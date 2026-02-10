@@ -3,112 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo Interactivo 60%</title>
-    <meta name="theme-color" content="#25d366">
-    <link rel="manifest" href="manifest.json">
+    <title>Catálogo Brylexroda</title>
     <style>
         :root { --primary: #25d366; --bg: #f0f2f5; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; padding-bottom: 140px; }
+        body { font-family: sans-serif; background: var(--bg); margin: 0; padding-bottom: 140px; }
         .header { background: white; padding: 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 20px; }
-        .card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative; transition: 0.3s; }
-        .card.selected { outline: 4px solid var(--primary); background: #f0fff4; }
-        
-        /* Carrusel de imágenes */
-        .carrusel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; height: 280px; background: #eee; }
+        .card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); cursor: pointer; transition: 0.3s; }
+        .card.selected { outline: 4px solid var(--primary); transform: scale(1.02); }
+        .carrusel { width: 100%; height: 250px; background: #eee; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
         .carrusel img { flex: 0 0 100%; object-fit: cover; scroll-snap-align: start; }
-        .carrusel::-webkit-scrollbar { height: 6px; }
-        .carrusel::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
-
         .info { padding: 15px; }
-        .nombre { font-size: 1.2rem; font-weight: bold; margin: 0; color: #333; }
-        .precio { font-size: 1rem; color: #666; margin: 5px 0; }
-        .pago-60 { color: #128c7e; font-weight: bold; background: #e8f9f0; padding: 5px 10px; border-radius: 8px; display: inline-block; margin-top: 5px; }
-        
-        .check-box { position: absolute; top: 15px; right: 15px; z-index: 20; transform: scale(2); cursor: pointer; }
-        
-        .footer { position: fixed; bottom: 0; width: 100%; background: white; padding: 20px; box-sizing: border-box; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); text-align: center; z-index: 100; }
-        .btn-ws { background: var(--primary); color: white; border: none; padding: 15px 30px; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%; max-width: 400px; box-shadow: 0 4px 10px rgba(37,211,102,0.3); }
+        .pago-60 { color: #128c7e; font-weight: bold; background: #e8f9f0; padding: 5px; border-radius: 5px; display: inline-block; margin-top: 5px; }
+        .footer { position: fixed; bottom: 0; width: 100%; background: white; padding: 20px; box-sizing: border-box; text-align: center; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); z-index: 100; }
+        .btn-ws { background: var(--primary); color: white; border: none; padding: 15px; border-radius: 50px; font-weight: bold; width: 100%; max-width: 400px; font-size: 16px; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h1 style="margin:0;">✨ Mi Catálogo Oficial</h1>
-    <p style="margin:5px 0 0; color: #666;">Selecciona tus modelos favoritos</p>
-</div>
-
-<div id="loading" style="text-align:center; padding: 50px;">Cargando productos...</div>
+<div class="header"><h1>🛍️ Catálogo Brylexroda</h1></div>
+<div id="loading" style="text-align:center; padding:50px;">Cargando inventario...</div>
 <div class="grid" id="contenedor"></div>
 
 <div class="footer">
-    <div id="resumen" style="margin-bottom:15px; font-size: 1.2rem; font-weight: bold;">Total Entradas (60%): $0.00</div>
+    <div id="resumen" style="margin-bottom:10px; font-weight:bold; font-size: 18px;">Total Entrada (60%): $0.00</div>
     <button class="btn-ws" onclick="enviarPedido()">Enviar Pedido por WhatsApp 📲</button>
 </div>
 
 <script>
-    // TU ENLACE CSV PUBLICADO
-    const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQuAq6Z_HRak2BFSbvMcCpeLtIR5iXL6ETn4rqejBHxbevf-5k5JN-6IC1g7TV6cgLByhaz2WKHSZ5g/pub?gid=0&single=true&output=csv';
+    // URL DE TU GOOGLE SHEETS
+    const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQuAq6Z_HRak2BFSbvMcCpeLtIR5iXL6ETn4rqejBHxbevf-5k5JN-6IC1g7TV6cgLByhaz2WKHSZ5g/pub?output=csv';
+    const miTelefono = "593990267974"; 
 
     let productos = [];
     let seleccionados = new Set();
 
-    // Función para limpiar links de Google Drive y que funcionen como imágenes directas
-    function limpiarLink(url) {
-        url = url.trim();
-        if (url.includes('drive.google.com')) {
-            const id = url.split('/d/')[1]?.split('/')[0] || url.split('id=')[1];
-            return `https://lh3.googleusercontent.com/d/${id}`;
-        }
-        return url;
-    }
-
-    async function cargarCatalogo() {
+    async function cargar() {
         try {
             const res = await fetch(SHEET_URL);
-            const data = await res.text();
-            const filas = data.split('\n').slice(1);
-
-            productos = filas.map((fila, i) => {
-                const columnas = fila.split(',');
-                // Separamos las fotos por el símbolo |
-                const fotosRaw = columnas[2] ? columnas[2].split('|') : [];
-                const fotosLimpias = fotosRaw.map(f => limpiarLink(f));
+            const text = await res.text();
+            
+            // Procesar CSV de forma más segura
+            const filas = text.split(/\r?\n/).slice(1);
+            productos = filas.map((f, i) => {
+                // Esta parte separa por comas pero respeta si hay algo mal escrito
+                const c = f.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); 
+                if(c.length < 2) return null;
 
                 return {
                     id: i,
-                    nombre: columnas[0]?.trim(),
-                    precio: parseFloat(columnas[1]) || 0,
-                    fotos: fotosLimpias
+                    nombre: c[0].replace(/"/g,'').trim(),
+                    precio: parseFloat(c[1]) || 0,
+                    fotos: c[2] ? c[2].split('|').map(link => link.trim()) : []
                 };
-            }).filter(p => p.nombre);
+            }).filter(p => p && p.nombre);
 
             document.getElementById('loading').style.display = 'none';
             dibujar();
-        } catch (error) {
-            document.getElementById('loading').innerText = "Error al conectar con el inventario.";
+        } catch (e) {
+            document.getElementById('loading').innerText = "Error al cargar productos. Revisa tu conexión.";
         }
     }
 
     function dibujar() {
-        const grid = document.getElementById('contenedor');
-        grid.innerHTML = productos.map(p => `
+        const cont = document.getElementById('contenedor');
+        cont.innerHTML = productos.map(p => {
+            const precio60 = (p.precio * 0.6).toFixed(2);
+            return `
             <div class="card ${seleccionados.has(p.id) ? 'selected' : ''}" onclick="toggle(${p.id})">
-                <input type="checkbox" class="check-box" ${seleccionados.has(p.id) ? 'checked' : ''}>
                 <div class="carrusel">
-                    ${p.fotos.length > 0 
-                        ? p.fotos.map(img => `<img src="${img}" onerror="this.src='https://via.placeholder.com/400x300?text=Cargando+Imagen...'">`).join('')
-                        : '<img src="https://via.placeholder.com/400x300?text=Sin+Foto">'
-                    }
+                    ${p.fotos.length > 0 && p.fotos[0].startsWith('http') 
+                        ? p.fotos.map(img => `<img src="${img}" onerror="this.src='https://via.placeholder.com/400x300?text=Error+al+cargar+foto'">`).join('')
+                        : '<img src="https://via.placeholder.com/400x300?text=Subir+Foto+a+Excel">' }
                 </div>
                 <div class="info">
-                    <p class="nombre">${p.nombre}</p>
-                    <p class="precio">Precio Total: $${p.precio.toFixed(2)}</p>
-                    <div class="pago-60">Pago Inicial (60%): $${(p.precio * 0.6).toFixed(2)}</div>
+                    <p style="margin:0; font-size:18px;"><b>${p.nombre}</b></p>
+                    <p style="margin:5px 0; color:#666;">Precio Total: $${p.precio.toFixed(2)}</p>
+                    <div class="pago-60">Pagas hoy (60%): $${precio60}</div>
                 </div>
-            </div>
-        `).join('');
-        calcular();
+            </div>`;
+        }).join('');
+
+        actualizarResumen();
     }
 
     function toggle(id) {
@@ -117,69 +93,33 @@
         dibujar();
     }
 
-    function calcular() {
-        let total60 = 0;
+    function actualizarResumen() {
+        let total = 0;
         productos.forEach(p => {
-            if(seleccionados.has(p.id)) total60 += (p.precio * 0.6);
+            if(seleccionados.has(p.id)) total += (p.precio * 0.6);
         });
-        document.getElementById('resumen').innerHTML = `Total Entradas (60%): <span style="color:#128c7e">$${total60.toFixed(2)}</span>`;
+        document.getElementById('resumen').innerText = `Total Entrada (60%): $${total.toFixed(2)}`;
     }
 
     function enviarPedido() {
-        if(seleccionados.size === 0) return alert("Por favor, selecciona al menos un modelo.");
+        if(seleccionados.size === 0) return alert("Por favor, selecciona al menos un producto.");
         
-        let mensaje = "¡Hola! 👋 Me interesan estos modelos de tu catálogo:\n\n";
-        let totalE = 0;
+        let mensaje = "¡Hola! Quisiera pedir estos productos:\n\n";
+        let total60 = 0;
 
         productos.forEach(p => {
             if(seleccionados.has(p.id)) {
-                const cuota = p.precio * 0.6;
-                mensaje += `⭐ *${p.nombre}*\n`;
-                mensaje += `   Precio: $${p.precio.toFixed(2)}\n`;
-                mensaje += `   Entrada (60%): $${cuota.toFixed(2)}\n\n`;
-                totalE += cuota;
+                mensaje += `- ${p.nombre} ($${p.precio})\n`;
+                total60 += (p.precio * 0.6);
             }
         });
 
-        mensaje += `--------------------------\n`;
-        mensaje += `💰 *TOTAL A PAGAR (Entradas): $${totalE.toFixed(2)}*`;
-
-        // REEMPLAZA CON TU NÚMERO (Ejemplo: 593999999999)
-        const miTelefono = "593990267974"; 
-        window.open(`https://wa.me/${miTelefono}?text=${encodeURIComponent(mensaje)}`);
+        mensaje += `\n*Total a pagar (60%): $${total60.toFixed(2)}*`;
+        const url = `https://wa.me/${miTelefono}?text=${encodeURIComponent(mensaje)}`;
+        window.open(url, '_blank');
     }
 
-    async function cargarCatalogo() {
-        try {
-            const res = await fetch(SHEET_URL);
-            const data = await res.text();
-            
-            // Esto limpia espacios vacíos y divide por filas
-            const filas = data.split(/\r?\n/).slice(1); 
-
-            productos = filas.map((fila, i) => {
-                const columnas = fila.split(',');
-                if(columnas.length < 2) return null;
-
-                const fotosRaw = columnas[2] ? columnas[2].split('|') : [];
-                const fotosLimpias = fotosRaw.map(f => limpiarLink(f));
-
-                return {
-                    id: i,
-                    nombre: columnas[0]?.replace(/"/g, '').trim(),
-                    precio: parseFloat(columnas[1]) || 0,
-                    fotos: fotosLimpias
-                };
-            }).filter(p => p && p.nombre);
-
-            document.getElementById('loading').style.display = 'none';
-            dibujar();
-        } catch (error) {
-            console.error(error);
-            document.getElementById('loading').innerText = "Error al conectar con el inventario.";
-        }
-    }
+    cargar();
 </script>
-
 </body>
 </html>
