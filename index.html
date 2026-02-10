@@ -149,7 +149,36 @@
         window.open(`https://wa.me/${miTelefono}?text=${encodeURIComponent(mensaje)}`);
     }
 
-    cargarCatalogo();
+    async function cargarCatalogo() {
+        try {
+            const res = await fetch(SHEET_URL);
+            const data = await res.text();
+            
+            // Esto limpia espacios vacíos y divide por filas
+            const filas = data.split(/\r?\n/).slice(1); 
+
+            productos = filas.map((fila, i) => {
+                const columnas = fila.split(',');
+                if(columnas.length < 2) return null;
+
+                const fotosRaw = columnas[2] ? columnas[2].split('|') : [];
+                const fotosLimpias = fotosRaw.map(f => limpiarLink(f));
+
+                return {
+                    id: i,
+                    nombre: columnas[0]?.replace(/"/g, '').trim(),
+                    precio: parseFloat(columnas[1]) || 0,
+                    fotos: fotosLimpias
+                };
+            }).filter(p => p && p.nombre);
+
+            document.getElementById('loading').style.display = 'none';
+            dibujar();
+        } catch (error) {
+            console.error(error);
+            document.getElementById('loading').innerText = "Error al conectar con el inventario.";
+        }
+    }
 </script>
 
 </body>
