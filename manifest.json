@@ -1,0 +1,20 @@
+{
+  "short_name": "MiTienda",
+  "name": "Mi Tienda Oficial - Catálogo",
+  "icons": [
+    {
+      "src": "tu-logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "tu-logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "index.html",
+  "display": "standalone",
+  "theme_color": "#25d366",
+  "background_color": "#ffffff"
+}
