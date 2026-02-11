@@ -21,13 +21,16 @@
         .pago-60 { color: #128c7e; font-weight: bold; background: #e8f9f0; padding: 5px; border-radius: 5px; display: inline-block; margin-top: 5px; }
         .footer { position: fixed; bottom: 0; width: 100%; background: white; padding: 20px; box-sizing: border-box; text-align: center; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); z-index: 100; }
         
+        /* Botón Principal (Footer) */
         .btn-enlistar { background: var(--dark); color: white; border: none; padding: 15px; border-radius: 50px; font-weight: bold; width: 100%; max-width: 400px; font-size: 16px; cursor: pointer; transition: 0.3s; }
         .btn-enlistar:hover { background: #333; }
 
+        /* Botón WhatsApp (Modal) */
         .btn-ws-final { background: var(--primary); color: white; border: none; padding: 15px; border-radius: 50px; font-weight: bold; width: 100%; font-size: 16px; cursor: pointer; margin-top: 10px; }
 
         .card.selected::after { content: "✅"; position: absolute; top: 10px; right: 10px; font-size: 24px; background: white; border-radius: 50%; padding: 2px; }
 
+        /* MODAL */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); overflow-y: auto; }
         .modal-content { background: white; margin: 5% auto; padding: 25px; border-radius: 20px; width: 90%; max-width: 500px; position: relative; animation: slideIn 0.3s; }
         @keyframes slideIn { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -69,4 +72,145 @@
         <div class="resumen-lista" id="listaResumen">
         </div>
 
-        <hr style="border:
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+        
+        <p style="font-size: 13px; color: #666; text-align: center; margin-bottom: 15px;">
+            Al presionar el botón, nos enviarás tu lista seleccionada por WhatsApp para validar stock y guiarte con el pago.
+        </p>
+
+        <button class="btn-ws-final" onclick="enviarWhatsAppFinal()">Confirmar y Enviar a WhatsApp 📲</button>
+    </div>
+</div>
+
+<script>
+    // Enlace directo para leer los datos de tu Google Sheet
+    const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1ZSSPWWk7VS3L1BHNBFAw8Lo3KFUiOKwFJwKXOoRKvk4/gviz/tq?tqx=out:csv';
+    const miTelefono = "593990267974"; 
+
+    let productos = [];
+    let seleccionados = new Set();
+
+    async function cargar() {
+        try {
+            // Usamos un timestamp para evitar caché
+            const res = await fetch(SHEET_URL + '&cache=' + new Date().getTime());
+            const text = await res.text();
+            
+            // Limpiamos las líneas y quitamos la cabecera
+            const filas = text.trim().split(/\r?\n/).slice(1);
+            
+            productos = filas.map((f, i) => {
+                // Separamos por comas teniendo en cuenta que Google Sheets usa comillas en el CSV
+                let c = f.split('","').map(item => item.replace(/"/g, '').trim());
+                
+                if(c.length < 2) return null;
+
+                // Nombre [0], Precio [1], Fotos [2]
+                let nombre = c[0];
+                let precioTexto = c[1].replace('$', '').replace(/[^\d.,]/g, '').trim();
+                let precioFinal = parseFloat(precioTexto) || 0;
+                let fotosRaw = c[2] || '';
+
+                return {
+                    id: i,
+                    nombre: nombre,
+                    precio: precioFinal,
+                    fotos: fotosRaw.split('|').map(link => link.trim()).filter(l => l.includes('http'))
+                };
+            }).filter(p => p && p.nombre);
+
+            document.getElementById('loading').style.display = 'none';
+            dibujar();
+        } catch (e) {
+            document.getElementById('loading').innerText = "Error al conectar con la base de datos.";
+            console.error(e);
+        }
+    }
+
+    function dibujar() {
+        const cont = document.getElementById('contenedor');
+        if(productos.length === 0) {
+            cont.innerHTML = "<p style='text-align:center;'>No se encontraron productos en el Excel.</p>";
+            return;
+        }
+        cont.innerHTML = productos.map(p => {
+            const precio60 = (p.precio * 0.6).toFixed(2);
+            return `
+            <div class="card ${seleccionados.has(p.id) ? 'selected' : ''}" onclick="toggle(${p.id})">
+                <div class="carrusel">
+                    ${p.fotos.length > 0 
+                        ? p.fotos.map(img => `<img src="${img}" onerror="this.src='https://via.placeholder.com/400x300?text=Error+en+Imagen'">`).join('')
+                        : '<img src="https://via.placeholder.com/400x300?text=Sin+Foto+en+Excel">' }
+                </div>
+                <div class="info">
+                    <div class="tag-import">📦 IMPORTACIÓN DIRECTA</div>
+                    <p style="margin:0; font-size:18px;"><b>${p.nombre}</b></p>
+                    <p style="margin:5px 0; color:#666;">Precio Total: $${p.precio.toFixed(2)}</p>
+                    <div class="pago-60">Pago inicial (60%): $${precio60}</div>
+                </div>
+            </div>`;
+        }).join('');
+        actualizarResumen();
+    }
+
+    function toggle(id) {
+        seleccionados.has(id) ? seleccionados.delete(id) : seleccionados.add(id);
+        dibujar();
+    }
+
+    function actualizarResumen() {
+        let total = 0;
+        productos.forEach(p => { if(seleccionados.has(p.id)) total += (p.precio * 0.6); });
+        document.getElementById('resumen').innerText = `Total Entrada (60%): $${total.toFixed(2)}`;
+    }
+
+    function abrirModal() {
+        if(!seleccionados.size) return alert("Por favor, selecciona los relojes que deseas enlistar.");
+        
+        let htmlLista = "<b>Relojes seleccionados:</b><br><ul style='padding-left:20px; margin-top:10px;'>";
+        let total60 = 0;
+        
+        productos.forEach(p => {
+            if(seleccionados.has(p.id)) {
+                htmlLista += `<li style="margin-bottom:8px;">${p.nombre} <br><small>Abono 60%: $${(p.precio * 0.6).toFixed(2)}</small></li>`;
+                total60 += (p.precio * 0.6);
+            }
+        });
+        
+        htmlLista += `</ul><div style='background:#eee; padding:10px; border-radius:8px; text-align:center;'>
+                        <span style='font-size: 14px;'>TOTAL A PAGAR HOY:</span><br>
+                        <span style='font-size: 22px; font-weight:bold; color:var(--accent);'>$${total60.toFixed(2)}</span>
+                      </div>`;
+        
+        document.getElementById('listaResumen').innerHTML = htmlLista;
+        document.getElementById('miModal').style.display = "block";
+    }
+
+    function cerrarModal() {
+        document.getElementById('miModal').style.display = "none";
+    }
+
+    function enviarWhatsAppFinal() {
+        let m = "¡Hola Brylexroda! He armado mi lista de pedido y deseo verificar stock:\n\n";
+        let t = 0;
+        productos.forEach(p => {
+            if(seleccionados.has(p.id)) {
+                m += `▪️ ${p.nombre} ($${p.precio.toFixed(2)})\n`;
+                t += (p.precio * 0.6);
+            }
+        });
+        m += `\n💰 *Total Abono Inicial (60%): $${t.toFixed(2)}*`;
+        m += `\n\nQuedo atento/a para que me confirmen disponibilidad y los datos de la cuenta bancaria.`;
+        
+        window.open(`https://wa.me/${miTelefono}?text=${encodeURIComponent(m)}`);
+        cerrarModal();
+    }
+
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('miModal')) cerrarModal();
+    }
+
+    cargar();
+</script>
+</body>
+</html>
