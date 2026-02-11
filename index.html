@@ -20,97 +20,100 @@
             background: var(--bg); 
             color: var(--text-main); 
             margin: 0; 
-            padding-bottom: 140px; 
+            padding-bottom: 160px; 
         }
         
-        /* ENCABEZADO CENTRADO Y MEJORADO */
         .header { 
             background: #1e293b; 
-            padding: 30px 20px; 
+            padding: 20px 20px 10px 20px; 
             text-align: center; 
-            border-bottom: 1px solid var(--border);
             display: flex;
             flex-direction: column;
             align-items: center;
+        }
+
+        .header h1 { margin: 0; font-size: 1.8em; letter-spacing: 1px; }
+        .header p { margin: 5px 0; color: var(--primary); font-weight: bold; font-size: 1em; text-transform: uppercase; }
+
+        /* BUSCADOR */
+        .contenedor-busqueda {
+            background: #1e293b;
+            padding: 10px 20px 20px 20px;
+            display: flex;
             justify-content: center;
+            border-bottom: 1px solid var(--border);
         }
-
-        .header h1 { 
-            margin: 0; 
-            font-size: 2.2em; 
-            letter-spacing: 1px;
+        .input-busqueda {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: white;
+            outline: none;
+            font-size: 16px;
         }
-
-        .header p { 
-            margin: 8px 0 0 0; 
-            color: var(--primary); 
-            font-weight: bold; 
-            font-size: 1.1em;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
+        .input-busqueda:focus { border-color: var(--primary); }
 
         /* FILTROS */
         .contenedor-filtros { background: #1e293b; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border); }
-        .btn-abrir-filtros { width: 100%; padding: 15px; background: transparent; border: none; color: #fff; font-weight: bold; cursor: pointer; }
+        .btn-abrir-filtros { width: 100%; padding: 12px; background: transparent; border: none; color: #fff; font-weight: bold; cursor: pointer; }
         .panel-filtros { display: none; padding: 15px; border-top: 1px solid var(--border); }
         .panel-filtros.active { display: block; }
         
-        .chips-container { display: flex; gap: 8px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
-        .chip { background: #334155; color: #fff; padding: 8px 15px; border-radius: 20px; font-size: 13px; cursor: pointer; border: none; white-space: nowrap; }
+        .chips-container { display: flex; gap: 8px; overflow-x: auto; padding: 5px 0; scrollbar-width: none; }
+        .chip { background: #334155; color: #fff; padding: 8px 15px; border-radius: 20px; font-size: 12px; cursor: pointer; border: none; white-space: nowrap; }
         .chip.active { background: var(--primary); color: #000; }
 
-        /* GRID Y CARDS */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 20px; }
+        /* GRID RESPONSIVO: 2 COLUMNAS EN MÓVIL */
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 12px; 
+            padding: 12px; 
+        }
+        @media (min-width: 768px) {
+            .grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; padding: 20px; }
+        }
+
         .card { 
-            background: var(--card-bg); border-radius: 15px; overflow: hidden; 
+            background: var(--card-bg); border-radius: 12px; overflow: hidden; 
             cursor: pointer; transition: 0.3s; border: 2px solid transparent; 
             position: relative;
         }
         .card.selected { border-color: var(--primary); background: #1e3a2f; transform: scale(1.02); }
         
         .select-indicator { 
-            position: absolute; top: 15px; right: 15px; width: 28px; height: 28px; 
-            background: rgba(0,0,0,0.6); border: 2px solid #fff; border-radius: 50%; 
+            position: absolute; top: 10px; right: 10px; width: 24px; height: 24px; 
+            background: rgba(0,0,0,0.6); border: 1px solid #fff; border-radius: 50%; 
             display: flex; align-items: center; justify-content: center; z-index: 10; 
-            color: transparent; font-size: 18px; font-weight: bold; transition: 0.2s;
+            color: transparent; font-size: 14px; font-weight: bold;
         }
         .card.selected .select-indicator { background: var(--primary); border-color: var(--primary); color: #000; }
         .card.selected .select-indicator::after { content: "✓"; }
 
-        .carrusel { width: 100%; height: 250px; background: #000; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
+        .carrusel { width: 100%; height: 160px; background: #000; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
+        @media (min-width: 768px) { .carrusel { height: 240px; } }
         .carrusel img { flex: 0 0 100%; object-fit: cover; scroll-snap-align: start; }
         
-        .info { padding: 15px; }
-        
-        .tag-import { 
-            background: #fff9c4; color: #827717; font-size: 10px; font-weight: bold; 
-            padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px; 
-        }
+        .info { padding: 10px; }
+        .tag-import { background: #fff9c4; color: #827717; font-size: 9px; font-weight: bold; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 5px; }
+        .pago-60 { color: var(--primary); font-weight: bold; font-size: 0.9em; display: block; }
+        .precio-total-card { color: var(--text-secondary); font-size: 0.8em; margin-bottom: 4px; }
 
-        .pago-60 { color: var(--primary); font-weight: bold; background: rgba(37, 211, 102, 0.1); padding: 5px; border-radius: 5px; display: inline-block; }
-
-        /* FOOTER */
-        .footer { position: fixed; bottom: 0; width: 100%; background: #1e293b; padding: 20px; text-align: center; border-top: 1px solid var(--border); z-index: 100; box-sizing: border-box; }
-        .btn-enlistar { background: var(--primary); color: #000; border: none; padding: 15px; border-radius: 50px; font-weight: bold; width: 100%; max-width: 400px; cursor: pointer; font-size: 16px; }
+        /* FOOTER MEJORADO */
+        .footer { position: fixed; bottom: 0; width: 100%; background: #1e293b; padding: 15px 20px; border-top: 1px solid var(--border); z-index: 100; box-sizing: border-box; }
+        .footer-totales { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .btn-enlistar { background: var(--primary); color: #000; border: none; padding: 12px; border-radius: 50px; font-weight: bold; width: 100%; cursor: pointer; font-size: 16px; }
 
         /* MODAL */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); overflow-y: auto; }
-        .modal-content { background: #1e293b; margin: 5% auto; padding: 25px; border-radius: 20px; width: 90%; max-width: 500px; color: #fff; position: relative; animation: slideIn 0.3s; }
-        @keyframes slideIn { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal-content { background: #1e293b; margin: 5% auto; padding: 25px; border-radius: 20px; width: 90%; max-width: 450px; color: #fff; position: relative; animation: slideIn 0.3s; }
         .close { position: absolute; top: 15px; right: 20px; font-size: 25px; cursor: pointer; color: var(--text-secondary); }
         
-        .instrucciones { 
-            background: #f0f7f4; padding: 15px; border-radius: 12px; font-size: 14px; 
-            color: #2c3e50; line-height: 1.6; margin-bottom: 20px; border-left: 5px solid var(--accent); 
-        }
-
-        .resumen-lista { text-align: left; border-top: 1px solid var(--border); padding-top: 15px; }
-        
-        .total-pago-caja { 
-            background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; 
-            text-align: center; margin-top: 10px; border: 1px solid var(--border);
-        }
+        .instrucciones { background: #f0f7f4; padding: 12px; border-radius: 10px; font-size: 13px; color: #2c3e50; line-height: 1.4; margin-bottom: 15px; border-left: 5px solid var(--accent); }
+        .total-pago-caja { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-top: 10px; border: 1px solid var(--border); }
     </style>
 </head>
 <body onclick="cerrarFiltrosFuera(event)">
@@ -118,14 +121,17 @@
 <div class="header">
     <h1>BrylexRoda</h1>
     <p>Catálogo de Relojería</p>
-    <span style="font-size: 12px; color: var(--text-secondary); margin-top: 5px;">Modelos de Importación</span>
+</div>
+
+<div class="contenedor-busqueda">
+    <input type="text" id="busqueda" class="input-busqueda" placeholder="Buscar modelo o marca..." oninput="aplicarFiltros()">
 </div>
 
 <div class="contenedor-filtros" id="areaFiltros">
-    <button class="btn-abrir-filtros" onclick="toggleFiltros(event)">🔍 Filtrar por Marca o Precio ▼</button>
+    <button class="btn-abrir-filtros" onclick="toggleFiltros(event)">🔍 Filtros de Precio y Marca ▼</button>
     <div class="panel-filtros" id="panelFiltros">
         <div class="chips-container">
-            <button class="chip chip-precio active" onclick="filtrarPrecio('todas', this)">Todos los precios</button>
+            <button class="chip chip-precio active" onclick="filtrarPrecio('todas', this)">Todos</button>
             <button class="chip chip-precio" onclick="filtrarPrecio('50-100', this)">$50 - $100</button>
             <button class="chip chip-precio" onclick="filtrarPrecio('100-200', this)">$100 - $200</button>
         </div>
@@ -135,15 +141,14 @@
     </div>
 </div>
 
-<div id="loading" style="text-align:center; padding:50px; color: var(--text-secondary);">Cargando inventario...</div>
+<div id="loading" style="text-align:center; padding:50px; color: var(--text-secondary);">Cargando catálogo...</div>
 <div class="grid" id="contenedor"></div>
 
-<div id="contenedorVerMas" style="text-align:center; padding: 20px; display:none;">
-    <button onclick="cargarMas()" style="background:transparent; border:2px solid var(--primary); color:var(--primary); padding:10px 25px; border-radius:20px; cursor:pointer; font-weight: bold;">Ver más modelos</button>
-</div>
-
 <div class="footer">
-    <div id="resumen" style="margin-bottom:10px; font-weight:bold; font-size: 18px;">Total Entrada (60%): $0.00</div>
+    <div class="footer-totales">
+        <div>Total Pedido: <br><span id="resumenTotalFull" style="color:#fff; font-weight:bold;">$0.00</span></div>
+        <div style="text-align:right;">Abono (60%): <br><span id="resumenAbono" style="color:var(--primary); font-weight:bold;">$0.00</span></div>
+    </div>
     <button class="btn-enlistar" onclick="abrirModal()">Ver mi Lista de Pedido 📋</button>
 </div>
 
@@ -153,16 +158,26 @@
         <h2 style="color:var(--primary); text-align:center; margin-top: 0;">🛒 Tu Pedido</h2>
         
         <div class="instrucciones">
-            <b style="color: var(--accent);">✅ Proceso de Compra Segura:</b><br>
-            • <b>Stock:</b> En el siguiente paso validaremos disponibilidad inmediata del pedido.<br>
-            • <b>Abono:</b> Pago inicial del <b>60%</b> para procesar tu pedido.<br>
-            • <b>Garantía:</b> El saldo restante se cancela antes de enviar el producto para usted.<br>
-            • <b>Entrega:</b> Tiempo estimado: <b> Maximo hasta un mes</b>.<br>
+            <b>Proceso de Compra:</b><br>
+            • Pago inicial del <b>60%</b> para importar.<br>
+            • Saldo restante antes del envío final.<br>
+            • Tiempo máximo: <b>1 mes</b>.
         </div>
 
-        <div class="resumen-lista" id="listaResumen"></div>
+        <div id="listaResumen" style="max-height: 200px; overflow-y: auto;"></div>
 
-        <button onclick="enviarWhatsAppFinal()" style="background:var(--primary); width:100%; padding:15px; border-radius:50px; border:none; font-weight:bold; cursor:pointer; font-size: 16px; margin-top: 15px; color: #000;">Confirmar y Enviar a WhatsApp 📲</button>
+        <div class="total-pago-caja">
+            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                <span>Total acumulado:</span>
+                <span id="modalTotalFinal">$0.00</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-weight:bold; color:var(--primary); font-size:1.2em;">
+                <span>Abono hoy (60%):</span>
+                <span id="modalAbonoHoy">$0.00</span>
+            </div>
+        </div>
+
+        <button onclick="enviarWhatsAppFinal()" style="background:var(--primary); width:100%; padding:15px; border-radius:50px; border:none; font-weight:bold; cursor:pointer; font-size: 16px; margin-top: 20px; color: #000;">Confirmar por WhatsApp 📲</button>
     </div>
 </div>
 
@@ -175,8 +190,6 @@
     let seleccionados = new Set();
     let marcaSeleccionada = "Todas";
     let rangoPrecio = "todas";
-    let paginaActual = 1;
-    const itemsPorPagina = 10;
 
     async function cargar() {
         try {
@@ -231,7 +244,6 @@
         el.classList.add('active');
         marcaSeleccionada = marca;
         aplicarFiltros();
-        document.getElementById('panelFiltros').classList.remove('active');
     }
 
     function filtrarPrecio(rango, el) {
@@ -239,43 +251,37 @@
         el.classList.add('active');
         rangoPrecio = rango;
         aplicarFiltros();
-        document.getElementById('panelFiltros').classList.remove('active');
     }
 
     function aplicarFiltros() {
-        paginaActual = 1;
+        const busqueda = document.getElementById('busqueda').value.toLowerCase();
+        
         productosFiltrados = productos.filter(p => {
-            const m = marcaSeleccionada === "Todas" || p.marca === marcaSeleccionada;
-            let pr = true;
-            if(rangoPrecio === '50-100') pr = (p.precio >= 50 && p.precio <= 100);
-            if(rangoPrecio === '100-200') pr = (p.precio > 100 && p.precio <= 200);
-            return m && pr;
+            const matchesMarca = marcaSeleccionada === "Todas" || p.marca === marcaSeleccionada;
+            const matchesBusqueda = p.nombre.toLowerCase().includes(busqueda);
+            let matchesPrecio = true;
+            if(rangoPrecio === '50-100') matchesPrecio = (p.precio >= 50 && p.precio <= 100);
+            if(rangoPrecio === '100-200') matchesPrecio = (p.precio > 100 && p.precio <= 200);
+            return matchesMarca && matchesPrecio && matchesBusqueda;
         });
         dibujar();
     }
 
-    function cargarMas() { paginaActual++; dibujar(); }
-
     function dibujar() {
         const cont = document.getElementById('contenedor');
-        const limite = paginaActual * itemsPorPagina;
-        const visible = productosFiltrados.slice(0, limite);
-        
-        cont.innerHTML = visible.map(p => `
-            <div id="card-${p.id}" class="card ${seleccionados.has(p.id) ? 'selected' : ''}" onclick="toggleSelect(${p.id})">
+        cont.innerHTML = productosFiltrados.map(p => `
+            <div class="card ${seleccionados.has(p.id) ? 'selected' : ''}" onclick="toggleSelect(${p.id})">
                 <div class="select-indicator"></div>
                 <div class="carrusel" onclick="event.stopPropagation()">
                     ${p.fotos.length > 0 ? p.fotos.map(img => `<img src="${img}" loading="lazy">`).join('') : '<img src="https://via.placeholder.com/400x300?text=Sin+Foto">'}
                 </div>
                 <div class="info">
-                    <div class="tag-import">📦 IMPORTACIÓN DIRECTA</div>
-                    <p style="margin:0; font-size: 1.1em;"><b>${p.nombre}</b></p>
-                    <p style="color:var(--text-secondary); margin:5px 0;">Total: $${p.precio.toFixed(2)}</p>
-                    <div class="pago-60">Abono 60%: $${(p.precio * 0.6).toFixed(2)}</div>
+                    <div class="tag-import">📦 IMPORTACIÓN</div>
+                    <p style="margin:0; font-size: 0.9em; height: 2.4em; overflow: hidden;"><b>${p.nombre}</b></p>
+                    <div class="precio-total-card">Total: $${p.precio.toFixed(2)}</div>
+                    <div class="pago-60">60%: $${(p.precio * 0.6).toFixed(2)}</div>
                 </div>
             </div>`).join('');
-
-        document.getElementById('contenedorVerMas').style.display = productosFiltrados.length > limite ? 'block' : 'none';
     }
 
     function toggleSelect(id) {
@@ -286,37 +292,49 @@
     }
 
     function actualizarResumen() {
-        let total = 0;
-        productos.forEach(p => { if(seleccionados.has(p.id)) total += (p.precio * 0.6); });
-        document.getElementById('resumen').innerText = `Total Entrada (60%): $${total.toFixed(2)}`;
+        let totalFull = 0;
+        let totalAbono = 0;
+        productos.forEach(p => { 
+            if(seleccionados.has(p.id)) {
+                totalFull += p.precio;
+                totalAbono += (p.precio * 0.6);
+            }
+        });
+        document.getElementById('resumenTotalFull').innerText = `$${totalFull.toFixed(2)}`;
+        document.getElementById('resumenAbono').innerText = `$${totalAbono.toFixed(2)}`;
     }
 
     function abrirModal() {
         if(!seleccionados.size) return alert("Selecciona algún reloj primero.");
-        let htmlLista = "<b>Relojes en tu lista:</b><br><ul style='padding-left: 20px; margin-top:10px;'>"; 
-        let total60 = 0;
+        let htmlLista = "<ul style='padding-left: 20px;'>"; 
+        let totalF = 0;
+        let totalA = 0;
         productos.forEach(p => { 
             if(seleccionados.has(p.id)) { 
-                htmlLista += `<li style='margin-bottom:10px;'>${p.nombre}<br><small style="color:var(--text-secondary)">Abono 60%: $${(p.precio * 0.6).toFixed(2)}</small></li>`; 
-                total60 += (p.precio * 0.6); 
+                htmlLista += `<li style='margin-bottom:8px; font-size:14px;'>${p.nombre} ($${p.precio.toFixed(2)})</li>`; 
+                totalF += p.precio;
+                totalA += (p.precio * 0.6);
             } 
         });
-        htmlLista += `</ul><div class='total-pago-caja'>
-                <span style='font-size:14px; color:var(--text-secondary)'>TOTAL ABONO HOY (60%):</span><br>
-                <span style='font-size:24px; font-weight:bold; color:var(--primary)'>$${total60.toFixed(2)}</span>
-              </div>`;
+        htmlLista += "</ul>";
         document.getElementById('listaResumen').innerHTML = htmlLista;
+        document.getElementById('modalTotalFinal').innerText = `$${totalF.toFixed(2)}`;
+        document.getElementById('modalAbonoHoy').innerText = `$${totalA.toFixed(2)}`;
         document.getElementById('miModal').style.display = "block";
     }
 
     function cerrarModal() { document.getElementById('miModal').style.display = "none"; }
 
     function enviarWhatsAppFinal() {
-        let m = "¡Hola Brylexroda! He armado mi pedido en el Catálogo de Relojería:\n\n";
-        let t = 0;
-        productos.forEach(p => { if(seleccionados.has(p.id)) { m += `▪️ ${p.nombre} ($${p.precio.toFixed(2)})\n`; t += (p.precio * 0.6); }});
-        m += `\n💰 *Total Abono Inicial (60%): $${t.toFixed(2)}*`;
-        m += `\n\nQuedo atento/a para confirmar disponibilidad y pago.`;
+        let m = "¡Hola Brylexroda! He armado mi pedido:\n\n";
+        let tf = 0; let ta = 0;
+        productos.forEach(p => { if(seleccionados.has(p.id)) { 
+            m += `▪️ ${p.nombre} ($${p.precio.toFixed(2)})\n`; 
+            tf += p.precio; ta += (p.precio * 0.6);
+        }});
+        m += `\n💵 Total Pedido: $${tf.toFixed(2)}`;
+        m += `\n💰 *Abono (60%): $${ta.toFixed(2)}*`;
+        m += `\n\nQuedo atento/a para el pago y la importación.`;
         window.open(`https://wa.me/${miTelefono}?text=${encodeURIComponent(m)}`);
     }
 
