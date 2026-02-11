@@ -37,37 +37,63 @@
         .chip { background: #334155; color: #fff; padding: 8px 15px; border-radius: 20px; font-size: 13px; cursor: pointer; border: none; white-space: nowrap; }
         .chip.active { background: var(--primary); color: #000; }
 
-        /* GRID */
+        /* GRID Y CARDS */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 20px; }
         .card { 
             background: var(--card-bg); border-radius: 15px; overflow: hidden; 
             cursor: pointer; transition: 0.3s; border: 2px solid transparent; 
+            position: relative; /* Importante para el círculo */
         }
         .card.selected { border-color: var(--primary); background: #1e3a2f; }
         
+        /* EL CÍRCULO DE SELECCIÓN */
+        .select-indicator { 
+            position: absolute; 
+            top: 15px; 
+            right: 15px; 
+            width: 28px; 
+            height: 28px; 
+            background: rgba(0,0,0,0.6); 
+            border: 2px solid #fff; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            z-index: 10; 
+            color: transparent; /* Oculto por defecto */
+            font-size: 18px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .card.selected .select-indicator { 
+            background: var(--primary); 
+            border-color: var(--primary); 
+            color: #000; /* Check negro sobre fondo verde */
+        }
+
         .carrusel { width: 100%; height: 250px; background: #000; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
-        .carrusel img { flex: 0 0 100%; object-fit: cover; }
+        .carrusel img { flex: 0 0 100%; object-fit: cover; scroll-snap-align: start; }
         
         .info { padding: 15px; }
         .pago-60 { color: var(--primary); font-weight: bold; background: rgba(37, 211, 102, 0.1); padding: 5px; border-radius: 5px; display: inline-block; }
 
         /* FOOTER */
         .footer { position: fixed; bottom: 0; width: 100%; background: #1e293b; padding: 20px; text-align: center; border-top: 1px solid var(--border); z-index: 100; box-sizing: border-box; }
-        .btn-enlistar { background: var(--primary); color: #000; border: none; padding: 15px; border-radius: 50px; font-weight: bold; width: 100%; max-width: 400px; cursor: pointer; }
+        .btn-enlistar { background: var(--primary); color: #000; border: none; padding: 15px; border-radius: 50px; font-weight: bold; width: 100%; max-width: 400px; cursor: pointer; font-size: 16px; }
         
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); }
-        .modal-content { background: #1e293b; margin: 10% auto; padding: 25px; border-radius: 20px; width: 90%; max-width: 500px; }
+        .modal-content { background: #1e293b; margin: 10% auto; padding: 25px; border-radius: 20px; width: 90%; max-width: 500px; color: #fff; }
     </style>
 </head>
 <body onclick="cerrarFiltrosFuera(event)">
 
 <div class="header">
     <h1 style="margin:0;">⌚ BrylexRoda</h1>
-    <p style="margin:5px 0; color:var(--primary);">Catálogo de Relojes</p>
+    <p style="margin:5px 0; color:var(--primary); font-weight: bold;">Catálogo de Relojes</p>
 </div>
 
 <div class="contenedor-filtros" id="areaFiltros">
-    <button class="btn-abrir-filtros" onclick="toggleFiltros(event)">🔍 Filtros (Marca / Precio)</button>
+    <button class="btn-abrir-filtros" onclick="toggleFiltros(event)">🔍 Filtros (Marca / Precio) ▼</button>
     <div class="panel-filtros" id="panelFiltros">
         <div class="chips-container">
             <button class="chip chip-precio active" onclick="filtrarPrecio('todas', this)">Todos los precios</button>
@@ -80,29 +106,28 @@
     </div>
 </div>
 
-<div id="loading" style="text-align:center; padding:50px;">Cargando productos...</div>
+<div id="loading" style="text-align:center; padding:50px; color: var(--text-secondary);">Cargando productos de lujo...</div>
 <div class="grid" id="contenedor"></div>
 
 <div id="contenedorVerMas" style="text-align:center; padding: 20px; display:none;">
-    <button onclick="cargarMas()" style="background:transparent; border:2px solid var(--primary); color:var(--primary); padding:10px 20px; border-radius:20px; cursor:pointer;">Ver más</button>
+    <button onclick="cargarMas()" style="background:transparent; border:2px solid var(--primary); color:var(--primary); padding:10px 25px; border-radius:20px; cursor:pointer; font-weight: bold;">Ver más modelos</button>
 </div>
 
 <div class="footer">
-    <div id="resumen" style="margin-bottom:10px; font-weight:bold;">Total Entrada (60%): $0.00</div>
+    <div id="resumen" style="margin-bottom:10px; font-weight:bold; font-size: 18px;">Total Entrada (60%): $0.00</div>
     <button class="btn-enlistar" onclick="abrirModal()">Ver mi Lista 📋</button>
 </div>
 
 <div id="miModal" class="modal">
     <div class="modal-content">
-        <h2 style="color:var(--primary); text-align:center;">Tu Pedido</h2>
-        <div id="listaResumen"></div>
-        <button onclick="enviarWhatsAppFinal()" style="background:var(--primary); width:100%; padding:15px; border-radius:50px; border:none; font-weight:bold; margin-top:20px; cursor:pointer;">Enviar a WhatsApp</button>
-        <button onclick="cerrarModal()" style="background:transparent; color:#fff; width:100%; border:none; margin-top:10px; cursor:pointer;">Cerrar</button>
+        <h2 style="color:var(--primary); text-align:center; margin-top: 0;">Tu Pedido</h2>
+        <div id="listaResumen" style="margin: 20px 0; border-top: 1px solid var(--border); padding-top: 15px;"></div>
+        <button onclick="enviarWhatsAppFinal()" style="background:var(--primary); width:100%; padding:15px; border-radius:50px; border:none; font-weight:bold; cursor:pointer; font-size: 16px;">Enviar a WhatsApp 📲</button>
+        <button onclick="cerrarModal()" style="background:transparent; color:var(--text-secondary); width:100%; border:none; margin-top:15px; cursor:pointer;">Regresar al catálogo</button>
     </div>
 </div>
 
 <script>
-    // URL y Configuración
     const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1ZSSPWWk7VS3L1BHNBFAw8Lo3KFUiOKwFJwKXOoRKvk4/gviz/tq?tqx=out:csv';
     const miTelefono = "593990267974"; 
 
@@ -114,17 +139,13 @@
     let paginaActual = 1;
     const itemsPorPagina = 10;
 
-    // 1. CARGA DE DATOS
     async function cargar() {
         try {
             const res = await fetch(SHEET_URL + '&cache=' + new Date().getTime());
-            if (!res.ok) throw new Error("Error al conectar con Google Sheets");
             const text = await res.text();
-            
-            // Procesar filas de forma más segura
             const filas = text.trim().split(/\r?\n/).slice(1);
+            
             productos = filas.map((f, i) => {
-                // Limpiar comillas y separar por coma (ajuste para CSV de Google)
                 let c = f.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(item => item.replace(/"/g, '').trim());
                 if(c.length < 2) return null;
                 return {
@@ -140,12 +161,10 @@
             document.getElementById('loading').style.display = 'none';
             aplicarFiltros();
         } catch (e) {
-            document.getElementById('loading').innerHTML = `<p style="color:red;">Error: No se pudieron cargar los productos.<br>Verifica que el Google Sheet sea público.</p>`;
-            console.error(e);
+            document.getElementById('loading').innerHTML = `<p style="color:red;">Error de conexión.</p>`;
         }
     }
 
-    // 2. FILTROS
     function toggleFiltros(e) {
         if(e) e.stopPropagation();
         document.getElementById('panelFiltros').classList.toggle('active');
@@ -153,7 +172,7 @@
 
     function cerrarFiltrosFuera(e) {
         const area = document.getElementById('areaFiltros');
-        if (!area.contains(e.target)) document.getElementById('panelFiltros').classList.remove('active');
+        if (area && !area.contains(e.target)) document.getElementById('panelFiltros').classList.remove('active');
     }
 
     function generarMarcas() {
@@ -173,6 +192,7 @@
         el.classList.add('active');
         marcaSeleccionada = marca;
         aplicarFiltros();
+        toggleFiltros(); 
     }
 
     function filtrarPrecio(rango, el) {
@@ -180,6 +200,7 @@
         el.classList.add('active');
         rangoPrecio = rango;
         aplicarFiltros();
+        toggleFiltros();
     }
 
     function aplicarFiltros() {
@@ -194,7 +215,6 @@
         dibujar();
     }
 
-    // 3. DIBUJAR
     function cargarMas() { paginaActual++; dibujar(); }
 
     function dibujar() {
@@ -204,11 +224,12 @@
         
         cont.innerHTML = visible.map(p => `
             <div class="card ${seleccionados.has(p.id) ? 'selected' : ''}" onclick="toggleSelect(${p.id})">
+                <div class="select-indicator">✓</div>
                 <div class="carrusel" onclick="event.stopPropagation()">
-                    ${p.fotos.map(img => `<img src="${img}" loading="lazy">`).join('')}
+                    ${p.fotos.length > 0 ? p.fotos.map(img => `<img src="${img}" loading="lazy">`).join('') : '<img src="https://via.placeholder.com/400x300?text=Sin+Foto">'}
                 </div>
                 <div class="info">
-                    <p style="margin:0;"><b>${p.nombre}</b></p>
+                    <p style="margin:0; font-size: 1.1em;"><b>${p.nombre}</b></p>
                     <p style="color:var(--text-secondary); margin:5px 0;">Total: $${p.precio.toFixed(2)}</p>
                     <div class="pago-60">Abono 60%: $${(p.precio * 0.6).toFixed(2)}</div>
                 </div>
@@ -217,36 +238,38 @@
         document.getElementById('contenedorVerMas').style.display = productosFiltrados.length > limite ? 'block' : 'none';
     }
 
-    // 4. SELECCIÓN Y WHATSAPP
     function toggleSelect(id) {
         if (seleccionados.has(id)) seleccionados.delete(id);
         else seleccionados.add(id);
         
+        actualizarResumen();
+        dibujar(); // Redibuja para que aparezca el check y el color verde
+    }
+
+    function actualizarResumen() {
         let total = 0;
         productos.forEach(p => { if(seleccionados.has(p.id)) total += (p.precio * 0.6); });
         document.getElementById('resumen').innerText = `Total Entrada (60%): $${total.toFixed(2)}`;
-        dibujar();
     }
 
     function abrirModal() {
-        if(!seleccionados.size) return alert("Selecciona productos.");
-        let h = "<ul>"; let t = 0;
-        productos.forEach(p => { if(seleccionados.has(p.id)) { h += `<li>${p.nombre}</li>`; t += (p.precio * 0.6); } });
-        document.getElementById('listaResumen').innerHTML = h + `</ul><p>Total Abono: <b>$${t.toFixed(2)}</b></p>`;
+        if(!seleccionados.size) return alert("Por favor, selecciona algún reloj primero.");
+        let h = "<ul style='padding-left: 20px;'>"; let t = 0;
+        productos.forEach(p => { if(seleccionados.has(p.id)) { h += `<li style='margin-bottom:10px;'>${p.nombre}</li>`; t += (p.precio * 0.6); } });
+        document.getElementById('listaResumen').innerHTML = h + `</ul><p style='text-align:right; font-size:1.2em;'>Total Abono: <b style='color:var(--primary)'>$${t.toFixed(2)}</b></p>`;
         document.getElementById('miModal').style.display = "block";
     }
 
     function cerrarModal() { document.getElementById('miModal').style.display = "none"; }
 
     function enviarWhatsAppFinal() {
-        let m = "¡Hola Brylexroda! Mi pedido:\n";
+        let m = "¡Hola Brylexroda! Mi pedido:\n\n";
         let t = 0;
         productos.forEach(p => { if(seleccionados.has(p.id)) { m += `▪️ ${p.nombre}\n`; t += (p.precio * 0.6); }});
-        m += `\nTotal Abono: $${t.toFixed(2)}`;
+        m += `\n💰 Total Abono (60%): $${t.toFixed(2)}`;
         window.open(`https://wa.me/${miTelefono}?text=${encodeURIComponent(m)}`);
     }
 
-    // Iniciar
     cargar();
 </script>
 </body>
