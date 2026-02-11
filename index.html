@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catálogo de Relojes BrylexRoda</title>
     <style>
-        :root { --primary: #25d366; --bg: #f0f2f5; --dark: #1c1e21; --accent: #128c7e; }
+        :root { --primary: #25d366; --bg: #f0f2f5; --dark: #1c1e21; --accent: #128c7e; --gold: #d4af37; }
         body { font-family: sans-serif; background: var(--bg); margin: 0; padding-bottom: 140px; }
         .header { background: white; padding: 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 20px; }
@@ -14,6 +14,10 @@
         .carrusel { width: 100%; height: 250px; background: #eee; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
         .carrusel img { flex: 0 0 100%; object-fit: cover; scroll-snap-align: start; }
         .info { padding: 15px; }
+        
+        /* Etiqueta de Importación */
+        .tag-import { background: #fff9c4; color: #827717; font-size: 10px; font-weight: bold; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 5px; border: 1px solid #fbc02d; }
+        
         .pago-60 { color: #128c7e; font-weight: bold; background: #e8f9f0; padding: 5px; border-radius: 5px; display: inline-block; margin-top: 5px; }
         .footer { position: fixed; bottom: 0; width: 100%; background: white; padding: 20px; box-sizing: border-box; text-align: center; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); z-index: 100; }
         
@@ -129,6 +133,7 @@
                         : '<img src="https://via.placeholder.com/400x300?text=Sin+Foto+en+Excel">' }
                 </div>
                 <div class="info">
+                    <div class="tag-import">📦 IMPORTACIÓN DIRECTA</div>
                     <p style="margin:0; font-size:18px;"><b>${p.nombre}</b></p>
                     <p style="margin:5px 0; color:#666;">Precio Total: $${p.precio.toFixed(2)}</p>
                     <div class="pago-60">Pago inicial (60%): $${precio60}</div>
@@ -188,14 +193,3 @@
         m += `\n\nQuedo atento/a para que me confirmen disponibilidad y los datos de la cuenta bancaria.`;
         
         window.open(`https://wa.me/${miTelefono}?text=${encodeURIComponent(m)}`);
-        cerrarModal();
-    }
-
-    window.onclick = function(event) {
-        if (event.target == document.getElementById('miModal')) cerrarModal();
-    }
-
-    cargar();
-</script>
-</body>
-</html>
