@@ -92,20 +92,14 @@
 
     async function cargar() {
         try {
-            // Usamos un timestamp para evitar caché
             const res = await fetch(SHEET_URL + '&cache=' + new Date().getTime());
             const text = await res.text();
-            
-            // Limpiamos las líneas y quitamos la cabecera
             const filas = text.trim().split(/\r?\n/).slice(1);
             
             productos = filas.map((f, i) => {
-                // Separamos por comas teniendo en cuenta que Google Sheets usa comillas en el CSV
                 let c = f.split('","').map(item => item.replace(/"/g, '').trim());
-                
                 if(c.length < 2) return null;
 
-                // Nombre [0], Precio [1], Fotos [2]
                 let nombre = c[0];
                 let precioTexto = c[1].replace('$', '').replace(/[^\d.,]/g, '').trim();
                 let precioFinal = parseFloat(precioTexto) || 0;
@@ -136,10 +130,10 @@
         cont.innerHTML = productos.map(p => {
             const precio60 = (p.precio * 0.6).toFixed(2);
             return `
-            <div class="card ${seleccionados.has(p.id) ? 'selected' : ''}" onclick="toggle(${p.id})">
-                <div class="carrusel">
+            <div id="card-${p.id}" class="card ${seleccionados.has(p.id) ? 'selected' : ''}" onclick="toggle(${p.id})">
+                <div class="carrusel" onclick="event.stopPropagation()">
                     ${p.fotos.length > 0 
-                        ? p.fotos.map(img => `<img src="${img}" onerror="this.src='https://via.placeholder.com/400x300?text=Error+en+Imagen'">`).join('')
+                        ? p.fotos.map(img => `<img src="${img}" referrerpolicy="no-referrer" onerror="this.src='https://via.placeholder.com/400x300?text=Error+en+Imagen'">`).join('')
                         : '<img src="https://via.placeholder.com/400x300?text=Sin+Foto+en+Excel">' }
                 </div>
                 <div class="info">
@@ -153,9 +147,17 @@
         actualizarResumen();
     }
 
+    // MEJORA: Esta función ahora solo cambia la clase CSS sin redibujar todo el HTML
     function toggle(id) {
-        seleccionados.has(id) ? seleccionados.delete(id) : seleccionados.add(id);
-        dibujar();
+        const card = document.getElementById(`card-${id}`);
+        if (seleccionados.has(id)) {
+            seleccionados.delete(id);
+            card.classList.remove('selected');
+        } else {
+            seleccionados.add(id);
+            card.classList.add('selected');
+        }
+        actualizarResumen();
     }
 
     function actualizarResumen() {
