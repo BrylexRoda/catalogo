@@ -9,33 +9,52 @@
         body { font-family: sans-serif; background: var(--bg); margin: 0; padding-bottom: 140px; }
         .header { background: white; padding: 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 20px; }
-        .card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); cursor: pointer; transition: 0.3s; position: relative; }
-        .card.selected { outline: 4px solid var(--primary); transform: scale(1.02); }
+        
+        /* CARD MEJORADA */
+        .card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); cursor: pointer; transition: 0.3s; position: relative; border: 2px solid transparent; }
+        .card.selected { border-color: var(--primary); transform: scale(1.01); background: #fafffb; }
+        
+        /* EL INDICADOR DE SELECCIÓN (EL CUADRADITO/CÍRCULO) */
+        .select-indicator {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            background: rgba(255,255,255,0.9);
+            border: 2px solid #ddd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: 0.3s;
+            font-size: 18px;
+            color: transparent;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .card.selected .select-indicator {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
         .carrusel { width: 100%; height: 250px; background: #eee; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
         .carrusel img { flex: 0 0 100%; object-fit: cover; scroll-snap-align: start; }
         .info { padding: 15px; }
         
-        /* Etiqueta de Importación */
         .tag-import { background: #fff9c4; color: #827717; font-size: 10px; font-weight: bold; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 5px; border: 1px solid #fbc02d; }
-        
         .pago-60 { color: #128c7e; font-weight: bold; background: #e8f9f0; padding: 5px; border-radius: 5px; display: inline-block; margin-top: 5px; }
-        .footer { position: fixed; bottom: 0; width: 100%; background: white; padding: 20px; box-sizing: border-box; text-align: center; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); z-index: 100; }
         
-        /* Botón Principal (Footer) */
+        .footer { position: fixed; bottom: 0; width: 100%; background: white; padding: 20px; box-sizing: border-box; text-align: center; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); z-index: 100; }
         .btn-enlistar { background: var(--dark); color: white; border: none; padding: 15px; border-radius: 50px; font-weight: bold; width: 100%; max-width: 400px; font-size: 16px; cursor: pointer; transition: 0.3s; }
-        .btn-enlistar:hover { background: #333; }
-
-        /* Botón WhatsApp (Modal) */
         .btn-ws-final { background: var(--primary); color: white; border: none; padding: 15px; border-radius: 50px; font-weight: bold; width: 100%; font-size: 16px; cursor: pointer; margin-top: 10px; }
-
-        .card.selected::after { content: "✅"; position: absolute; top: 10px; right: 10px; font-size: 24px; background: white; border-radius: 50%; padding: 2px; }
 
         /* MODAL */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); overflow-y: auto; }
         .modal-content { background: white; margin: 5% auto; padding: 25px; border-radius: 20px; width: 90%; max-width: 500px; position: relative; animation: slideIn 0.3s; }
         @keyframes slideIn { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .close { position: absolute; top: 15px; right: 20px; font-size: 25px; cursor: pointer; color: #888; }
-        
         .instrucciones { background: #f0f7f4; padding: 15px; border-radius: 12px; font-size: 14px; color: #2c3e50; line-height: 1.6; margin-bottom: 20px; border-left: 5px solid var(--accent); }
         .resumen-lista { text-align: left; border-top: 1px solid #eee; padding-top: 15px; max-height: 200px; overflow-y: auto; }
     </style>
@@ -59,31 +78,19 @@
     <div class="modal-content">
         <span class="close" onclick="cerrarModal()">&times;</span>
         <h2 style="margin-top:0; color: var(--dark); text-align: center;">🛒 Resumen de tu Pedido</h2>
-        
         <div class="instrucciones">
             <b style="color: var(--accent);">✅ Proceso de Compra Segura:</b><br>
-            • <b>Stock:</b> En el siguiente paso validaremos disponibilidad inmediata.<br>
-            • <b>Abono:</b> Se requiere un pago inicial del <b>60%</b> para separar y procesar tu pedido.<br>
-            • <b>Garantía:</b> El saldo restante se cancela previo al envío final para asegurar el despacho.<br>
-            • <b>Tiempos:</b> Realizamos envíos a todo el país. El tiempo estimado de entrega es de aproximadamente <b>un mes</b> desde el abono inicial.<br>
-            <small><i>Trabajamos con transparencia para brindarte los mejores modelos.</i></small>
+            • <b>Stock:</b> En el siguiente paso validaremos disponibilidad.<br>
+            • <b>Abono:</b> Se requiere un pago inicial del <b>60%</b>.<br>
+            • <b>Tiempos:</b> Entrega estimada en aproximadamente <b>un mes</b>.
         </div>
-
-        <div class="resumen-lista" id="listaResumen">
-        </div>
-
+        <div class="resumen-lista" id="listaResumen"></div>
         <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-        
-        <p style="font-size: 13px; color: #666; text-align: center; margin-bottom: 15px;">
-            Al presionar el botón, nos enviarás tu lista seleccionada por WhatsApp para validar stock y guiarte con el pago.
-        </p>
-
         <button class="btn-ws-final" onclick="enviarWhatsAppFinal()">Confirmar y Enviar a WhatsApp 📲</button>
     </div>
 </div>
 
 <script>
-    // Enlace directo para leer los datos de tu Google Sheet
     const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1ZSSPWWk7VS3L1BHNBFAw8Lo3KFUiOKwFJwKXOoRKvk4/gviz/tq?tqx=out:csv';
     const miTelefono = "593990267974"; 
 
@@ -99,17 +106,11 @@
             productos = filas.map((f, i) => {
                 let c = f.split('","').map(item => item.replace(/"/g, '').trim());
                 if(c.length < 2) return null;
-
-                let nombre = c[0];
-                let precioTexto = c[1].replace('$', '').replace(/[^\d.,]/g, '').trim();
-                let precioFinal = parseFloat(precioTexto) || 0;
-                let fotosRaw = c[2] || '';
-
                 return {
                     id: i,
-                    nombre: nombre,
-                    precio: precioFinal,
-                    fotos: fotosRaw.split('|').map(link => link.trim()).filter(l => l.includes('http'))
+                    nombre: c[0],
+                    precio: parseFloat(c[1].replace('$', '').replace(/[^\d.,]/g, '').trim()) || 0,
+                    fotos: (c[2] || '').split('|').map(link => link.trim()).filter(l => l.includes('http'))
                 };
             }).filter(p => p && p.nombre);
 
@@ -117,24 +118,20 @@
             dibujar();
         } catch (e) {
             document.getElementById('loading').innerText = "Error al conectar con la base de datos.";
-            console.error(e);
         }
     }
 
     function dibujar() {
         const cont = document.getElementById('contenedor');
-        if(productos.length === 0) {
-            cont.innerHTML = "<p style='text-align:center;'>No se encontraron productos en el Excel.</p>";
-            return;
-        }
         cont.innerHTML = productos.map(p => {
             const precio60 = (p.precio * 0.6).toFixed(2);
             return `
             <div id="card-${p.id}" class="card ${seleccionados.has(p.id) ? 'selected' : ''}" onclick="toggle(${p.id})">
+                <div class="select-indicator">✓</div>
                 <div class="carrusel" onclick="event.stopPropagation()">
                     ${p.fotos.length > 0 
-                        ? p.fotos.map(img => `<img src="${img}" referrerpolicy="no-referrer" onerror="this.src='https://via.placeholder.com/400x300?text=Error+en+Imagen'">`).join('')
-                        : '<img src="https://via.placeholder.com/400x300?text=Sin+Foto+en+Excel">' }
+                        ? p.fotos.map(img => `<img src="${img}" referrerpolicy="no-referrer" onerror="this.src='https://via.placeholder.com/400x300?text=Error+Imagen'">`).join('')
+                        : '<img src="https://via.placeholder.com/400x300?text=Sin+Foto">' }
                 </div>
                 <div class="info">
                     <div class="tag-import">📦 IMPORTACIÓN DIRECTA</div>
@@ -144,10 +141,8 @@
                 </div>
             </div>`;
         }).join('');
-        actualizarResumen();
     }
 
-    // MEJORA: Esta función ahora solo cambia la clase CSS sin redibujar todo el HTML
     function toggle(id) {
         const card = document.getElementById(`card-${id}`);
         if (seleccionados.has(id)) {
@@ -168,49 +163,35 @@
 
     function abrirModal() {
         if(!seleccionados.size) return alert("Por favor, selecciona los relojes que deseas enlistar.");
-        
-        let htmlLista = "<b>Relojes seleccionados:</b><br><ul style='padding-left:20px; margin-top:10px;'>";
+        let htmlLista = "<b>Relojes seleccionados:</b><ul>";
         let total60 = 0;
-        
         productos.forEach(p => {
             if(seleccionados.has(p.id)) {
-                htmlLista += `<li style="margin-bottom:8px;">${p.nombre} <br><small>Abono 60%: $${(p.precio * 0.6).toFixed(2)}</small></li>`;
+                htmlLista += `<li>${p.nombre} - $${(p.precio * 0.6).toFixed(2)}</li>`;
                 total60 += (p.precio * 0.6);
             }
         });
-        
-        htmlLista += `</ul><div style='background:#eee; padding:10px; border-radius:8px; text-align:center;'>
-                        <span style='font-size: 14px;'>TOTAL A PAGAR HOY:</span><br>
-                        <span style='font-size: 22px; font-weight:bold; color:var(--accent);'>$${total60.toFixed(2)}</span>
-                      </div>`;
-        
+        htmlLista += `</ul><div style='background:#eee; padding:10px; border-radius:8px; text-align:center;'><b>Total Abono: $${total60.toFixed(2)}</b></div>`;
         document.getElementById('listaResumen').innerHTML = htmlLista;
         document.getElementById('miModal').style.display = "block";
     }
 
-    function cerrarModal() {
-        document.getElementById('miModal').style.display = "none";
-    }
+    function cerrarModal() { document.getElementById('miModal').style.display = "none"; }
 
     function enviarWhatsAppFinal() {
-        let m = "¡Hola Brylexroda! He armado mi lista de pedido y deseo verificar stock:\n\n";
+        let m = "¡Hola Brylexroda! Deseo verificar stock de:\n\n";
         let t = 0;
         productos.forEach(p => {
             if(seleccionados.has(p.id)) {
-                m += `▪️ ${p.nombre} ($${p.precio.toFixed(2)})\n`;
+                m += `▪️ ${p.nombre}\n`;
                 t += (p.precio * 0.6);
             }
         });
-        m += `\n💰 *Total Abono Inicial (60%): $${t.toFixed(2)}*`;
-        m += `\n\nQuedo atento/a para que me confirmen disponibilidad y los datos de la cuenta bancaria.`;
-        
+        m += `\n💰 Total Abono (60%): $${t.toFixed(2)}`;
         window.open(`https://wa.me/${miTelefono}?text=${encodeURIComponent(m)}`);
-        cerrarModal();
     }
 
-    window.onclick = function(event) {
-        if (event.target == document.getElementById('miModal')) cerrarModal();
-    }
+    window.onclick = function(event) { if (event.target == document.getElementById('miModal')) cerrarModal(); }
 
     cargar();
 </script>
