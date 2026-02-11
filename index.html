@@ -23,9 +23,31 @@
             padding-bottom: 140px; 
         }
         
+        /* ENCABEZADO CENTRADO Y MEJORADO */
         .header { 
-            background: #1e293b; padding: 20px; text-align: center; 
+            background: #1e293b; 
+            padding: 30px 20px; 
+            text-align: center; 
             border-bottom: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header h1 { 
+            margin: 0; 
+            font-size: 2.2em; 
+            letter-spacing: 1px;
+        }
+
+        .header p { 
+            margin: 8px 0 0 0; 
+            color: var(--primary); 
+            font-weight: bold; 
+            font-size: 1.1em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
         /* FILTROS */
@@ -61,7 +83,6 @@
         
         .info { padding: 15px; }
         
-        /* ETIQUETA IMPORTACIÓN */
         .tag-import { 
             background: #fff9c4; color: #827717; font-size: 10px; font-weight: bold; 
             padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px; 
@@ -71,8 +92,7 @@
 
         /* FOOTER */
         .footer { position: fixed; bottom: 0; width: 100%; background: #1e293b; padding: 20px; text-align: center; border-top: 1px solid var(--border); z-index: 100; box-sizing: border-box; }
-        .btn-enlistar { background: var(--primary); color: #000; border: none; padding: 15px; border-radius: 50px; font-weight: bold; width: 100%; max-width: 400px; cursor: pointer; font-size: 16px; transition: 0.3s; }
-        .btn-enlistar:hover { background: #1eb956; }
+        .btn-enlistar { background: var(--primary); color: #000; border: none; padding: 15px; border-radius: 50px; font-weight: bold; width: 100%; max-width: 400px; cursor: pointer; font-size: 16px; }
 
         /* MODAL */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); overflow-y: auto; }
@@ -80,7 +100,6 @@
         @keyframes slideIn { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .close { position: absolute; top: 15px; right: 20px; font-size: 25px; cursor: pointer; color: var(--text-secondary); }
         
-        /* INSTRUCCIONES COMPRA SEGURA */
         .instrucciones { 
             background: #f0f7f4; padding: 15px; border-radius: 12px; font-size: 14px; 
             color: #2c3e50; line-height: 1.6; margin-bottom: 20px; border-left: 5px solid var(--accent); 
@@ -97,8 +116,9 @@
 <body onclick="cerrarFiltrosFuera(event)">
 
 <div class="header">
-    <h1 style="margin:0;">⌚ BrylexRoda</h1>
-    <p style="margin:5px 0; color:var(--primary); font-weight: bold;">Catálogo de Relojeria</p>
+    <h1>BrylexRoda</h1>
+    <p>Catálogo de Relojería</p>
+    <span style="font-size: 12px; color: var(--text-secondary); margin-top: 5px;">Modelos de Importación</span>
 </div>
 
 <div class="contenedor-filtros" id="areaFiltros">
@@ -135,19 +155,14 @@
         <div class="instrucciones">
             <b style="color: var(--accent);">✅ Proceso de Compra Segura:</b><br>
             • <b>Stock:</b> En el siguiente paso validaremos disponibilidad inmediata.<br>
-            • <b>Abono:</b> Se requiere un pago inicial del <b>60%</b> para separar y procesar tu pedido.<br>
+            • <b>Abono:</b> Pago inicial del <b>60%</b> para procesar tu pedido.<br>
             • <b>Garantía:</b> El saldo restante se cancela al recibir el producto.<br>
-            • <b>Tiempos:</b> El tiempo estimado de entrega es de aproximadamente <b>12 a 15 días laborables</b>.<br>
-            <small><i>Trabajamos con transparencia para brindarte los mejores modelos.</i></small>
+            • <b>Entrega:</b> Tiempo estimado: <b>12 a 15 días laborables</b>.<br>
         </div>
 
         <div class="resumen-lista" id="listaResumen"></div>
 
-        <p style="font-size: 13px; color: var(--text-secondary); text-align: center; margin-top: 15px;">
-            Al confirmar, nos enviarás tu lista por WhatsApp para validar stock y guiarte con el pago.
-        </p>
-
-        <button onclick="enviarWhatsAppFinal()" style="background:var(--primary); width:100%; padding:15px; border-radius:50px; border:none; font-weight:bold; cursor:pointer; font-size: 16px; margin-top: 10px; color: #000;">Confirmar y Enviar a WhatsApp 📲</button>
+        <button onclick="enviarWhatsAppFinal()" style="background:var(--primary); width:100%; padding:15px; border-radius:50px; border:none; font-weight:bold; cursor:pointer; font-size: 16px; margin-top: 15px; color: #000;">Confirmar y Enviar a WhatsApp 📲</button>
     </div>
 </div>
 
@@ -277,23 +292,19 @@
     }
 
     function abrirModal() {
-        if(!seleccionados.size) return alert("Por favor, selecciona algún reloj primero.");
-        
-        let htmlLista = "<b>Relojes seleccionados:</b><br><ul style='padding-left: 20px; margin-top:10px;'>"; 
+        if(!seleccionados.size) return alert("Selecciona algún reloj primero.");
+        let htmlLista = "<b>Relojes en tu lista:</b><br><ul style='padding-left: 20px; margin-top:10px;'>"; 
         let total60 = 0;
-        
         productos.forEach(p => { 
             if(seleccionados.has(p.id)) { 
                 htmlLista += `<li style='margin-bottom:10px;'>${p.nombre}<br><small style="color:var(--text-secondary)">Abono 60%: $${(p.precio * 0.6).toFixed(2)}</small></li>`; 
                 total60 += (p.precio * 0.6); 
             } 
         });
-
         htmlLista += `</ul><div class='total-pago-caja'>
-                <span style='font-size:14px; color:var(--text-secondary)'>TOTAL A PAGAR HOY (60%):</span><br>
+                <span style='font-size:14px; color:var(--text-secondary)'>TOTAL ABONO HOY (60%):</span><br>
                 <span style='font-size:24px; font-weight:bold; color:var(--primary)'>$${total60.toFixed(2)}</span>
               </div>`;
-              
         document.getElementById('listaResumen').innerHTML = htmlLista;
         document.getElementById('miModal').style.display = "block";
     }
@@ -301,11 +312,11 @@
     function cerrarModal() { document.getElementById('miModal').style.display = "none"; }
 
     function enviarWhatsAppFinal() {
-        let m = "¡Hola Brylexroda! He armado mi lista de pedido y deseo verificar stock:\n\n";
+        let m = "¡Hola Brylexroda! He armado mi pedido en el Catálogo de Relojería:\n\n";
         let t = 0;
         productos.forEach(p => { if(seleccionados.has(p.id)) { m += `▪️ ${p.nombre} ($${p.precio.toFixed(2)})\n`; t += (p.precio * 0.6); }});
         m += `\n💰 *Total Abono Inicial (60%): $${t.toFixed(2)}*`;
-        m += `\n\nEntiendo que el saldo restante se cancela al recibir. Quedo atento/a.`;
+        m += `\n\nQuedo atento/a para confirmar disponibilidad y pago.`;
         window.open(`https://wa.me/${miTelefono}?text=${encodeURIComponent(m)}`);
     }
 
