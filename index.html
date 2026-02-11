@@ -44,15 +44,16 @@
             cursor: pointer; transition: 0.3s; border: 2px solid transparent; 
             position: relative;
         }
-        .card.selected { border-color: var(--primary); background: #1e3a2f; }
+        .card.selected { border-color: var(--primary); background: #1e3a2f; transform: scale(1.01); }
         
         .select-indicator { 
-            position: absolute; top: 15px; right: 15px; width: 28px; height: 28px; 
-            background: rgba(0,0,0,0.6); border: 2px solid #fff; border-radius: 50%; 
+            position: absolute; top: 15px; right: 15px; width: 30px; height: 30px; 
+            background: rgba(255,255,255,0.9); border: 2px solid #ddd; border-radius: 50%; 
             display: flex; align-items: center; justify-content: center; z-index: 10; 
-            color: transparent; font-size: 18px; font-weight: bold; transition: 0.2s;
+            font-size: 18px; color: transparent; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: 0.2s;
         }
-        .card.selected .select-indicator { background: var(--primary); border-color: var(--primary); color: #000; }
+        .card.selected .select-indicator { background: var(--primary); border-color: var(--primary); color: white; }
 
         .carrusel { width: 100%; height: 250px; background: #000; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
         .carrusel img { flex: 0 0 100%; object-fit: cover; scroll-snap-align: start; }
@@ -69,15 +70,16 @@
         .modal-content { background: #1e293b; margin: 5% auto; padding: 25px; border-radius: 20px; width: 90%; max-width: 500px; color: #fff; position: relative; }
         .close { position: absolute; top: 15px; right: 20px; font-size: 25px; cursor: pointer; color: var(--text-secondary); }
         
-        /* ESTILO PARA LOS TÉRMINOS */
+        /* ESTILO PARA LOS TÉRMINOS (RESTAURADOS) */
         .terminos-caja { 
             background: rgba(255,255,255,0.05); 
             padding: 15px; 
             border-radius: 10px; 
-            font-size: 13px; 
-            color: var(--text-secondary); 
+            font-size: 14px; 
+            color: #cbd5e1; 
             margin-top: 15px; 
-            border: 1px dashed var(--border);
+            border: 1px solid var(--border);
+            line-height: 1.5;
         }
     </style>
 </head>
@@ -110,7 +112,7 @@
 </div>
 
 <div class="footer">
-    <div id="resumen" style="margin-bottom:10px; font-weight:bold; font-size: 18px;">Total Entrada (60%): $0.00</div>
+    <div id="resumen" style="margin-bottom:10px; font-weight:bold; font-size: 18px;">Total Pago de Entrada (60%): $0.00</div>
     <button class="btn-enlistar" onclick="abrirModal()">Ver mi Lista de Pedido 📋</button>
 </div>
 
@@ -122,13 +124,13 @@
         <div id="listaResumen" style="margin: 20px 0;"></div>
 
         <div class="terminos-caja">
-            <strong style="color: #fff;">⚠️ Términos de Compra:</strong><br>
-            • Pago inicial del 60% para procesar importación.<br>
-            • El saldo restante se cancela al recibir el producto.<br>
-            • Tiempo estimado de entrega: 12 a 15 días laborables.
+            <strong style="color: var(--primary);">Términos de Compra:</strong><br>
+            • Se requiere el pago del <b>60% de entrada</b> para procesar el pedido.<br>
+            • El <b>40% restante</b> se cancela al momento de la entrega.<br>
+            • Tiempo de entrega estimado: <b>12 a 15 días laborables</b>.
         </div>
 
-        <button onclick="enviarWhatsAppFinal()" style="background:var(--primary); width:100%; padding:15px; border-radius:50px; border:none; font-weight:bold; cursor:pointer; font-size: 16px; margin-top: 20px;">Confirmar y Enviar a WhatsApp 📲</button>
+        <button onclick="enviarWhatsAppFinal()" style="background:var(--primary); width:100%; padding:15px; border-radius:50px; border:none; font-weight:bold; cursor:pointer; font-size: 16px; margin-top: 20px; color: #000;">Confirmar y Enviar a WhatsApp 📲</button>
     </div>
 </div>
 
@@ -228,7 +230,7 @@
         const visible = productosFiltrados.slice(0, limite);
         
         cont.innerHTML = visible.map(p => `
-            <div class="card ${seleccionados.has(p.id) ? 'selected' : ''}" onclick="toggleSelect(${p.id})">
+            <div id="card-${p.id}" class="card ${seleccionados.has(p.id) ? 'selected' : ''}" onclick="toggleSelect(${p.id})">
                 <div class="select-indicator">✓</div>
                 <div class="carrusel" onclick="event.stopPropagation()">
                     ${p.fotos.length > 0 ? p.fotos.map(img => `<img src="${img}" loading="lazy">`).join('') : '<img src="https://via.placeholder.com/400x300?text=Sin+Foto">'}
@@ -244,17 +246,21 @@
     }
 
     function toggleSelect(id) {
-        if (seleccionados.has(id)) seleccionados.delete(id);
-        else seleccionados.add(id);
-        
+        const card = document.getElementById(`card-${id}`);
+        if (seleccionados.has(id)) {
+            seleccionados.delete(id);
+            if(card) card.classList.remove('selected');
+        } else {
+            seleccionados.add(id);
+            if(card) card.classList.add('selected');
+        }
         actualizarResumen();
-        dibujar();
     }
 
     function actualizarResumen() {
         let total = 0;
         productos.forEach(p => { if(seleccionados.has(p.id)) total += (p.precio * 0.6); });
-        document.getElementById('resumen').innerText = `Total Entrada (60%): $${total.toFixed(2)}`;
+        document.getElementById('resumen').innerText = `Total Pago de Entrada (60%): $${total.toFixed(2)}`;
     }
 
     function abrirModal() {
@@ -272,7 +278,7 @@
         let t = 0;
         productos.forEach(p => { if(seleccionados.has(p.id)) { m += `▪️ ${p.nombre}\n`; t += (p.precio * 0.6); }});
         m += `\n💰 Total Abono (60%): $${t.toFixed(2)}`;
-        m += `\n\nEntiendo que debo cancelar el saldo al recibir el producto.`;
+        m += `\n\nEntiendo los términos de importación (60% entrada y 40% al recibir).`;
         window.open(`https://wa.me/${miTelefono}?text=${encodeURIComponent(m)}`);
     }
 
