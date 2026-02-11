@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo de Relojes BrylexRoda</title>
+    <title>Catálogo BrylexRoda</title>
     <style>
         :root { 
             --primary: #25d366; 
             --bg: #0f172a;       
             --card-bg: #1e293b;  
             --text-main: #ffffff;      
-            --accent: #10b981; 
             --text-secondary: #94a3b8;
             --border: #334155;
         }
@@ -24,120 +23,231 @@
         }
         
         .header { 
-            background: #1e293b; 
-            padding: 20px; 
-            text-align: center; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
+            background: #1e293b; padding: 20px; text-align: center; 
             border-bottom: 1px solid var(--border);
         }
 
         /* FILTROS */
-        .contenedor-filtros { 
-            background: #1e293b; 
-            border-bottom: 1px solid var(--border); 
-            position: sticky; 
-            top: 0; 
-            z-index: 100; 
-        }
-        .btn-abrir-filtros { 
-            width: 100%; padding: 12px; background: transparent; border: none; 
-            font-weight: bold; cursor: pointer; display: flex; align-items: center; 
-            justify-content: center; gap: 10px; color: #fff;
-        }
-        .panel-filtros { 
-            display: none; padding: 15px; background: #1e293b; 
-            border-top: 1px solid var(--border); 
-        }
+        .contenedor-filtros { background: #1e293b; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border); }
+        .btn-abrir-filtros { width: 100%; padding: 15px; background: transparent; border: none; color: #fff; font-weight: bold; cursor: pointer; }
+        .panel-filtros { display: none; padding: 15px; border-top: 1px solid var(--border); }
         .panel-filtros.active { display: block; }
-        .seccion-filtro label { 
-            display: block; font-size: 12px; font-weight: bold; margin-bottom: 8px; 
-            color: var(--text-secondary); text-transform: uppercase; 
-        }
         
-        .chips-container { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
-        .chip { 
-            background: #334155; color: #fff; padding: 8px 15px; border-radius: 20px; 
-            font-size: 13px; cursor: pointer; white-space: nowrap; border: 1px solid transparent; 
-        }
-        .chip.active { background: var(--primary); color: #000; font-weight: bold; }
+        .chips-container { display: flex; gap: 8px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
+        .chip { background: #334155; color: #fff; padding: 8px 15px; border-radius: 20px; font-size: 13px; cursor: pointer; border: none; white-space: nowrap; }
+        .chip.active { background: var(--primary); color: #000; }
 
         /* GRID */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 20px; }
         .card { 
             background: var(--card-bg); border-radius: 15px; overflow: hidden; 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2); cursor: pointer; transition: 0.3s; 
-            position: relative; border: 2px solid transparent; 
+            cursor: pointer; transition: 0.3s; border: 2px solid transparent; 
         }
         .card.selected { border-color: var(--primary); background: #1e3a2f; }
         
-        .select-indicator { 
-            position: absolute; top: 15px; right: 15px; width: 30px; height: 30px; 
-            background: rgba(0,0,0,0.5); border: 2px solid #fff; border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; z-index: 10; color: transparent; 
-        }
-        .card.selected .select-indicator { background: var(--primary); border-color: var(--primary); color: #000; }
-
         .carrusel { width: 100%; height: 250px; background: #000; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
-        .carrusel img { flex: 0 0 100%; object-fit: cover; scroll-snap-align: start; }
+        .carrusel img { flex: 0 0 100%; object-fit: cover; }
         
         .info { padding: 15px; }
-        .pago-60 { 
-            color: var(--primary); font-weight: bold; background: rgba(37, 211, 102, 0.1); 
-            padding: 8px; border-radius: 5px; display: inline-block; margin-top: 5px; 
-        }
+        .pago-60 { color: var(--primary); font-weight: bold; background: rgba(37, 211, 102, 0.1); padding: 5px; border-radius: 5px; display: inline-block; }
 
-        .contenedor-ver-mas { text-align: center; padding: 20px; }
-        .btn-ver-mas { 
-            background: transparent; border: 2px solid var(--primary); color: var(--primary); 
-            padding: 10px 30px; border-radius: 25px; font-weight: bold; cursor: pointer; 
-        }
-
-        .footer { 
-            position: fixed; bottom: 0; width: 100%; background: #1e293b; padding: 20px; 
-            box-sizing: border-box; text-align: center; box-shadow: 0 -5px 20px rgba(0,0,0,0.4); 
-            z-index: 100; border-top: 1px solid var(--border);
-        }
-        .btn-enlistar { 
-            background: var(--primary); color: #000; border: none; padding: 15px; 
-            border-radius: 50px; font-weight: bold; width: 100%; max-width: 400px; cursor: pointer; 
-        }
+        /* FOOTER */
+        .footer { position: fixed; bottom: 0; width: 100%; background: #1e293b; padding: 20px; text-align: center; border-top: 1px solid var(--border); z-index: 100; box-sizing: border-box; }
+        .btn-enlistar { background: var(--primary); color: #000; border: none; padding: 15px; border-radius: 50px; font-weight: bold; width: 100%; max-width: 400px; cursor: pointer; }
         
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); }
-        .modal-content { 
-            background: #1e293b; color: #fff; margin: 10% auto; padding: 25px; 
-            border-radius: 20px; width: 90%; max-width: 500px; position: relative; 
-        }
-        .close { position: absolute; top: 15px; right: 20px; font-size: 25px; cursor: pointer; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); }
+        .modal-content { background: #1e293b; margin: 10% auto; padding: 25px; border-radius: 20px; width: 90%; max-width: 500px; }
     </style>
 </head>
 <body onclick="cerrarFiltrosFuera(event)">
 
 <div class="header">
-    <h1 style="margin:0; color:#fff;">⌚ BrylexRoda</h1>
-    <p style="margin:5px 0; color:var(--primary); font-weight:bold;">Catálogo Modo Oscuro</p>
+    <h1 style="margin:0;">⌚ BrylexRoda</h1>
+    <p style="margin:5px 0; color:var(--primary);">Catálogo de Relojes</p>
 </div>
 
 <div class="contenedor-filtros" id="areaFiltros">
-    <button class="btn-abrir-filtros" onclick="toggleFiltros(event)">
-        <span>🔍 Filtrar por Marca o Precio</span>
-        <span id="flechaFiltro">▼</span>
-    </button>
+    <button class="btn-abrir-filtros" onclick="toggleFiltros(event)">🔍 Filtros (Marca / Precio)</button>
     <div class="panel-filtros" id="panelFiltros">
-        <div class="seccion-filtro">
-            <label>Rango de Precio:</label>
-            <div class="chips-container">
-                <button class="chip chip-precio active" onclick="filtrarPrecio('todas', this)">Todos</button>
-                <button class="chip chip-precio" onclick="filtrarPrecio('50-100', this)">$50 - $100</button>
-                <button class="chip chip-precio" onclick="filtrarPrecio('100-200', this)">$100 - $200</button>
-            </div>
+        <div class="chips-container">
+            <button class="chip chip-precio active" onclick="filtrarPrecio('todas', this)">Todos los precios</button>
+            <button class="chip chip-precio" onclick="filtrarPrecio('50-100', this)">$50 - $100</button>
+            <button class="chip chip-precio" onclick="filtrarPrecio('100-200', this)">$100 - $200</button>
         </div>
-        <div class="seccion-filtro">
-            <label>Marcas:</label>
-            <div class="chips-container" id="contenedorMarcas">
-                <button class="chip chip-marca active" onclick="filtrarMarca('Todas', this)">Todas</button>
-            </div>
+        <div class="chips-container" id="contenedorMarcas">
+            <button class="chip chip-marca active" onclick="filtrarMarca('Todas', this)">Todas las marcas</button>
         </div>
     </div>
 </div>
 
-<div id="loading" style="text-align:center; padding:50px; color: var(--text-
+<div id="loading" style="text-align:center; padding:50px;">Cargando productos...</div>
+<div class="grid" id="contenedor"></div>
+
+<div id="contenedorVerMas" style="text-align:center; padding: 20px; display:none;">
+    <button onclick="cargarMas()" style="background:transparent; border:2px solid var(--primary); color:var(--primary); padding:10px 20px; border-radius:20px; cursor:pointer;">Ver más</button>
+</div>
+
+<div class="footer">
+    <div id="resumen" style="margin-bottom:10px; font-weight:bold;">Total Entrada (60%): $0.00</div>
+    <button class="btn-enlistar" onclick="abrirModal()">Ver mi Lista 📋</button>
+</div>
+
+<div id="miModal" class="modal">
+    <div class="modal-content">
+        <h2 style="color:var(--primary); text-align:center;">Tu Pedido</h2>
+        <div id="listaResumen"></div>
+        <button onclick="enviarWhatsAppFinal()" style="background:var(--primary); width:100%; padding:15px; border-radius:50px; border:none; font-weight:bold; margin-top:20px; cursor:pointer;">Enviar a WhatsApp</button>
+        <button onclick="cerrarModal()" style="background:transparent; color:#fff; width:100%; border:none; margin-top:10px; cursor:pointer;">Cerrar</button>
+    </div>
+</div>
+
+<script>
+    // URL y Configuración
+    const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1ZSSPWWk7VS3L1BHNBFAw8Lo3KFUiOKwFJwKXOoRKvk4/gviz/tq?tqx=out:csv';
+    const miTelefono = "593990267974"; 
+
+    let productos = [];
+    let productosFiltrados = [];
+    let seleccionados = new Set();
+    let marcaSeleccionada = "Todas";
+    let rangoPrecio = "todas";
+    let paginaActual = 1;
+    const itemsPorPagina = 10;
+
+    // 1. CARGA DE DATOS
+    async function cargar() {
+        try {
+            const res = await fetch(SHEET_URL + '&cache=' + new Date().getTime());
+            if (!res.ok) throw new Error("Error al conectar con Google Sheets");
+            const text = await res.text();
+            
+            // Procesar filas de forma más segura
+            const filas = text.trim().split(/\r?\n/).slice(1);
+            productos = filas.map((f, i) => {
+                // Limpiar comillas y separar por coma (ajuste para CSV de Google)
+                let c = f.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(item => item.replace(/"/g, '').trim());
+                if(c.length < 2) return null;
+                return {
+                    id: i,
+                    nombre: c[0],
+                    marca: c[0].split(' ')[0],
+                    precio: parseFloat(c[1].replace('$', '').replace(/[^\d.,]/g, '').trim()) || 0,
+                    fotos: (c[2] || '').split('|').map(link => link.trim()).filter(l => l.startsWith('http'))
+                };
+            }).filter(p => p !== null);
+
+            generarMarcas();
+            document.getElementById('loading').style.display = 'none';
+            aplicarFiltros();
+        } catch (e) {
+            document.getElementById('loading').innerHTML = `<p style="color:red;">Error: No se pudieron cargar los productos.<br>Verifica que el Google Sheet sea público.</p>`;
+            console.error(e);
+        }
+    }
+
+    // 2. FILTROS
+    function toggleFiltros(e) {
+        if(e) e.stopPropagation();
+        document.getElementById('panelFiltros').classList.toggle('active');
+    }
+
+    function cerrarFiltrosFuera(e) {
+        const area = document.getElementById('areaFiltros');
+        if (!area.contains(e.target)) document.getElementById('panelFiltros').classList.remove('active');
+    }
+
+    function generarMarcas() {
+        const cont = document.getElementById('contenedorMarcas');
+        const marcas = [...new Set(productos.map(p => p.marca))];
+        marcas.forEach(m => {
+            const btn = document.createElement('button');
+            btn.className = 'chip chip-marca';
+            btn.innerText = m;
+            btn.onclick = (e) => { e.stopPropagation(); filtrarMarca(m, btn); };
+            cont.appendChild(btn);
+        });
+    }
+
+    function filtrarMarca(marca, el) {
+        document.querySelectorAll('.chip-marca').forEach(c => c.classList.remove('active'));
+        el.classList.add('active');
+        marcaSeleccionada = marca;
+        aplicarFiltros();
+    }
+
+    function filtrarPrecio(rango, el) {
+        document.querySelectorAll('.chip-precio').forEach(c => c.classList.remove('active'));
+        el.classList.add('active');
+        rangoPrecio = rango;
+        aplicarFiltros();
+    }
+
+    function aplicarFiltros() {
+        paginaActual = 1;
+        productosFiltrados = productos.filter(p => {
+            const m = marcaSeleccionada === "Todas" || p.marca === marcaSeleccionada;
+            let pr = true;
+            if(rangoPrecio === '50-100') pr = (p.precio >= 50 && p.precio <= 100);
+            if(rangoPrecio === '100-200') pr = (p.precio > 100 && p.precio <= 200);
+            return m && pr;
+        });
+        dibujar();
+    }
+
+    // 3. DIBUJAR
+    function cargarMas() { paginaActual++; dibujar(); }
+
+    function dibujar() {
+        const cont = document.getElementById('contenedor');
+        const limite = paginaActual * itemsPorPagina;
+        const visible = productosFiltrados.slice(0, limite);
+        
+        cont.innerHTML = visible.map(p => `
+            <div class="card ${seleccionados.has(p.id) ? 'selected' : ''}" onclick="toggleSelect(${p.id})">
+                <div class="carrusel" onclick="event.stopPropagation()">
+                    ${p.fotos.map(img => `<img src="${img}" loading="lazy">`).join('')}
+                </div>
+                <div class="info">
+                    <p style="margin:0;"><b>${p.nombre}</b></p>
+                    <p style="color:var(--text-secondary); margin:5px 0;">Total: $${p.precio.toFixed(2)}</p>
+                    <div class="pago-60">Abono 60%: $${(p.precio * 0.6).toFixed(2)}</div>
+                </div>
+            </div>`).join('');
+
+        document.getElementById('contenedorVerMas').style.display = productosFiltrados.length > limite ? 'block' : 'none';
+    }
+
+    // 4. SELECCIÓN Y WHATSAPP
+    function toggleSelect(id) {
+        if (seleccionados.has(id)) seleccionados.delete(id);
+        else seleccionados.add(id);
+        
+        let total = 0;
+        productos.forEach(p => { if(seleccionados.has(p.id)) total += (p.precio * 0.6); });
+        document.getElementById('resumen').innerText = `Total Entrada (60%): $${total.toFixed(2)}`;
+        dibujar();
+    }
+
+    function abrirModal() {
+        if(!seleccionados.size) return alert("Selecciona productos.");
+        let h = "<ul>"; let t = 0;
+        productos.forEach(p => { if(seleccionados.has(p.id)) { h += `<li>${p.nombre}</li>`; t += (p.precio * 0.6); } });
+        document.getElementById('listaResumen').innerHTML = h + `</ul><p>Total Abono: <b>$${t.toFixed(2)}</b></p>`;
+        document.getElementById('miModal').style.display = "block";
+    }
+
+    function cerrarModal() { document.getElementById('miModal').style.display = "none"; }
+
+    function enviarWhatsAppFinal() {
+        let m = "¡Hola Brylexroda! Mi pedido:\n";
+        let t = 0;
+        productos.forEach(p => { if(seleccionados.has(p.id)) { m += `▪️ ${p.nombre}\n`; t += (p.precio * 0.6); }});
+        m += `\nTotal Abono: $${t.toFixed(2)}`;
+        window.open(`https://wa.me/${miTelefono}?text=${encodeURIComponent(m)}`);
+    }
+
+    // Iniciar
+    cargar();
+</script>
+</body>
+</html>
