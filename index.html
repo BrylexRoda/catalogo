@@ -35,7 +35,7 @@
         .header h1 { margin: 0; font-size: 1.8em; letter-spacing: 1px; }
         .header p { margin: 5px 0; color: var(--primary); font-weight: bold; font-size: 1em; text-transform: uppercase; }
 
-        /* BUSCADOR CENTRAL */
+        /* BUSCADOR */
         .contenedor-busqueda {
             background: #1e293b;
             padding: 10px 20px 20px 20px;
@@ -55,7 +55,6 @@
             font-size: 16px;
             text-align: center;
         }
-        .input-busqueda:focus { border-color: var(--primary); }
 
         /* FILTROS */
         .contenedor-filtros { background: #1e293b; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border); }
@@ -67,7 +66,7 @@
         .chip { background: #334155; color: #fff; padding: 8px 15px; border-radius: 20px; font-size: 12px; cursor: pointer; border: none; white-space: nowrap; }
         .chip.active { background: var(--primary); color: #000; }
 
-        /* GRID: 2 COLUMNAS EN MÓVIL */
+        /* GRID RESPONSIVO: 2 COLUMNAS EN MÓVIL */
         .grid { 
             display: grid; 
             grid-template-columns: repeat(2, 1fr); 
@@ -85,7 +84,7 @@
         }
         .card.selected { border-color: var(--primary); background: #1e3a2f; transform: scale(1.02); }
         
-        /* PANEL DE DESCRIPCIÓN (HOVER) */
+        /* PESTAÑA DE ESPECIFICACIONES (COLUMNA D) */
         .detalles-overlay {
             position: absolute;
             bottom: -100%;
@@ -99,7 +98,7 @@
             font-size: 0.8em;
             border-top: 2px solid var(--primary);
             z-index: 20;
-            pointer-events: none; /* Evita que interfiera con el clic de selección */
+            pointer-events: none;
         }
         .card:hover .detalles-overlay { bottom: 0; }
 
@@ -126,10 +125,14 @@
         .footer-totales { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
         .btn-enlistar { background: var(--primary); color: #000; border: none; padding: 12px; border-radius: 50px; font-weight: bold; width: 100%; cursor: pointer; font-size: 16px; }
 
-        /* MODAL */
+        /* MODAL CON REQUISITOS */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); overflow-y: auto; }
-        .modal-content { background: #1e293b; margin: 5% auto; padding: 25px; border-radius: 20px; width: 90%; max-width: 450px; color: #fff; position: relative; }
+        .modal-content { background: #1e293b; margin: 5% auto; padding: 25px; border-radius: 20px; width: 90%; max-width: 450px; color: #fff; position: relative; animation: slideIn 0.3s; }
+        @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .close { position: absolute; top: 15px; right: 20px; font-size: 25px; cursor: pointer; color: var(--text-secondary); }
+        
+        .instrucciones { background: #f0f7f4; padding: 12px; border-radius: 10px; font-size: 13px; color: #2c3e50; line-height: 1.4; margin-bottom: 15px; border-left: 5px solid var(--accent); }
+        .total-pago-caja { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-top: 10px; border: 1px solid var(--border); }
     </style>
 </head>
 <body onclick="cerrarFiltrosFuera(event)">
@@ -171,13 +174,30 @@
 <div id="miModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="cerrarModal()">&times;</span>
-        <h2 style="color:var(--primary); text-align:center; margin-top: 0;">🛒 Resumen de Compra</h2>
-        <div id="listaResumen" style="max-height: 200px; overflow-y: auto; margin-bottom: 15px; border-bottom: 1px solid var(--border);"></div>
-        <div style="padding: 10px 0;">
-            <div style="display:flex; justify-content:space-between;"><span>Total Final:</span> <span id="modalTotalFinal">$0.00</span></div>
-            <div style="display:flex; justify-content:space-between; font-weight:bold; color:var(--primary); font-size:1.2em;"><span>Abono (60%):</span> <span id="modalAbonoHoy">$0.00</span></div>
+        <h2 style="color:var(--primary); text-align:center; margin-top: 0;">🛒 Tu Pedido</h2>
+        
+        <div class="instrucciones">
+            <b style="color: var(--accent);">✅ Requisitos de Compra:</b><br>
+            • <b>Abono:</b> Pago inicial del <b>60%</b> para importar.<br>
+            • <b>Garantía:</b> Saldo restante antes del envío final.<br>
+            • <b>Entrega:</b> Tiempo estimado: <b>Máximo 1 mes</b>.<br>
+            • <b>Stock:</b> Validaremos disponibilidad al recibir el mensaje.
         </div>
-        <button onclick="enviarWhatsAppFinal()" style="background:var(--primary); width:100%; padding:15px; border-radius:50px; border:none; font-weight:bold; cursor:pointer; margin-top: 15px;">Confirmar Pedido 📲</button>
+
+        <div id="listaResumen" style="max-height: 180px; overflow-y: auto; margin-bottom: 10px; border-bottom: 1px solid var(--border);"></div>
+
+        <div class="total-pago-caja">
+            <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size: 0.9em;">
+                <span>Valor Total:</span>
+                <span id="modalTotalFinal">$0.00</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-weight:bold; color:var(--primary); font-size:1.2em;">
+                <span>Abono Hoy (60%):</span>
+                <span id="modalAbonoHoy">$0.00</span>
+            </div>
+        </div>
+
+        <button onclick="enviarWhatsAppFinal()" style="background:var(--primary); width:100%; padding:15px; border-radius:50px; border:none; font-weight:bold; cursor:pointer; font-size: 16px; margin-top: 20px; color: #000;">Confirmar por WhatsApp 📲</button>
     </div>
 </div>
 
@@ -206,7 +226,7 @@
                     marca: c[0].split(' ')[0],
                     precio: parseFloat(c[1].replace('$', '').replace(/[^\d.,]/g, '').trim()) || 0,
                     fotos: (c[2] || '').split('|').map(link => link.trim()).filter(l => l.startsWith('http')),
-                    descripcion: c[3] || "Especificaciones no disponibles." // COLUMNA D
+                    descripcion: c[3] || "Especificaciones no disponibles."
                 };
             }).filter(p => p !== null);
 
@@ -265,7 +285,7 @@
         cont.innerHTML = productosFiltrados.map(p => `
             <div class="card ${seleccionados.has(p.id) ? 'selected' : ''}" onclick="toggleSelect(${p.id})">
                 <div class="detalles-overlay">
-                    <strong>Detalles:</strong><br>${p.descripcion}
+                    <strong>Especificaciones:</strong><br>${p.descripcion}
                 </div>
                 <div class="select-indicator"></div>
                 <div class="carrusel" onclick="event.stopPropagation()">
@@ -295,10 +315,10 @@
     }
 
     function abrirModal() {
-        if(!seleccionados.size) return alert("Selecciona un reloj.");
-        let html = "<ul>", tf = 0, ta = 0;
+        if(!seleccionados.size) return alert("Selecciona algún reloj primero.");
+        let html = "<ul style='padding-left: 20px;'>", tf = 0, ta = 0;
         productos.forEach(p => { if(seleccionados.has(p.id)) { 
-            html += `<li>${p.nombre} ($${p.precio.toFixed(2)})</li>`; 
+            html += `<li style='margin-bottom:8px; font-size:14px;'>${p.nombre} ($${p.precio.toFixed(2)})</li>`; 
             tf += p.precio; ta += (p.precio * 0.6);
         }});
         document.getElementById('listaResumen').innerHTML = html + "</ul>";
@@ -310,13 +330,15 @@
     function cerrarModal() { document.getElementById('miModal').style.display = "none"; }
 
     function enviarWhatsAppFinal() {
-        let m = "¡Hola Brylexroda! Pedido de catálogo:\n\n";
+        let m = "¡Hola Brylexroda! He armado mi pedido:\n\n";
         let tf = 0; let ta = 0;
         productos.forEach(p => { if(seleccionados.has(p.id)) { 
             m += `▪️ ${p.nombre} ($${p.precio.toFixed(2)})\n`; 
             tf += p.precio; ta += (p.precio * 0.6);
         }});
-        m += `\n💰 *Total: $${tf.toFixed(2)}*\n✅ *Abono (60%): $${ta.toFixed(2)}*`;
+        m += `\n💵 Valor Total: $${tf.toFixed(2)}`;
+        m += `\n💰 *Abono Inicial (60%): $${ta.toFixed(2)}*`;
+        m += `\n\nQuedo atento/a para confirmar disponibilidad.`;
         window.open(`https://wa.me/${miTelefono}?text=${encodeURIComponent(m)}`);
     }
 
