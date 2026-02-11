@@ -42,34 +42,17 @@
         .card { 
             background: var(--card-bg); border-radius: 15px; overflow: hidden; 
             cursor: pointer; transition: 0.3s; border: 2px solid transparent; 
-            position: relative; /* Importante para el círculo */
+            position: relative;
         }
         .card.selected { border-color: var(--primary); background: #1e3a2f; }
         
-        /* EL CÍRCULO DE SELECCIÓN */
         .select-indicator { 
-            position: absolute; 
-            top: 15px; 
-            right: 15px; 
-            width: 28px; 
-            height: 28px; 
-            background: rgba(0,0,0,0.6); 
-            border: 2px solid #fff; 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            z-index: 10; 
-            color: transparent; /* Oculto por defecto */
-            font-size: 18px;
-            font-weight: bold;
-            transition: 0.2s;
+            position: absolute; top: 15px; right: 15px; width: 28px; height: 28px; 
+            background: rgba(0,0,0,0.6); border: 2px solid #fff; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; z-index: 10; 
+            color: transparent; font-size: 18px; font-weight: bold; transition: 0.2s;
         }
-        .card.selected .select-indicator { 
-            background: var(--primary); 
-            border-color: var(--primary); 
-            color: #000; /* Check negro sobre fondo verde */
-        }
+        .card.selected .select-indicator { background: var(--primary); border-color: var(--primary); color: #000; }
 
         .carrusel { width: 100%; height: 250px; background: #000; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
         .carrusel img { flex: 0 0 100%; object-fit: cover; scroll-snap-align: start; }
@@ -81,19 +64,32 @@
         .footer { position: fixed; bottom: 0; width: 100%; background: #1e293b; padding: 20px; text-align: center; border-top: 1px solid var(--border); z-index: 100; box-sizing: border-box; }
         .btn-enlistar { background: var(--primary); color: #000; border: none; padding: 15px; border-radius: 50px; font-weight: bold; width: 100%; max-width: 400px; cursor: pointer; font-size: 16px; }
         
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); }
-        .modal-content { background: #1e293b; margin: 10% auto; padding: 25px; border-radius: 20px; width: 90%; max-width: 500px; color: #fff; }
+        /* MODAL */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); overflow-y: auto; }
+        .modal-content { background: #1e293b; margin: 5% auto; padding: 25px; border-radius: 20px; width: 90%; max-width: 500px; color: #fff; position: relative; }
+        .close { position: absolute; top: 15px; right: 20px; font-size: 25px; cursor: pointer; color: var(--text-secondary); }
+        
+        /* ESTILO PARA LOS TÉRMINOS */
+        .terminos-caja { 
+            background: rgba(255,255,255,0.05); 
+            padding: 15px; 
+            border-radius: 10px; 
+            font-size: 13px; 
+            color: var(--text-secondary); 
+            margin-top: 15px; 
+            border: 1px dashed var(--border);
+        }
     </style>
 </head>
 <body onclick="cerrarFiltrosFuera(event)">
 
 <div class="header">
     <h1 style="margin:0;">⌚ BrylexRoda</h1>
-    <p style="margin:5px 0; color:var(--primary); font-weight: bold;">Catálogo de Relojes</p>
+    <p style="margin:5px 0; color:var(--primary); font-weight: bold;">Catálogo de Importación</p>
 </div>
 
 <div class="contenedor-filtros" id="areaFiltros">
-    <button class="btn-abrir-filtros" onclick="toggleFiltros(event)">🔍 Filtros (Marca / Precio) ▼</button>
+    <button class="btn-abrir-filtros" onclick="toggleFiltros(event)">🔍 Filtrar por Marca o Precio ▼</button>
     <div class="panel-filtros" id="panelFiltros">
         <div class="chips-container">
             <button class="chip chip-precio active" onclick="filtrarPrecio('todas', this)">Todos los precios</button>
@@ -106,7 +102,7 @@
     </div>
 </div>
 
-<div id="loading" style="text-align:center; padding:50px; color: var(--text-secondary);">Cargando productos de lujo...</div>
+<div id="loading" style="text-align:center; padding:50px; color: var(--text-secondary);">Cargando inventario...</div>
 <div class="grid" id="contenedor"></div>
 
 <div id="contenedorVerMas" style="text-align:center; padding: 20px; display:none;">
@@ -115,15 +111,24 @@
 
 <div class="footer">
     <div id="resumen" style="margin-bottom:10px; font-weight:bold; font-size: 18px;">Total Entrada (60%): $0.00</div>
-    <button class="btn-enlistar" onclick="abrirModal()">Ver mi Lista 📋</button>
+    <button class="btn-enlistar" onclick="abrirModal()">Ver mi Lista de Pedido 📋</button>
 </div>
 
 <div id="miModal" class="modal">
     <div class="modal-content">
-        <h2 style="color:var(--primary); text-align:center; margin-top: 0;">Tu Pedido</h2>
-        <div id="listaResumen" style="margin: 20px 0; border-top: 1px solid var(--border); padding-top: 15px;"></div>
-        <button onclick="enviarWhatsAppFinal()" style="background:var(--primary); width:100%; padding:15px; border-radius:50px; border:none; font-weight:bold; cursor:pointer; font-size: 16px;">Enviar a WhatsApp 📲</button>
-        <button onclick="cerrarModal()" style="background:transparent; color:var(--text-secondary); width:100%; border:none; margin-top:15px; cursor:pointer;">Regresar al catálogo</button>
+        <span class="close" onclick="cerrarModal()">&times;</span>
+        <h2 style="color:var(--primary); text-align:center; margin-top: 0;">🛒 Tu Pedido</h2>
+        
+        <div id="listaResumen" style="margin: 20px 0;"></div>
+
+        <div class="terminos-caja">
+            <strong style="color: #fff;">⚠️ Términos de Compra:</strong><br>
+            • Pago inicial del 60% para procesar importación.<br>
+            • El saldo restante se cancela al recibir el producto.<br>
+            • Tiempo estimado de entrega: 12 a 15 días laborables.
+        </div>
+
+        <button onclick="enviarWhatsAppFinal()" style="background:var(--primary); width:100%; padding:15px; border-radius:50px; border:none; font-weight:bold; cursor:pointer; font-size: 16px; margin-top: 20px;">Confirmar y Enviar a WhatsApp 📲</button>
     </div>
 </div>
 
@@ -192,7 +197,7 @@
         el.classList.add('active');
         marcaSeleccionada = marca;
         aplicarFiltros();
-        toggleFiltros(); 
+        document.getElementById('panelFiltros').classList.remove('active');
     }
 
     function filtrarPrecio(rango, el) {
@@ -200,7 +205,7 @@
         el.classList.add('active');
         rangoPrecio = rango;
         aplicarFiltros();
-        toggleFiltros();
+        document.getElementById('panelFiltros').classList.remove('active');
     }
 
     function aplicarFiltros() {
@@ -243,7 +248,7 @@
         else seleccionados.add(id);
         
         actualizarResumen();
-        dibujar(); // Redibuja para que aparezca el check y el color verde
+        dibujar();
     }
 
     function actualizarResumen() {
@@ -267,6 +272,7 @@
         let t = 0;
         productos.forEach(p => { if(seleccionados.has(p.id)) { m += `▪️ ${p.nombre}\n`; t += (p.precio * 0.6); }});
         m += `\n💰 Total Abono (60%): $${t.toFixed(2)}`;
+        m += `\n\nEntiendo que debo cancelar el saldo al recibir el producto.`;
         window.open(`https://wa.me/${miTelefono}?text=${encodeURIComponent(m)}`);
     }
 
