@@ -5,89 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catálogo BrylexRoda</title>
     <style>
-        :root { 
-            --primary: #25d366; 
-            --bg: #0f172a;       
-            --card-bg: #1e293b;  
-            --text-main: #ffffff;      
-            --text-secondary: #94a3b8;
-            --border: #334155;
-            --accent: #128c7e;
-        }
-
+        :root { --primary: #25d366; --bg: #0f172a; --card-bg: #1e293b; --text-main: #ffffff; --text-secondary: #94a3b8; --border: #334155; --accent: #128c7e; }
         body { font-family: sans-serif; background: var(--bg); color: var(--text-main); margin: 0; padding-bottom: 160px; }
-        
-        /* HEADER Y BUSCADOR */
-        .header { background: #1e293b; padding: 20px 20px 10px 20px; text-align: center; }
-        .header h1 { margin: 0; font-size: 1.8em; letter-spacing: 1px; }
-        .header p { margin: 5px 0; color: var(--primary); font-weight: bold; font-size: 1em; text-transform: uppercase; }
+        .header { background: #1e293b; padding: 20px; text-align: center; }
+        .header h1 { margin: 0; font-size: 1.8em; }
+        .header p { margin: 5px 0; color: var(--primary); font-weight: bold; }
 
-        .contenedor-busqueda { background: #1e293b; padding: 10px 20px 20px; display: flex; justify-content: center; border-bottom: 1px solid var(--border); }
-        .input-busqueda { width: 100%; max-width: 400px; padding: 12px 20px; border-radius: 25px; border: 1px solid var(--border); background: var(--bg); color: white; outline: none; text-align: center; font-size: 16px; }
+        .contenedor-busqueda { background: #1e293b; padding: 10px 20px; display: flex; justify-content: center; }
+        .input-busqueda { width: 100%; max-width: 400px; padding: 12px 20px; border-radius: 25px; border: 1px solid var(--border); background: var(--bg); color: white; text-align: center; }
 
-        /* FILTROS */
-        .contenedor-filtros { background: #1e293b; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border); }
-        .btn-abrir-filtros { width: 100%; padding: 12px; background: transparent; border: none; color: #fff; font-weight: bold; cursor: pointer; }
-        .panel-filtros { display: none; padding: 15px; border-top: 1px solid var(--border); }
+        /* PANEL DE FILTROS RECUPERADO */
+        .contenedor-filtros { background: #1e293b; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .btn-abrir-filtros { width: 100%; padding: 10px; background: transparent; border: none; color: #fff; font-weight: bold; cursor: pointer; }
+        .panel-filtros { display: none; padding: 10px 20px; }
         .panel-filtros.active { display: block; }
-        .chips-container { display: flex; gap: 8px; overflow-x: auto; padding: 5px 0; scrollbar-width: none; }
-        .chip { background: #334155; color: #fff; padding: 8px 15px; border-radius: 20px; font-size: 12px; cursor: pointer; border: none; white-space: nowrap; }
+        .chips-container { display: flex; gap: 8px; overflow-x: auto; padding: 5px 0; }
+        .chip { background: #334155; color: #fff; padding: 6px 12px; border-radius: 15px; font-size: 11px; cursor: pointer; border: none; white-space: nowrap; }
         .chip.active { background: var(--primary); color: #000; }
 
-        /* GRID */
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 12px; }
-        @media (min-width: 768px) { .grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; padding: 20px; } }
+        @media (min-width: 768px) { .grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); } }
 
-        /* TARJETAS Y PESTAÑA DE DETALLES */
-        .card { background: var(--card-bg); border-radius: 12px; overflow: hidden; cursor: pointer; position: relative; transition: 0.3s; border: 2px solid transparent; }
-        .card.selected { border-color: var(--primary); background: #1e3a2f; transform: scale(1.02); }
-        
-        .detalles-overlay {
-            position: absolute;
-            bottom: -100%;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(15, 23, 42, 0.93);
-            backdrop-filter: blur(4px);
-            color: white;
-            padding: 15px;
-            box-sizing: border-box;
-            transition: 0.4s ease;
-            font-size: 11px;
-            line-height: 1.6;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            text-align: center;
-            z-index: 20;
-            pointer-events: none;
-        }
-        .card:hover .detalles-overlay { bottom: 0; }
+        .card { background: var(--card-bg); border-radius: 12px; overflow: hidden; cursor: pointer; position: relative; border: 2px solid transparent; transition: 0.3s; }
+        .card.selected { border-color: var(--primary); background: #1e3a2f; }
+
+        .btn-info { position: absolute; top: 10px; left: 10px; width: 30px; height: 30px; background: rgba(37, 211, 102, 0.95); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 50; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+
+        .detalles-overlay { position: absolute; bottom: -100%; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(5px); color: white; padding: 20px; box-sizing: border-box; transition: 0.4s; font-size: 11px; display: flex; flex-direction: column; justify-content: center; text-align: center; z-index: 60; }
+        .detalles-overlay.active { bottom: 0; }
 
         .select-indicator { position: absolute; top: 10px; right: 10px; width: 24px; height: 24px; background: rgba(0,0,0,0.6); border: 1px solid #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 10; color: transparent; }
         .card.selected .select-indicator { background: var(--primary); border-color: var(--primary); color: #000; }
         .card.selected .select-indicator::after { content: "✓"; }
 
         .carrusel { width: 100%; height: 160px; background: #000; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
-        @media (min-width: 768px) { .carrusel { height: 240px; } }
-        .carrusel img { flex: 0 0 100%; object-fit: cover; scroll-snap-align: start; }
-        
+        .carrusel img { flex: 0 0 100%; object-fit: cover; }
+
         .info { padding: 10px; }
-        .tag-import { background: #fff9c4; color: #827717; font-size: 9px; font-weight: bold; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 5px; }
         .pago-60 { color: var(--primary); font-weight: bold; font-size: 0.9em; }
 
-        /* FOOTER */
         .footer { position: fixed; bottom: 0; width: 100%; background: #1e293b; padding: 15px 20px; border-top: 1px solid var(--border); z-index: 100; box-sizing: border-box; }
-        .footer-totales { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-        .btn-enlistar { background: var(--primary); color: #000; border: none; padding: 12px; border-radius: 50px; font-weight: bold; width: 100%; cursor: pointer; font-size: 16px; }
-
-        /* MODAL Y REQUISITOS */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); overflow-y: auto; }
-        .modal-content { background: #1e293b; margin: 5% auto; padding: 25px; border-radius: 20px; width: 90%; max-width: 450px; color: #fff; position: relative; }
-        .close { position: absolute; top: 15px; right: 20px; font-size: 25px; cursor: pointer; color: var(--text-secondary); }
-        .instrucciones { background: #f0f7f4; padding: 12px; border-radius: 10px; font-size: 13px; color: #2c3e50; line-height: 1.4; margin-bottom: 15px; border-left: 5px solid var(--accent); }
-        .total-pago-caja { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-top: 10px; border: 1px solid var(--border); }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); }
+        .modal-content { background: #1e293b; margin: 5% auto; padding: 25px; border-radius: 20px; width: 90%; max-width: 400px; color: #fff; position: relative; }
+        .instrucciones { background: #f0f7f4; padding: 12px; border-radius: 8px; color: #2c3e50; font-size: 12px; margin-bottom: 15px; border-left: 5px solid var(--accent); }
     </style>
 </head>
 <body onclick="cerrarFiltrosFuera(event)">
@@ -98,14 +58,14 @@
 </div>
 
 <div class="contenedor-busqueda">
-    <input type="text" id="busqueda" class="input-busqueda" placeholder="🔍 Buscar modelo o marca..." oninput="aplicarFiltros()">
+    <input type="text" id="busqueda" class="input-busqueda" placeholder="🔍 Buscar modelo..." oninput="aplicarFiltros()">
 </div>
 
 <div class="contenedor-filtros" id="areaFiltros">
-    <button class="btn-abrir-filtros" onclick="toggleFiltros(event)">Filtros de Precio y Marca ▼</button>
+    <button class="btn-abrir-filtros" onclick="toggleFiltros(event)">Filtros Avanzados ▼</button>
     <div class="panel-filtros" id="panelFiltros">
         <div class="chips-container">
-            <button class="chip chip-precio active" onclick="filtrarPrecio('todas', this)">Todos</button>
+            <button class="chip chip-precio active" onclick="filtrarPrecio('todas', this)">Todos los precios</button>
             <button class="chip chip-precio" onclick="filtrarPrecio('50-100', this)">$50 - $100</button>
             <button class="chip chip-precio" onclick="filtrarPrecio('100-200', this)">$100 - $200</button>
         </div>
@@ -119,33 +79,28 @@
 <div class="grid" id="contenedor"></div>
 
 <div class="footer">
-    <div class="footer-totales">
-        <div>Total Pedido: <br><span id="resumenTotalFull" style="color:#fff; font-weight:bold;">$0.00</span></div>
-        <div style="text-align:right;">Abono (60%): <br><span id="resumenAbono" style="color:var(--primary); font-weight:bold;">$0.00</span></div>
+    <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:14px;">
+        <div>Total: <span id="resumenTotalFull">$0.00</span></div>
+        <div style="color:var(--primary);">Abono (60%): <span id="resumenAbono">$0.00</span></div>
     </div>
     <button class="btn-enlistar" onclick="abrirModal()">Ver mi Lista de Pedido 📋</button>
 </div>
 
 <div id="miModal" class="modal">
     <div class="modal-content">
-        <span class="close" onclick="cerrarModal()">&times;</span>
-        <h2 style="color:var(--primary); text-align:center; margin-top: 0;">🛒 Tu Pedido</h2>
-        
+        <h2 style="color:var(--primary); text-align:center; margin-top:0;">🛒 Tu Pedido</h2>
         <div class="instrucciones">
-            <b>Proceso de Compra:</b><br>
-            • Pago inicial del <b>60%</b> para importar.<br>
-            • Saldo restante antes del envío final.<br>
-            • Tiempo máximo de entrega: <b>1 mes</b>.
+            <b>Requisitos de Importación:</b><br>
+            • Abono inicial del <b>60%</b>.<br>
+            • Entrega estimada en 1 mes.<br>
+            • Pago del saldo contra entrega.
         </div>
-
-        <div id="listaResumen" style="max-height: 180px; overflow-y: auto;"></div>
-
-        <div class="total-pago-caja">
-            <div style="display:flex; justify-content:space-between; margin-bottom:5px;"><span>Total Acumulado:</span> <span id="modalTotalFinal">$0.00</span></div>
-            <div style="display:flex; justify-content:space-between; font-weight:bold; color:var(--primary); font-size:1.2em;"><span>Abono Hoy (60%):</span> <span id="modalAbonoHoy">$0.00</span></div>
+        <div id="listaResumen" style="max-height:150px; overflow-y:auto; border-bottom:1px solid #334155; margin-bottom:10px;"></div>
+        <div style="padding:10px 0; font-weight:bold;">
+            Abono Hoy: <span id="modalAbonoHoy" style="color:var(--primary); font-size:1.4em;">$0.00</span>
         </div>
-
-        <button onclick="enviarWhatsAppFinal()" style="background:var(--primary); width:100%; padding:15px; border-radius:50px; border:none; font-weight:bold; cursor:pointer; font-size: 16px; margin-top: 20px; color: #000;">Confirmar por WhatsApp 📲</button>
+        <button onclick="enviarWhatsAppFinal()" style="background:var(--primary); width:100%; padding:15px; border-radius:50px; font-weight:bold; cursor:pointer; border:none;">Confirmar WhatsApp 📲</button>
+        <p onclick="cerrarModal()" style="text-align:center; cursor:pointer; color:var(--text-secondary); margin-top:15px;">Cerrar</p>
     </div>
 </div>
 
@@ -170,22 +125,21 @@
                 if(c.length < 2) return null;
                 return {
                     id: i,
-                    nombre: c[0],
-                    marca: c[0].split(' ')[0],
-                    precio: parseFloat(c[1].replace('$', '').replace(/[^\d.,]/g, '').trim()) || 0,
-                    fotos: (c[2] || '').split('|').map(link => link.trim()).filter(l => l.startsWith('http')),
-                    // CAMBIO CLAVE: Reemplazamos | por saltos de línea HTML
-                    descripcion: (c[3] || "Sin detalles.").split('|').join('<br>')
+                    nombre: c[0] || 'Reloj',
+                    marca: (c[0] || '').split(' ')[0],
+                    precio: parseFloat(c[1]?.replace('$', '').replace(/[^\d.,]/g, '')) || 0,
+                    fotos: (c[2] || '').split('|').map(link => link.trim()),
+                    descripcion: (c[3] || 'Sin detalles').split('|').join('<br>')
                 };
             }).filter(p => p !== null);
 
             generarMarcas();
             document.getElementById('loading').style.display = 'none';
             aplicarFiltros();
-        } catch (e) { document.getElementById('loading').innerHTML = "Error de conexión."; }
+        } catch (e) { console.error(e); }
     }
 
-    function toggleFiltros(e) { if(e) e.stopPropagation(); document.getElementById('panelFiltros').classList.toggle('active'); }
+    function toggleFiltros(e) { e.stopPropagation(); document.getElementById('panelFiltros').classList.toggle('active'); }
     function cerrarFiltrosFuera(e) { if (!document.getElementById('areaFiltros').contains(e.target)) document.getElementById('panelFiltros').classList.remove('active'); }
 
     function generarMarcas() {
@@ -200,25 +154,25 @@
         });
     }
 
-    function filtrarMarca(marca, el) {
+    function filtrarMarca(m, el) {
         document.querySelectorAll('.chip-marca').forEach(c => c.classList.remove('active'));
-        el.classList.add('active'); marcaSeleccionada = marca; aplicarFiltros();
+        el.classList.add('active'); marcaSeleccionada = m; aplicarFiltros();
     }
 
-    function filtrarPrecio(rango, el) {
+    function filtrarPrecio(r, el) {
         document.querySelectorAll('.chip-precio').forEach(c => c.classList.remove('active'));
-        el.classList.add('active'); rangoPrecio = rango; aplicarFiltros();
+        el.classList.add('active'); rangoPrecio = r; aplicarFiltros();
     }
 
     function aplicarFiltros() {
-        const busqueda = document.getElementById('busqueda').value.toLowerCase();
+        const query = document.getElementById('busqueda').value.toLowerCase();
         productosFiltrados = productos.filter(p => {
             const mMarca = marcaSeleccionada === "Todas" || p.marca === marcaSeleccionada;
-            const mBusqueda = p.nombre.toLowerCase().includes(busqueda);
+            const mBusqueda = p.nombre.toLowerCase().includes(query);
             let mPrecio = true;
             if(rangoPrecio === '50-100') mPrecio = (p.precio >= 50 && p.precio <= 100);
             if(rangoPrecio === '100-200') mPrecio = (p.precio > 100 && p.precio <= 200);
-            return mMarca && mPrecio && mBusqueda;
+            return mMarca && mBusqueda && mPrecio;
         });
         dibujar();
     }
@@ -227,21 +181,23 @@
         const cont = document.getElementById('contenedor');
         cont.innerHTML = productosFiltrados.map(p => `
             <div class="card ${seleccionados.has(p.id) ? 'selected' : ''}" onclick="toggleSelect(${p.id})">
-                <div class="detalles-overlay">
-                    <strong style="color:var(--primary)">ESPECIFICACIONES</strong><br>
-                    ${p.descripcion}
+                <div class="btn-info" onclick="toggleDetalles(event, ${p.id})">i</div>
+                <div id="detalles-${p.id}" class="detalles-overlay" onclick="toggleDetalles(event, ${p.id})">
+                    <strong style="color:var(--primary)">ESPECIFICACIONES</strong><br><br>
+                    ${p.descripcion}<br><br><small style="opacity:0.7">(Toca para cerrar)</small>
                 </div>
                 <div class="select-indicator"></div>
                 <div class="carrusel" onclick="event.stopPropagation()">
-                    ${p.fotos.length > 0 ? p.fotos.map(img => `<img src="${img}" loading="lazy">`).join('') : '<img src="https://via.placeholder.com/400?text=Sin+Foto">'}
+                    ${p.fotos.length > 0 && p.fotos[0].startsWith('http') ? p.fotos.map(img => `<img src="${img}" loading="lazy">`).join('') : '<img src="https://via.placeholder.com/400x300?text=Ver+Fotos">'}
                 </div>
                 <div class="info">
-                    <div class="tag-import">📦 IMPORTACIÓN</div>
-                    <p style="margin:0; font-size: 0.9em; height: 2.4em; overflow: hidden;"><b>${p.nombre}</b></p>
+                    <p style="margin:0; font-size:0.85em; height:2.5em; overflow:hidden;"><b>${p.nombre}</b></p>
                     <div class="pago-60">60%: $${(p.precio * 0.6).toFixed(2)}</div>
                 </div>
             </div>`).join('');
     }
+
+    function toggleDetalles(e, id) { e.stopPropagation(); document.getElementById(`detalles-${id}`).classList.toggle('active'); }
 
     function toggleSelect(id) {
         if (seleccionados.has(id)) seleccionados.delete(id);
@@ -250,35 +206,27 @@
     }
 
     function actualizarResumen() {
-        let tf = 0; let ta = 0;
-        productos.forEach(p => { if(seleccionados.has(p.id)) { tf += p.precio; ta += (p.precio * 0.6); }});
-        document.getElementById('resumenTotalFull').innerText = `$${tf.toFixed(2)}`;
-        document.getElementById('resumenAbono').innerText = `$${ta.toFixed(2)}`;
+        let f = 0, a = 0;
+        productos.forEach(p => { if(seleccionados.has(p.id)){ f += p.precio; a += (p.precio * 0.6); }});
+        document.getElementById('resumenTotalFull').innerText = `$${f.toFixed(2)}`;
+        document.getElementById('resumenAbono').innerText = `$${a.toFixed(2)}`;
     }
 
     function abrirModal() {
         if(!seleccionados.size) return alert("Selecciona un producto.");
-        let html = "<ul style='padding-left: 20px;'>", tf = 0, ta = 0;
-        productos.forEach(p => { if(seleccionados.has(p.id)) { 
-            html += `<li style='margin-bottom:8px; font-size:14px;'>${p.nombre} ($${p.precio.toFixed(2)})</li>`; 
-            tf += p.precio; ta += (p.precio * 0.6);
-        }});
-        document.getElementById('listaResumen').innerHTML = html + "</ul>";
-        document.getElementById('modalTotalFinal').innerText = `$${tf.toFixed(2)}`;
-        document.getElementById('modalAbonoHoy').innerText = `$${ta.toFixed(2)}`;
+        let h = "<ul>", a = 0;
+        productos.forEach(p => { if(seleccionados.has(p.id)){ h += `<li>${p.nombre}</li>`; a += (p.precio * 0.6); }});
+        document.getElementById('listaResumen').innerHTML = h + "</ul>";
+        document.getElementById('modalAbonoHoy').innerText = `$${a.toFixed(2)}`;
         document.getElementById('miModal').style.display = "block";
     }
 
     function cerrarModal() { document.getElementById('miModal').style.display = "none"; }
 
     function enviarWhatsAppFinal() {
-        let m = "¡Hola Brylexroda! Mi pedido:\n\n";
-        let tf = 0; let ta = 0;
-        productos.forEach(p => { if(seleccionados.has(p.id)) { 
-            m += `▪️ ${p.nombre} ($${p.precio.toFixed(2)})\n`; 
-            tf += p.precio; ta += (p.precio * 0.6);
-        }});
-        m += `\n💵 Total: $${tf.toFixed(2)}\n💰 *Abono (60%): $${ta.toFixed(2)}*`;
+        let m = "¡Hola Brylexroda! Mi pedido:\n", a = 0;
+        productos.forEach(p => { if(seleccionados.has(p.id)) { m += `▪️ ${p.nombre}\n`; a += (p.precio * 0.6); }});
+        m += `\n*Abono 60%: $${a.toFixed(2)}*`;
         window.open(`https://wa.me/${miTelefono}?text=${encodeURIComponent(m)}`);
     }
 
