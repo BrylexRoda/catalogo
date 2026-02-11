@@ -15,7 +15,7 @@
         .contenedor-filtros { background: white; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 100; }
         .btn-abrir-filtros { width: 100%; padding: 12px; background: white; border: none; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--dark); }
         
-        .panel-filtros { display: none; padding: 15px; background: #fff; border-top: 1px solid #eee; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .panel-filtros { display: none; padding: 15px; background: #fff; border-top: 1px solid #eee; box-shadow: 0 10px 15px rgba(0,0,0,0.1); }
         .panel-filtros.active { display: block; }
         
         .seccion-filtro { margin-bottom: 15px; }
@@ -36,7 +36,6 @@
         .carrusel { width: 100%; height: 250px; background: #eee; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
         .carrusel img { flex: 0 0 100%; object-fit: cover; scroll-snap-align: start; }
         .info { padding: 15px; }
-        .tag-import { background: #fff9c4; color: #827717; font-size: 10px; font-weight: bold; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 5px; border: 1px solid #fbc02d; }
         .pago-60 { color: #128c7e; font-weight: bold; background: #e8f9f0; padding: 5px; border-radius: 5px; display: inline-block; margin-top: 5px; }
 
         /* FOOTER */
@@ -50,15 +49,15 @@
         .btn-ws-final { background: var(--primary); color: white; border: none; padding: 15px; border-radius: 50px; font-weight: bold; width: 100%; font-size: 16px; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
-<body>
+<body onclick="cerrarFiltrosFuera(event)">
 
 <div class="header">
     <h1 style="margin-bottom: 5px;">⌚ Catálogo de Relojes</h1>
     <p style="margin: 0; color: #666; font-weight: bold; font-size: 1.2em;">BrylexRoda</p>
 </div>
 
-<div class="contenedor-filtros">
-    <button class="btn-abrir-filtros" onclick="toggleFiltros()">
+<div class="contenedor-filtros" id="areaFiltros">
+    <button class="btn-abrir-filtros" onclick="toggleFiltros(event)">
         <span>🔍 Filtrar por Marca o Precio</span>
         <span id="flechaFiltro">▼</span>
     </button>
@@ -78,7 +77,6 @@
                 <button class="chip chip-marca active" onclick="filtrarMarca('Todas', this)">Todas</button>
             </div>
         </div>
-        <button onclick="toggleFiltros()" style="width:100%; padding:8px; background:#f0f0f0; border:none; border-radius:5px; font-size:12px; cursor:pointer;">Cerrar filtros ↑</button>
     </div>
 </div>
 
@@ -106,13 +104,28 @@
     let productos = [];
     let seleccionados = new Set();
     let marcaSeleccionada = "Todas";
-    let rangoPrecio = "todas"; // Opciones: "todas", "50-100", "100-200"
+    let rangoPrecio = "todas";
 
-    function toggleFiltros() {
+    // Función para abrir/cerrar
+    function toggleFiltros(event) {
+        if(event) event.stopPropagation(); // Evita que el clic se propague al body
         const panel = document.getElementById('panelFiltros');
         const flecha = document.getElementById('flechaFiltro');
         const esVisible = panel.classList.toggle('active');
         flecha.innerText = esVisible ? '▲' : '▼';
+    }
+
+    // Cierra el panel si se hace clic afuera
+    function cerrarFiltrosFuera(event) {
+        const areaFiltros = document.getElementById('areaFiltros');
+        const panel = document.getElementById('panelFiltros');
+        const flecha = document.getElementById('flechaFiltro');
+        
+        // Si el panel está abierto y el clic no fue dentro del área de filtros
+        if (panel.classList.contains('active') && !areaFiltros.contains(event.target)) {
+            panel.classList.remove('active');
+            flecha.innerText = '▼';
+        }
     }
 
     async function cargar() {
@@ -148,7 +161,10 @@
             const btn = document.createElement('button');
             btn.className = 'chip chip-marca';
             btn.innerText = m;
-            btn.onclick = (e) => filtrarMarca(m, e.target);
+            btn.onclick = (e) => {
+                e.stopPropagation(); // Evita líos con el body
+                filtrarMarca(m, e.target);
+            };
             cont.appendChild(btn);
         });
     }
@@ -158,6 +174,7 @@
         el.classList.add('active');
         marcaSeleccionada = marca;
         dibujar();
+        toggleFiltros(); // Cierra el panel al elegir
     }
 
     function filtrarPrecio(rango, el) {
@@ -165,6 +182,7 @@
         el.classList.add('active');
         rangoPrecio = rango;
         dibujar();
+        toggleFiltros(); // Cierra el panel al elegir
     }
 
     function dibujar() {
