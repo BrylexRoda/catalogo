@@ -133,7 +133,8 @@
                     marca: (c[0] || '').split(' ')[0],
                     precio: parseFloat(c[1]?.replace('$', '').replace(/[^\d.,]/g, '')) || 0,
                     fotos: (c[2] || '').split('|').map(link => link.trim()),
-                    descripcion: (c[3] || 'Sin detalles').split('|').join('<br>')
+                    descripcion: (c[3] || 'Sin detalles').split('|').join('<br>'),
+                    linkJomashop: c[4] || '' // Lee la columna E (Links ocultos)
                 };
             }).filter(p => p !== null);
 
@@ -229,7 +230,11 @@
 
     function enviarWhatsAppFinal() {
         let m = "¡Hola Brylexroda! Mi pedido:\n", a = 0;
-        productos.forEach(p => { if(seleccionados.has(p.id)) { m += `▪️ ${p.nombre}\n`; a += (p.precio * 0.6); }});
+        productos.forEach(p => { if(seleccionados.has(p.id)) { 
+            // Envía nombre + Link de la columna E
+            m += `▪️ ${p.nombre}\n  🔗 ${p.linkJomashop}\n`; 
+            a += (p.precio * 0.6); 
+        }});
         m += `\n*Abono 60%: $${a.toFixed(2)}*`;
         window.open(`https://wa.me/${miTelefono}?text=${encodeURIComponent(m)}`);
     }
