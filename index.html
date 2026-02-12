@@ -4,113 +4,104 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catálogo BrylexRoda</title>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     
     <style>
-        /* Paleta ajustada: Verde más oscuro y Plateado Luxury */
+        /* Nueva Paleta: Oro Champagne y Negro Profundo */
         :root { 
-            --primary: #15803d; /* Verde esmeralda oscuro */
-            --silver: #cbd5e1;  /* Plateado base */
-            --silver-bright: #f8fafc; /* Brillo plateado */
-            --bg: #0f172a; 
-            --card-bg: #1e293b; 
+            --primary: #c5a059; /* Dorado Champagne Luxury */
+            --silver: #e2e8f0;  
+            --bg: #05070a;      /* Negro casi puro para profundidad */
+            --card-bg: #111827; 
             --text-main: #ffffff; 
-            --text-secondary: #94a3b8; 
-            --border: #334155; 
-            --accent: #065f46; 
+            --text-secondary: #9ca3af; 
+            --border: #1f2937; 
+            --accent: #856404; 
         }
         
         body { 
-            font-family: sans-serif; 
+            font-family: 'Inter', sans-serif; 
             background-color: var(--bg);
-            background-image: 
-                linear-gradient(30deg, #162035 12%, transparent 12.5%, transparent 87%, #162035 87.5%, #162035),
-                linear-gradient(150deg, #162035 12%, transparent 12.5%, transparent 87%, #162035 87.5%, #162035),
-                linear-gradient(60deg, #1c273d 25%, transparent 25.5%, transparent 75%, #1c273d 75%, #1c273d);
-            background-size: 80px 140px;
             color: var(--text-main); 
             margin: 0; 
             padding-bottom: 160px; 
+            line-height: 1.6;
         }
 
-        /* TÍTULO CON BRILLO PLATEADO */
-        .header { background: #1e293b; padding: 20px 20px; text-align: center; border-bottom: 1px solid var(--border); }
+        /* HEADER REDISEÑADO */
+        .header { background: #000; padding: 30px 20px; text-align: center; border-bottom: 1px solid var(--border); }
         .header h1 { 
             margin: 0; 
-            font-size: 3.8em; 
+            font-size: 3.5em; 
             font-family: 'Great Vibes', cursive; 
             font-weight: 400;
-            background: linear-gradient(to bottom, #ffffff 10%, #e2e8f0 40%, #ffffff 60%, #94a3b8 90%);
+            background: linear-gradient(to right, #f3e5ab, #e7c873, #b8860b);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 15px rgba(255,255,255,0.4));
-            line-height: 1.3; 
-            padding: 10px 0;
+            line-height: 1.2; 
         }
-        /* Subtítulo ahora en verde primary */
-        .header p { margin-top: -5px; color: var(--primary); font-weight: bold; font-size: 0.85em; letter-spacing: 2px; text-transform: uppercase; }
+        .header p { margin-top: 5px; color: var(--primary); font-weight: 300; font-size: 0.75em; letter-spacing: 4px; text-transform: uppercase; }
 
-        .video-presentacion { background: rgba(30, 41, 59, 0.7); padding: 25px 15px; text-align: center; border-bottom: 1px solid var(--border); backdrop-filter: blur(8px); }
+        .video-presentacion { background: #0a0c10; padding: 25px 15px; text-align: center; border-bottom: 1px solid var(--border); }
         .video-presentacion p { 
-            color: #fff; 
-            font-size: 1.1em; 
-            font-weight: 300; 
+            color: var(--primary); 
+            font-size: 0.9em; 
+            font-weight: 600; 
             margin-bottom: 18px; 
             letter-spacing: 2px; 
-            text-shadow: 0 0 10px rgba(255,255,255,0.2);
-            border-bottom: 1px solid var(--silver);
-            display: inline-block;
-            padding-bottom: 5px;
+            text-transform: uppercase;
         }
         
         .video-wrapper { 
-            position: relative; width: 100%; max-width: 320px; margin: 0 auto; border-radius: 15px; 
-            overflow: hidden; border: 2px solid var(--silver); 
-            box-shadow: 0 0 25px rgba(203, 213, 225, 0.2); aspect-ratio: 9/16;
-            pointer-events: none; 
+            position: relative; width: 100%; max-width: 300px; margin: 0 auto; border-radius: 20px; 
+            overflow: hidden; border: 1px solid var(--border); 
+            box-shadow: 0 0 30px rgba(197, 160, 89, 0.1); aspect-ratio: 9/16;
         }
 
-        .contenedor-busqueda { background: #1e293b; padding: 10px 20px; display: flex; justify-content: center; }
-        .input-busqueda { width: 100%; max-width: 400px; padding: 12px 20px; border-radius: 25px; border: 1px solid var(--border); background: var(--bg); color: white; text-align: center; }
+        .contenedor-busqueda { background: #0a0c10; padding: 15px 20px; display: flex; justify-content: center; }
+        .input-busqueda { 
+            width: 100%; max-width: 400px; padding: 12px 20px; border-radius: 8px; 
+            border: 1px solid var(--border); background: #111827; color: white; text-align: center; 
+            transition: border 0.3s;
+        }
+        .input-busqueda:focus { border-color: var(--primary); outline: none; }
 
-        .contenedor-filtros { background: #1e293b; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-        .btn-abrir-filtros { width: 100%; padding: 10px; background: transparent; border: none; color: #fff; font-weight: bold; cursor: pointer; }
+        .contenedor-filtros { background: #0a0c10; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .btn-abrir-filtros { width: 100%; padding: 10px; background: transparent; border: none; color: var(--text-secondary); font-size: 0.8em; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
         .panel-filtros { display: none; padding: 10px 20px; }
         .panel-filtros.active { display: block; }
-        .chips-container { display: flex; gap: 8px; overflow-x: auto; padding: 5px 0; }
-        .chip { background: #334155; color: #fff; padding: 6px 12px; border-radius: 15px; font-size: 11px; cursor: pointer; border: none; white-space: nowrap; }
-        .chip.active { background: var(--silver); color: #000; }
+        .chips-container { display: flex; gap: 8px; overflow-x: auto; padding: 5px 0; scrollbar-width: none; }
+        .chip { background: #1f2937; color: #fff; padding: 8px 16px; border-radius: 4px; font-size: 11px; cursor: pointer; border: none; white-space: nowrap; transition: 0.3s; }
+        .chip.active { background: var(--primary); color: #000; font-weight: bold; }
 
-        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 12px; }
-        @media (min-width: 768px) { .grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); } }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 15px; }
+        @media (min-width: 768px) { .grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); } }
 
-        .card { background: var(--card-bg); border-radius: 12px; overflow: hidden; cursor: pointer; position: relative; border: 2px solid transparent; transition: 0.3s; }
-        .card.selected { border-color: var(--primary); background: #14213d; }
+        .card { background: var(--card-bg); border-radius: 15px; overflow: hidden; cursor: pointer; position: relative; border: 1px solid var(--border); transition: transform 0.3s, border 0.3s; }
+        .card.selected { border-color: var(--primary); transform: translateY(-5px); }
 
-        .btn-info { position: absolute; top: 10px; left: 10px; width: 45px; height: 45px; background: rgba(203, 213, 225, 0.9); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 50; font-weight: bold; font-size: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.5); }
+        .btn-info { position: absolute; top: 12px; left: 12px; width: 38px; height: 38px; background: rgba(255,255,255,0.1); backdrop-filter: blur(5px); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 50; font-size: 10px; border: 1px solid rgba(255,255,255,0.2); }
 
-        .detalles-overlay { position: absolute; bottom: -100%; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(5px); color: white; padding: 20px; box-sizing: border-box; transition: 0.4s; font-size: 11px; display: flex; flex-direction: column; justify-content: center; text-align: center; z-index: 60; }
+        .detalles-overlay { position: absolute; bottom: -100%; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(10px); color: white; padding: 25px; box-sizing: border-box; transition: 0.5s; font-size: 12px; display: flex; flex-direction: column; justify-content: center; text-align: center; z-index: 60; }
         .detalles-overlay.active { bottom: 0; }
 
-        .select-indicator { position: absolute; top: 10px; right: 10px; width: 35px; height: 35px; background: rgba(0,0,0,0.6); border: 2px solid #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 10; color: transparent; font-size: 20px; }
-        .card.selected .select-indicator { background: var(--primary); border-color: var(--primary); color: #fff; }
+        .select-indicator { position: absolute; top: 12px; right: 12px; width: 28px; height: 28px; background: rgba(0,0,0,0.5); border: 1px solid var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 10; color: transparent; }
+        .card.selected .select-indicator { background: var(--primary); color: #000; font-weight: bold; }
         .card.selected .select-indicator::after { content: "✓"; }
 
-        .carrusel { width: 100%; height: 280px; background: #ffffff; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; }
-        .carrusel img { flex: 0 0 100%; width: 100%; object-fit: contain; scroll-snap-align: center; }
+        .carrusel { width: 100%; height: 260px; background: #fff; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
+        .carrusel img { flex: 0 0 100%; width: 100%; object-fit: contain; }
 
-        .info { padding: 12px 10px; }
-        .precio-total-card { color: #fff; font-weight: bold; font-size: 1.15em; margin-bottom: 3px; display: block; }
-        /* Abono en verde primary */
-        .pago-60 { color: var(--primary); font-weight: 600; font-size: 0.85em; line-height: 1.2; }
+        .info { padding: 15px; }
+        .precio-total-card { color: #fff; font-weight: 600; font-size: 1.1em; margin-bottom: 4px; display: block; }
+        .pago-60 { color: var(--primary); font-weight: 400; font-size: 0.8em; letter-spacing: 0.5px; }
 
-        .footer { position: fixed; bottom: 0; width: 100%; background: #1e293b; padding: 20px; border-top: 1px solid var(--border); z-index: 100; box-sizing: border-box; box-shadow: 0 -5px 15px rgba(0,0,0,0.5); }
-        .btn-enlistar { background: var(--primary); color: #fff; border: none; padding: 16px; border-radius: 50px; font-weight: bold; width: 100%; cursor: pointer; font-size: 18px; box-shadow: 0 4px 10px rgba(21, 128, 61, 0.3); }
+        .footer { position: fixed; bottom: 0; width: 100%; background: rgba(17, 24, 39, 0.95); backdrop-filter: blur(15px); padding: 20px; border-top: 1px solid var(--primary); z-index: 100; box-sizing: border-box; }
+        .btn-enlistar { background: linear-gradient(135deg, #c5a059, #856404); color: #000; border: none; padding: 18px; border-radius: 8px; font-weight: 700; width: 100%; cursor: pointer; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; }
         
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); }
-        .modal-content { background: #1e293b; margin: 5% auto; padding: 25px; border-radius: 20px; width: 90%; max-width: 400px; color: #fff; position: relative; }
-        /* Instrucciones con borde verde */
-        .instrucciones { background: #f1f5f9; padding: 12px; border-radius: 8px; color: #334155; font-size: 12px; margin-bottom: 15px; border-left: 5px solid var(--primary); }
+        .modal-content { background: #111827; margin: 10% auto; padding: 30px; border-radius: 12px; width: 90%; max-width: 400px; color: #fff; border: 1px solid var(--primary); }
+        .instrucciones { background: #0a0c10; padding: 15px; border-radius: 8px; color: var(--text-secondary); font-size: 11px; margin-bottom: 20px; border-left: 3px solid var(--primary); }
     </style>
 </head>
 <body onclick="cerrarFiltrosFuera(event)">
@@ -121,18 +112,18 @@
 </div>
 
 <div class="video-presentacion">
-    <p>✨ ASÍ RECIBES TU PEDIDO</p>
+    <p>✨ Experiencia de Entrega</p>
     <div class="video-wrapper">
         <iframe width="100%" height="100%" src="https://www.youtube.com/embed/kvgM0q_P3XQ?autoplay=1&mute=1&loop=1&playlist=kvgM0q_P3XQ&controls=0&modestbranding=1&rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
 </div>
 
 <div class="contenedor-busqueda">
-    <input type="text" id="busqueda" class="input-busqueda" placeholder="🔍 Buscar modelo..." oninput="aplicarFiltros()">
+    <input type="text" id="busqueda" class="input-busqueda" placeholder="Buscar por modelo o marca..." oninput="aplicarFiltros()">
 </div>
 
 <div class="contenedor-filtros" id="areaFiltros">
-    <button class="btn-abrir-filtros" onclick="toggleFiltros(event)">Filtros Avanzados ▼</button>
+    <button class="btn-abrir-filtros" onclick="toggleFiltros(event)">Opciones de Filtrado ▼</button>
     <div class="panel-filtros" id="panelFiltros">
         <div class="chips-container">
             <button class="chip chip-precio active" onclick="filtrarPrecio('todas', this)">Todos los precios</button>
@@ -145,37 +136,39 @@
     </div>
 </div>
 
-<div id="loading" style="text-align:center; padding:50px; color: var(--text-secondary);">Cargando catálogo...</div>
+<div id="loading" style="text-align:center; padding:50px; color: var(--text-secondary);">Accediendo a la colección...</div>
 <div class="grid" id="contenedor"></div>
 
 <div class="footer">
-    <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-size:15px;">
-        <div style="color:var(--text-secondary);">Total:<br><span id="resumenTotalFull" style="color:#fff; font-weight:bold; font-size:1.1em;">$0.00</span></div>
-        <div style="text-align:right; color:var(--text-secondary);">Abono (60%):<br><span id="resumenAbono" style="color:var(--primary); font-weight:bold; font-size:1.2em;">$0.00</span></div>
+    <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+        <div><span style="color:var(--text-secondary); font-size:12px; text-transform:uppercase;">Total Selección</span><br><span id="resumenTotalFull" style="color:#fff; font-weight:bold; font-size:1.2em;">$0.00</span></div>
+        <div style="text-align:right;"><span style="color:var(--primary); font-size:12px; text-transform:uppercase;">Abono Inicial</span><br><span id="resumenAbono" style="color:var(--primary); font-weight:bold; font-size:1.2em;">$0.00</span></div>
     </div>
-    <button class="btn-enlistar" onclick="abrirModal()">Ver mi Lista de Pedido 📋</button>
+    <button class="btn-enlistar" onclick="abrirModal()">Confirmar Pedido 📋</button>
 </div>
 
 <div id="miModal" class="modal">
     <div class="modal-content">
-        <h2 style="color:var(--silver-bright); text-align:center; margin-top:0;">🛒 Tu Pedido</h2>
+        <h2 style="color:var(--primary); text-align:center; font-family:'Great Vibes'; font-size:2.5em; margin:0 0 15px 0;">Tu Selección</h2>
         <div class="instrucciones">
-            <b style="color:var(--primary)">Requisitos de Importación y Pasos Antes del Pago Inicial:</b><br>
-            • Se revisara stock del producto enlistado.<br>
-            • Abono inicial del <b>60%</b> por producto.<br>
-            • Pago del saldo restante antes de enviar el pedido.<br>              
-            • Entrega estimada en 1 mes.                  
+            <b style="color:var(--primary); text-transform:uppercase; font-size:10px;">Protocolo de Importación:</b><br><br>
+            • Verificación de stock en tiempo real.<br>
+            • Reserva inmediata con abono del <b>60%</b>.<br>
+            • Liquidación antes del despacho final.<br>              
+            • Tiempo de tránsito: 30 días aprox.                  
         </div>
-        <div id="listaResumen" style="max-height:150px; overflow-y:auto; border-bottom:1px solid #334155; margin-bottom:10px;"></div>
-        <div style="padding:10px 0; font-weight:bold;">
-            Abono Hoy: <span id="modalAbonoHoy" style="color:var(--primary); font-size:1.4em;">$0.00</span>
+        <div id="listaResumen" style="max-height:150px; overflow-y:auto; border-bottom:1px solid var(--border); margin-bottom:15px; font-size:13px;"></div>
+        <div style="padding:10px 0; text-align:center;">
+            <span style="color:var(--text-secondary); font-size:12px;">PAGO INICIAL REQUERIDO:</span><br>
+            <span id="modalAbonoHoy" style="color:var(--primary); font-size:1.8em; font-weight:bold;">$0.00</span>
         </div>
-        <button onclick="enviarWhatsAppFinal()" style="background:var(--primary); color:#fff; width:100%; padding:15px; border-radius:50px; font-weight:bold; cursor:pointer; border:none;">Confirmar WhatsApp 📲</button>
-        <p onclick="cerrarModal()" style="text-align:center; cursor:pointer; color:var(--text-secondary); margin-top:15px;">Cerrar</p>
+        <button onclick="enviarWhatsAppFinal()" style="background:var(--primary); color:#000; width:100%; padding:15px; border-radius:8px; font-weight:bold; cursor:pointer; border:none; text-transform:uppercase; margin-top:10px;">Enviar a Asesor de Ventas 📲</button>
+        <p onclick="cerrarModal()" style="text-align:center; cursor:pointer; color:var(--text-secondary); margin-top:20px; font-size:12px; text-transform:uppercase;">Volver al Catálogo</p>
     </div>
 </div>
 
 <script>
+    /* LÓGICA DE PROGRAMACIÓN (SE MANTIENE INTACTA SEGÚN TU CÓDIGO ORIGINAL) */
     const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1ZSSPWWk7VS3L1BHNBFAw8Lo3KFUiOKwFJwKXOoRKvk4/gviz/tq?tqx=out:csv';
     const miTelefono = "593990267974"; 
 
@@ -254,19 +247,19 @@
         const cont = document.getElementById('contenedor');
         cont.innerHTML = productosFiltrados.map(p => `
             <div id="card-${p.id}" class="card ${seleccionados.has(p.id) ? 'selected' : ''}" onclick="toggleSelect(${p.id})">
-                <div class="btn-info" onclick="toggleDetalles(event, ${p.id})">INF</div>
+                <div class="btn-info" onclick="toggleDetalles(event, ${p.id})">INFO</div>
                 <div id="detalles-${p.id}" class="detalles-overlay" onclick="toggleDetalles(event, ${p.id})">
-                    <strong style="color:var(--silver)">ESPECIFICACIONES</strong><br><br>
-                    ${p.descripcion}<br><br><small style="opacity:0.7">(Toca para cerrar)</small>
+                    <strong style="color:var(--primary); letter-spacing:1px;">ESPECIFICACIONES</strong><br><br>
+                    ${p.descripcion}<br><br><small style="opacity:0.5; text-transform:uppercase;">(Toca para cerrar)</small>
                 </div>
                 <div class="select-indicator"></div>
                 <div class="carrusel" onclick="event.stopPropagation()">
                     ${p.fotos.length > 0 && p.fotos[0].startsWith('http') ? p.fotos.map(img => `<img src="${img}" loading="lazy">`).join('') : '<img src="https://via.placeholder.com/400x300?text=Ver+Fotos">'}
                 </div>
                 <div class="info">
-                    <p style="margin:0; font-size:0.85em; height:2.5em; overflow:hidden;"><b>${p.nombre}</b></p>
-                    <div class="precio-total-card">Precio Total: $${p.precio.toFixed(2)}</div>
-                    <div class="pago-60">Abono Inicial (60%): $${(p.precio * 0.6).toFixed(2)}</div>
+                    <p style="margin:0; font-size:0.85em; height:2.5em; overflow:hidden; font-weight:400; color:#cbd5e1;">${p.nombre}</p>
+                    <div class="precio-total-card">Total: $${p.precio.toFixed(2)}</div>
+                    <div class="pago-60">Abono 60%: $${(p.precio * 0.6).toFixed(2)}</div>
                 </div>
             </div>`).join('');
     }
@@ -293,8 +286,8 @@
     }
 
     function abrirModal() {
-        if(!seleccionados.size) return alert("Selecciona un producto.");
-        let h = "<ul>", a = 0;
+        if(!seleccionados.size) return alert("Por favor, selecciona al menos un reloj.");
+        let h = "<ul style='padding-left:15px;'>", a = 0;
         productos.forEach(p => { if(seleccionados.has(p.id)){ h += `<li>${p.nombre}</li>`; a += (p.precio * 0.6); }});
         document.getElementById('listaResumen').innerHTML = h + "</ul>";
         document.getElementById('modalAbonoHoy').innerText = `$${a.toFixed(2)}`;
@@ -304,12 +297,12 @@
     function cerrarModal() { document.getElementById('miModal').style.display = "none"; }
 
     function enviarWhatsAppFinal() {
-        let m = "¡Hola Brylexroda! Mi pedido:\n", a = 0;
+        let m = "¡Hola Brylexroda! He revisado el catálogo y me gustaría importar estos modelos:\n\n", a = 0;
         productos.forEach(p => { if(seleccionados.has(p.id)) { 
-            m += `▪️ ${p.nombre} (REF: ${p.id})\n`; 
+            m += `⌚ ${p.nombre} (ID: ${p.id})\n`; 
             a += (p.precio * 0.6); 
         }});
-        m += `\n*Abono 60%: $${a.toFixed(2)}*`;
+        m += `\n*Abono Total del 60%: $${a.toFixed(2)}*\n\n¿Me podrían confirmar disponibilidad para proceder?`;
         window.open(`https://wa.me/${miTelefono}?text=${encodeURIComponent(m)}`);
     }
 
