@@ -38,8 +38,9 @@
         .card.selected .select-indicator { background: var(--primary); border-color: var(--primary); color: #000; }
         .card.selected .select-indicator::after { content: "✓"; }
 
-        .carrusel { width: 100%; height: 160px; background: #000; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
-        .carrusel img { flex: 0 0 100%; object-fit: cover; }
+        /* AJUSTE: Imágenes más grandes y completas */
+        .carrusel { width: 100%; height: 240px; background: #000; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
+        .carrusel img { flex: 0 0 100%; object-fit: contain; }
 
         .info { padding: 10px; }
         .pago-60 { color: var(--primary); font-weight: bold; font-size: 0.9em; }
@@ -128,13 +129,12 @@
                 let c = f.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(item => item.replace(/"/g, '').trim());
                 if(c.length < 2) return null;
                 return {
-                    id: i,
+                    id: i + 2, // ID basado en el número de fila real del Excel (empieza en 2)
                     nombre: c[0] || 'Reloj',
                     marca: (c[0] || '').split(' ')[0],
                     precio: parseFloat(c[1]?.replace('$', '').replace(/[^\d.,]/g, '')) || 0,
                     fotos: (c[2] || '').split('|').map(link => link.trim()),
-                    descripcion: (c[3] || 'Sin detalles').split('|').join('<br>'),
-                    linkJomashop: c[4] || '' // Lee la columna E (Links ocultos)
+                    descripcion: (c[3] || 'Sin detalles').split('|').join('<br>')
                 };
             }).filter(p => p !== null);
 
@@ -144,102 +144,4 @@
         } catch (e) { console.error(e); }
     }
 
-    function toggleFiltros(e) { e.stopPropagation(); document.getElementById('panelFiltros').classList.toggle('active'); }
-    function cerrarFiltrosFuera(e) { if (!document.getElementById('areaFiltros').contains(e.target)) document.getElementById('panelFiltros').classList.remove('active'); }
-
-    function generarMarcas() {
-        const cont = document.getElementById('contenedorMarcas');
-        const marcas = [...new Set(productos.map(p => p.marca))];
-        marcas.forEach(m => {
-            const btn = document.createElement('button');
-            btn.className = 'chip chip-marca';
-            btn.innerText = m;
-            btn.onclick = (e) => { e.stopPropagation(); filtrarMarca(m, btn); };
-            cont.appendChild(btn);
-        });
-    }
-
-    function filtrarMarca(m, el) {
-        document.querySelectorAll('.chip-marca').forEach(c => c.classList.remove('active'));
-        el.classList.add('active'); marcaSeleccionada = m; aplicarFiltros();
-    }
-
-    function filtrarPrecio(r, el) {
-        document.querySelectorAll('.chip-precio').forEach(c => c.classList.remove('active'));
-        el.classList.add('active'); rangoPrecio = r; aplicarFiltros();
-    }
-
-    function aplicarFiltros() {
-        const query = document.getElementById('busqueda').value.toLowerCase();
-        productosFiltrados = productos.filter(p => {
-            const mMarca = marcaSeleccionada === "Todas" || p.marca === marcaSeleccionada;
-            const mBusqueda = p.nombre.toLowerCase().includes(query);
-            let mPrecio = true;
-            if(rangoPrecio === '50-100') mPrecio = (p.precio >= 50 && p.precio <= 100);
-            if(rangoPrecio === '100-200') mPrecio = (p.precio > 100 && p.precio <= 200);
-            return mMarca && mBusqueda && mPrecio;
-        });
-        dibujar();
-    }
-
-    function dibujar() {
-        const cont = document.getElementById('contenedor');
-        cont.innerHTML = productosFiltrados.map(p => `
-            <div class="card ${seleccionados.has(p.id) ? 'selected' : ''}" onclick="toggleSelect(${p.id})">
-                <div class="btn-info" onclick="toggleDetalles(event, ${p.id})">i</div>
-                <div id="detalles-${p.id}" class="detalles-overlay" onclick="toggleDetalles(event, ${p.id})">
-                    <strong style="color:var(--primary)">ESPECIFICACIONES</strong><br><br>
-                    ${p.descripcion}<br><br><small style="opacity:0.7">(Toca para cerrar)</small>
-                </div>
-                <div class="select-indicator"></div>
-                <div class="carrusel" onclick="event.stopPropagation()">
-                    ${p.fotos.length > 0 && p.fotos[0].startsWith('http') ? p.fotos.map(img => `<img src="${img}" loading="lazy">`).join('') : '<img src="https://via.placeholder.com/400x300?text=Ver+Fotos">'}
-                </div>
-                <div class="info">
-                    <p style="margin:0; font-size:0.85em; height:2.5em; overflow:hidden;"><b>${p.nombre}</b></p>
-                    <div class="pago-60">60%: $${(p.precio * 0.6).toFixed(2)}</div>
-                </div>
-            </div>`).join('');
-    }
-
-    function toggleDetalles(e, id) { e.stopPropagation(); document.getElementById(`detalles-${id}`).classList.toggle('active'); }
-
-    function toggleSelect(id) {
-        if (seleccionados.has(id)) seleccionados.delete(id);
-        else seleccionados.add(id);
-        actualizarResumen(); dibujar();
-    }
-
-    function actualizarResumen() {
-        let f = 0, a = 0;
-        productos.forEach(p => { if(seleccionados.has(p.id)){ f += p.precio; a += (p.precio * 0.6); }});
-        document.getElementById('resumenTotalFull').innerText = `$${f.toFixed(2)}`;
-        document.getElementById('resumenAbono').innerText = `$${a.toFixed(2)}`;
-    }
-
-    function abrirModal() {
-        if(!seleccionados.size) return alert("Selecciona un producto.");
-        let h = "<ul>", a = 0;
-        productos.forEach(p => { if(seleccionados.has(p.id)){ h += `<li>${p.nombre}</li>`; a += (p.precio * 0.6); }});
-        document.getElementById('listaResumen').innerHTML = h + "</ul>";
-        document.getElementById('modalAbonoHoy').innerText = `$${a.toFixed(2)}`;
-        document.getElementById('miModal').style.display = "block";
-    }
-
-    function cerrarModal() { document.getElementById('miModal').style.display = "none"; }
-
-    function enviarWhatsAppFinal() {
-        let m = "¡Hola Brylexroda! Mi pedido:\n", a = 0;
-        productos.forEach(p => { if(seleccionados.has(p.id)) { 
-            // Envía nombre + Link de la columna E
-            m += `▪️ ${p.nombre}\n  🔗 ${p.linkJomashop}\n`; 
-            a += (p.precio * 0.6); 
-        }});
-        m += `\n*Abono 60%: $${a.toFixed(2)}*`;
-        window.open(`https://wa.me/${miTelefono}?text=${encodeURIComponent(m)}`);
-    }
-
-    cargar();
-</script>
-</body>
-</html>
+    function toggleFiltros(e) { e.stopPropagation(); document.getElementById('panelFiltros').classList.
