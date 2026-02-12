@@ -291,10 +291,21 @@
     }
 
     function abrirModal() {
-        if(!seleccionados.size) return alert("Selecciona un reloj.");
-        let h = "<ul style='padding:0; list-style:none;'>", a = 0;
-        productos.forEach(p => { if(seleccionados.has(p.id)){ h += `<li>• ${p.nombre}</li>`; a += (p.precio * 0.6); }});
-        document.getElementById('listaResumen').innerHTML = h + "</ul>";
+        if(!seleccionados.size) return alert("Por favor, selecciona al menos un reloj.");
+        let h = "<div style='display:flex; flex-direction:column; gap:8px;'>", a = 0, total = 0;
+        productos.forEach(p => { 
+            if(seleccionados.has(p.id)){ 
+                // Marca llamativa con emoji y nombre
+                h += `<div style="display:flex; align-items:center; gap:10px; color:#fff;">
+                        <span style="color:var(--primary); font-size:16px;">⌚</span> 
+                        <span>${p.nombre}</span>
+                      </div>`; 
+                a += (p.precio * 0.6);
+                total += p.precio;
+            }
+        });
+        document.getElementById('listaResumen').innerHTML = h + "</div>";
+        document.getElementById('modalTotalFull').innerText = `$${total.toFixed(2)}`;
         document.getElementById('modalAbonoHoy').innerText = `$${a.toFixed(2)}`;
         document.getElementById('miModal').style.display = "block";
     }
