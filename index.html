@@ -22,7 +22,7 @@
             padding-bottom: 160px; 
         }
 
-        /* TÍTULO CON BRILLO MÁXIMO */
+        /* TÍTULO CON BRILLO MÁXIMO REFORZADO */
         .header { background: #1e293b; padding: 20px 20px; text-align: center; border-bottom: 1px solid var(--border); }
         .header h1 { 
             margin: 0; 
@@ -32,8 +32,8 @@
             background: linear-gradient(to bottom, #ffffff 10%, #f8fafc 40%, #ffffff 60%, #cbd5e1 90%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            /* Resplandor aumentado */
-            filter: drop-shadow(0 0 15px rgba(255,255,255,0.8)) drop-shadow(0 0 5px rgba(37, 211, 102, 0.2));
+            /* Filtro de brillo aumentado para máxima elegancia */
+            filter: drop-shadow(0 0 18px rgba(255,255,255,0.9)) drop-shadow(0 0 5px rgba(37, 211, 102, 0.3));
             line-height: 1.3; 
             padding: 10px 0;
         }
@@ -88,11 +88,13 @@
         .carrusel { width: 100%; height: 280px; background: #ffffff; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; }
         .carrusel img { flex: 0 0 100%; width: 100%; object-fit: contain; scroll-snap-align: center; }
 
-        .info { padding: 10px; }
-        .precio-total-card { color: var(--text-secondary); font-size: 0.75em; text-decoration: none; margin-bottom: 2px; }
-        .pago-60 { color: var(--primary); font-weight: bold; font-size: 0.82em; line-height: 1.2; }
+        .info { padding: 12px 10px; }
+        /* Precio total más grande y con más importancia */
+        .precio-total-card { color: #fff; font-weight: bold; font-size: 1.05em; margin-bottom: 3px; display: block; }
+        /* Abono con texto explícito */
+        .pago-60 { color: #1db954; font-weight: 600; font-size: 0.8em; line-height: 1.2; opacity: 0.9; }
 
-        .footer { position: fixed; bottom: 0; width: 100%; background: #1e293b; padding: 20px; border-top: 1px solid var(--border); z-index: 100; box-sizing: border-box; box-shadow: 0 -5px 15px rgba(0,0,0,0.3); }
+        .footer { position: fixed; bottom: 0; width: 100%; background: #1e293b; padding: 20px; border-top: 1px solid var(--border); z-index: 100; box-sizing: border-box; box-shadow: 0 -5 -15px rgba(0,0,0,0.3); }
         .btn-enlistar { background: var(--primary); color: #000; border: none; padding: 16px; border-radius: 50px; font-weight: bold; width: 100%; cursor: pointer; font-size: 18px; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); }
         
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); }
@@ -252,7 +254,7 @@
                 </div>
                 <div class="info">
                     <p style="margin:0; font-size:0.85em; height:2.5em; overflow:hidden;"><b>${p.nombre}</b></p>
-                    <div class="precio-total-card">Precio: $${p.precio.toFixed(2)}</div>
+                    <div class="precio-total-card">Precio Total: $${p.precio.toFixed(2)}</div>
                     <div class="pago-60">Abono Inicial (60%): $${(p.precio * 0.6).toFixed(2)}</div>
                 </div>
             </div>`).join('');
