@@ -7,8 +7,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
     
     <style>
-        /* Agregada variable --gold para la paleta Luxury */
-        :root { --primary: #25d366; --gold: #d4af37; --bg: #0f172a; --card-bg: #1e293b; --text-main: #ffffff; --text-secondary: #94a3b8; --border: #334155; --accent: #128c7e; }
+        /* Paleta ajustada: Verde más oscuro y Plateado Luxury */
+        :root { 
+            --primary: #15803d; /* Verde esmeralda oscuro */
+            --silver: #cbd5e1;  /* Plateado base */
+            --silver-bright: #f8fafc; /* Brillo plateado */
+            --bg: #0f172a; 
+            --card-bg: #1e293b; 
+            --text-main: #ffffff; 
+            --text-secondary: #94a3b8; 
+            --border: #334155; 
+            --accent: #065f46; 
+        }
         
         body { 
             font-family: sans-serif; 
@@ -23,22 +33,21 @@
             padding-bottom: 160px; 
         }
 
-        /* TÍTULO CON BRILLO MÁXIMO REFORZADO */
+        /* TÍTULO CON BRILLO PLATEADO */
         .header { background: #1e293b; padding: 20px 20px; text-align: center; border-bottom: 1px solid var(--border); }
         .header h1 { 
             margin: 0; 
             font-size: 3.8em; 
             font-family: 'Great Vibes', cursive; 
             font-weight: 400;
-            background: linear-gradient(to bottom, #ffffff 10%, #f8fafc 40%, #ffffff 60%, #cbd5e1 90%);
+            background: linear-gradient(to bottom, #ffffff 10%, #e2e8f0 40%, #ffffff 60%, #94a3b8 90%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 18px rgba(255,255,255,0.9)) drop-shadow(0 0 5px rgba(37, 211, 102, 0.3));
+            filter: drop-shadow(0 0 15px rgba(255,255,255,0.4));
             line-height: 1.3; 
             padding: 10px 0;
         }
-        /* El subtítulo ahora en Dorado para combinar con la marca */
-        .header p { margin-top: -5px; color: var(--gold); font-weight: bold; font-size: 0.85em; letter-spacing: 2px; text-transform: uppercase; }
+        .header p { margin-top: -5px; color: var(--silver); font-weight: bold; font-size: 0.85em; letter-spacing: 2px; text-transform: uppercase; }
 
         .video-presentacion { background: rgba(30, 41, 59, 0.7); padding: 25px 15px; text-align: center; border-bottom: 1px solid var(--border); backdrop-filter: blur(8px); }
         .video-presentacion p { 
@@ -48,15 +57,15 @@
             margin-bottom: 18px; 
             letter-spacing: 2px; 
             text-shadow: 0 0 10px rgba(255,255,255,0.2);
-            border-bottom: 1px solid var(--gold);
+            border-bottom: 1px solid var(--silver);
             display: inline-block;
             padding-bottom: 5px;
         }
         
         .video-wrapper { 
             position: relative; width: 100%; max-width: 320px; margin: 0 auto; border-radius: 15px; 
-            overflow: hidden; border: 2px solid var(--gold); 
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.25); aspect-ratio: 9/16;
+            overflow: hidden; border: 2px solid var(--silver); 
+            box-shadow: 0 0 25px rgba(203, 213, 225, 0.2); aspect-ratio: 9/16;
             pointer-events: none; 
         }
 
@@ -69,40 +78,38 @@
         .panel-filtros.active { display: block; }
         .chips-container { display: flex; gap: 8px; overflow-x: auto; padding: 5px 0; }
         .chip { background: #334155; color: #fff; padding: 6px 12px; border-radius: 15px; font-size: 11px; cursor: pointer; border: none; white-space: nowrap; }
-        .chip.active { background: var(--gold); color: #000; }
+        .chip.active { background: var(--silver); color: #000; }
 
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 12px; }
         @media (min-width: 768px) { .grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); } }
 
         .card { background: var(--card-bg); border-radius: 12px; overflow: hidden; cursor: pointer; position: relative; border: 2px solid transparent; transition: 0.3s; }
-        /* La selección mantiene el verde para indicar acción */
-        .card.selected { border-color: var(--primary); background: #1e3a2f; }
+        .card.selected { border-color: var(--primary); background: #14213d; }
 
-        /* Botón INF ahora en dorado para no distraer del botón principal */
-        .btn-info { position: absolute; top: 10px; left: 10px; width: 45px; height: 45px; background: rgba(212, 175, 55, 0.95); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 50; font-weight: bold; font-size: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.5); }
+        /* INF en plateado */
+        .btn-info { position: absolute; top: 10px; left: 10px; width: 45px; height: 45px; background: rgba(203, 213, 225, 0.9); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 50; font-weight: bold; font-size: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.5); }
 
         .detalles-overlay { position: absolute; bottom: -100%; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(5px); color: white; padding: 20px; box-sizing: border-box; transition: 0.4s; font-size: 11px; display: flex; flex-direction: column; justify-content: center; text-align: center; z-index: 60; }
         .detalles-overlay.active { bottom: 0; }
 
         .select-indicator { position: absolute; top: 10px; right: 10px; width: 35px; height: 35px; background: rgba(0,0,0,0.6); border: 2px solid #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 10; color: transparent; font-size: 20px; }
-        .card.selected .select-indicator { background: var(--primary); border-color: var(--primary); color: #000; }
+        .card.selected .select-indicator { background: var(--primary); border-color: var(--primary); color: #fff; }
         .card.selected .select-indicator::after { content: "✓"; }
 
         .carrusel { width: 100%; height: 280px; background: #ffffff; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; }
         .carrusel img { flex: 0 0 100%; width: 100%; object-fit: contain; scroll-snap-align: center; }
 
         .info { padding: 12px 10px; }
-        /* PRECIOS: Se aumentó tamaño y se cambió a Blanco/Dorado Elegante */
         .precio-total-card { color: #fff; font-weight: bold; font-size: 1.15em; margin-bottom: 3px; display: block; }
-        .pago-60 { color: var(--gold); font-weight: 600; font-size: 0.85em; line-height: 1.2; opacity: 1; }
+        /* Abono en Plateado Brillante */
+        .pago-60 { color: var(--silver); font-weight: 600; font-size: 0.85em; line-height: 1.2; }
 
-        .footer { position: fixed; bottom: 0; width: 100%; background: #1e293b; padding: 20px; border-top: 1px solid var(--border); z-index: 100; box-sizing: border-box; box-shadow: 0 -5 -15px rgba(0,0,0,0.3); }
-        /* Botón de WhatsApp se mantiene Verde para reconocimiento instantáneo */
-        .btn-enlistar { background: var(--primary); color: #000; border: none; padding: 16px; border-radius: 50px; font-weight: bold; width: 100%; cursor: pointer; font-size: 18px; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); }
+        .footer { position: fixed; bottom: 0; width: 100%; background: #1e293b; padding: 20px; border-top: 1px solid var(--border); z-index: 100; box-sizing: border-box; box-shadow: 0 -5px 15px rgba(0,0,0,0.5); }
+        .btn-enlistar { background: var(--primary); color: #fff; border: none; padding: 16px; border-radius: 50px; font-weight: bold; width: 100%; cursor: pointer; font-size: 18px; box-shadow: 0 4px 10px rgba(21, 128, 61, 0.3); }
         
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); }
         .modal-content { background: #1e293b; margin: 5% auto; padding: 25px; border-radius: 20px; width: 90%; max-width: 400px; color: #fff; position: relative; }
-        .instrucciones { background: #f0f7f4; padding: 12px; border-radius: 8px; color: #2c3e50; font-size: 12px; margin-bottom: 15px; border-left: 5px solid var(--gold); }
+        .instrucciones { background: #f1f5f9; padding: 12px; border-radius: 8px; color: #334155; font-size: 12px; margin-bottom: 15px; border-left: 5px solid var(--silver); }
     </style>
 </head>
 <body onclick="cerrarFiltrosFuera(event)">
@@ -143,14 +150,14 @@
 <div class="footer">
     <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-size:15px;">
         <div style="color:var(--text-secondary);">Total:<br><span id="resumenTotalFull" style="color:#fff; font-weight:bold; font-size:1.1em;">$0.00</span></div>
-        <div style="text-align:right; color:var(--text-secondary);">Abono (60%):<br><span id="resumenAbono" style="color:var(--gold); font-weight:bold; font-size:1.2em;">$0.00</span></div>
+        <div style="text-align:right; color:var(--text-secondary);">Abono (60%):<br><span id="resumenAbono" style="color:var(--silver-bright); font-weight:bold; font-size:1.2em;">$0.00</span></div>
     </div>
     <button class="btn-enlistar" onclick="abrirModal()">Ver mi Lista de Pedido 📋</button>
 </div>
 
 <div id="miModal" class="modal">
     <div class="modal-content">
-        <h2 style="color:var(--gold); text-align:center; margin-top:0;">🛒 Tu Pedido</h2>
+        <h2 style="color:var(--silver-bright); text-align:center; margin-top:0;">🛒 Tu Pedido</h2>
         <div class="instrucciones">
             <b>Requisitos de Importación y Pasos Antes del Pago Inicial:</b><br>
             • Se revisara stock del producto enlistado.<br>
@@ -160,9 +167,9 @@
         </div>
         <div id="listaResumen" style="max-height:150px; overflow-y:auto; border-bottom:1px solid #334155; margin-bottom:10px;"></div>
         <div style="padding:10px 0; font-weight:bold;">
-            Abono Hoy: <span id="modalAbonoHoy" style="color:var(--gold); font-size:1.4em;">$0.00</span>
+            Abono Hoy: <span id="modalAbonoHoy" style="color:var(--silver-bright); font-size:1.4em;">$0.00</span>
         </div>
-        <button onclick="enviarWhatsAppFinal()" style="background:var(--primary); width:100%; padding:15px; border-radius:50px; font-weight:bold; cursor:pointer; border:none;">Confirmar WhatsApp 📲</button>
+        <button onclick="enviarWhatsAppFinal()" style="background:var(--primary); color:#fff; width:100%; padding:15px; border-radius:50px; font-weight:bold; cursor:pointer; border:none;">Confirmar WhatsApp 📲</button>
         <p onclick="cerrarModal()" style="text-align:center; cursor:pointer; color:var(--text-secondary); margin-top:15px;">Cerrar</p>
     </div>
 </div>
@@ -248,7 +255,7 @@
             <div id="card-${p.id}" class="card ${seleccionados.has(p.id) ? 'selected' : ''}" onclick="toggleSelect(${p.id})">
                 <div class="btn-info" onclick="toggleDetalles(event, ${p.id})">INF</div>
                 <div id="detalles-${p.id}" class="detalles-overlay" onclick="toggleDetalles(event, ${p.id})">
-                    <strong style="color:var(--gold)">ESPECIFICACIONES</strong><br><br>
+                    <strong style="color:var(--silver)">ESPECIFICACIONES</strong><br><br>
                     ${p.descripcion}<br><br><small style="opacity:0.7">(Toca para cerrar)</small>
                 </div>
                 <div class="select-indicator"></div>
