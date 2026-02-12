@@ -22,22 +22,22 @@
             padding-bottom: 160px; 
         }
 
-        /* TÍTULO BRYLEXRODA ÚNICO Y ELEGANTE */
-        .header { background: #1e293b; padding: 30px 20px; text-align: center; border-bottom: 1px solid var(--border); }
+        /* TÍTULO CORREGIDO (SIN CORTES) */
+        .header { background: #1e293b; padding: 20px 20px; text-align: center; border-bottom: 1px solid var(--border); }
         .header h1 { 
             margin: 0; 
-            font-size: 3.5em; /* Más grande para que luzca la cursiva */
+            font-size: 3.5em; 
             font-family: 'Great Vibes', cursive; 
             font-weight: 400;
             background: linear-gradient(to bottom, #ffffff 30%, #a5a5a5 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             filter: drop-shadow(0 0 8px rgba(255,255,255,0.3));
-            line-height: 1;
+            line-height: 1.2; /* Ajustado para evitar cortes */
+            padding: 10px 0; /* Espacio extra para las curvas de la letra */
         }
-        .header p { margin-top: 5px; color: var(--primary); font-weight: bold; font-size: 0.85em; letter-spacing: 3px; text-transform: uppercase; }
+        .header p { margin-top: -5px; color: var(--primary); font-weight: bold; font-size: 0.85em; letter-spacing: 2px; text-transform: uppercase; }
 
-        /* MEJORA TEXTO SOBRE VIDEO - ESTILO PREMIUM */
         .video-presentacion { background: rgba(30, 41, 59, 0.7); padding: 25px 15px; text-align: center; border-bottom: 1px solid var(--border); backdrop-filter: blur(8px); }
         .video-presentacion p { 
             color: #fff; 
@@ -83,7 +83,8 @@
         .card.selected .select-indicator { background: var(--primary); border-color: var(--primary); color: #000; }
         .card.selected .select-indicator::after { content: "✓"; }
 
-        .carrusel { width: 100%; height: 280px; background: #000; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; }
+        /* CARRUSEL CON FONDO BLANCO */
+        .carrusel { width: 100%; height: 280px; background: #ffffff; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; }
         .carrusel img { flex: 0 0 100%; width: 100%; object-fit: contain; scroll-snap-align: center; }
 
         .info { padding: 10px; }
@@ -101,7 +102,7 @@
 
 <div class="header">
     <h1>BrylexRoda</h1>
-    <p>Catálogo de Relojería</p>
+    <p>Importación Directa de Relojería</p>
 </div>
 
 <div class="video-presentacion">
