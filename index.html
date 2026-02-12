@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catálogo BrylexRoda</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    
     <style>
         :root { --primary: #25d366; --bg: #0f172a; --card-bg: #1e293b; --text-main: #ffffff; --text-secondary: #94a3b8; --border: #334155; --accent: #128c7e; }
         
@@ -20,23 +22,34 @@
             padding-bottom: 160px; 
         }
 
-        /* Título con diseño más profesional */
-        .header { background: #1e293b; padding: 25px 20px; text-align: center; border-bottom: 1px solid var(--border); }
+        /* TÍTULO BRYLEXRODA ÚNICO Y ELEGANTE */
+        .header { background: #1e293b; padding: 30px 20px; text-align: center; border-bottom: 1px solid var(--border); }
         .header h1 { 
             margin: 0; 
-            font-size: 2.2em; 
-            font-family: 'Georgia', serif; 
-            letter-spacing: 3px; 
-            text-transform: uppercase;
-            background: linear-gradient(to bottom, #fff, var(--text-secondary));
+            font-size: 3.5em; /* Más grande para que luzca la cursiva */
+            font-family: 'Great Vibes', cursive; 
+            font-weight: 400;
+            background: linear-gradient(to bottom, #ffffff 30%, #a5a5a5 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 8px rgba(255,255,255,0.3));
+            line-height: 1;
         }
-        .header p { margin: 5px 0; color: var(--primary); font-weight: bold; font-size: 0.9em; letter-spacing: 1px; }
+        .header p { margin-top: 5px; color: var(--primary); font-weight: bold; font-size: 0.85em; letter-spacing: 3px; text-transform: uppercase; }
 
-        /* Mejora texto sobre video */
-        .video-presentacion { background: rgba(30, 41, 59, 0.7); padding: 20px 15px; text-align: center; border-bottom: 1px solid var(--border); backdrop-filter: blur(8px); }
-        .video-presentacion p { color: #fff; font-size: 1em; font-weight: 600; margin-bottom: 15px; letter-spacing: 1.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        /* MEJORA TEXTO SOBRE VIDEO - ESTILO PREMIUM */
+        .video-presentacion { background: rgba(30, 41, 59, 0.7); padding: 25px 15px; text-align: center; border-bottom: 1px solid var(--border); backdrop-filter: blur(8px); }
+        .video-presentacion p { 
+            color: #fff; 
+            font-size: 1.1em; 
+            font-weight: 300; 
+            margin-bottom: 18px; 
+            letter-spacing: 2px; 
+            text-shadow: 0 0 10px rgba(255,255,255,0.2);
+            border-bottom: 1px solid rgba(37, 211, 102, 0.3);
+            display: inline-block;
+            padding-bottom: 5px;
+        }
         
         .video-wrapper { 
             position: relative; width: 100%; max-width: 320px; margin: 0 auto; border-radius: 15px; 
@@ -70,7 +83,6 @@
         .card.selected .select-indicator { background: var(--primary); border-color: var(--primary); color: #000; }
         .card.selected .select-indicator::after { content: "✓"; }
 
-        /* Ajuste de carrusel para centrado perfecto */
         .carrusel { width: 100%; height: 280px; background: #000; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; }
         .carrusel img { flex: 0 0 100%; width: 100%; object-fit: contain; scroll-snap-align: center; }
 
@@ -242,7 +254,6 @@
 
     function toggleDetalles(e, id) { e.stopPropagation(); document.getElementById(`detalles-${id}`).classList.toggle('active'); }
 
-    /* SOLUCIÓN AL RESET DE IMÁGENES: Actualización manual de clases */
     function toggleSelect(id) {
         const card = document.getElementById(`card-${id}`);
         if (seleccionados.has(id)) {
