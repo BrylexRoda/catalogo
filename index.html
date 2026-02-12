@@ -14,7 +14,6 @@
         .contenedor-busqueda { background: #1e293b; padding: 10px 20px; display: flex; justify-content: center; }
         .input-busqueda { width: 100%; max-width: 400px; padding: 12px 20px; border-radius: 25px; border: 1px solid var(--border); background: var(--bg); color: white; text-align: center; }
 
-        /* PANEL DE FILTROS RECUPERADO */
         .contenedor-filtros { background: #1e293b; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
         .btn-abrir-filtros { width: 100%; padding: 10px; background: transparent; border: none; color: #fff; font-weight: bold; cursor: pointer; }
         .panel-filtros { display: none; padding: 10px 20px; }
@@ -38,14 +37,13 @@
         .card.selected .select-indicator { background: var(--primary); border-color: var(--primary); color: #000; }
         .card.selected .select-indicator::after { content: "✓"; }
 
-        /* AJUSTE: Imágenes más grandes y completas */
-        .carrusel { width: 100%; height: 240px; background: #000; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
+        /* ARREGLO IMAGEN GRANDE */
+        .carrusel { width: 100%; height: 280px; background: #000; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
         .carrusel img { flex: 0 0 100%; object-fit: contain; }
 
         .info { padding: 10px; }
         .pago-60 { color: var(--primary); font-weight: bold; font-size: 0.9em; }
 
-        /* FOOTER OPTIMIZADO */
         .footer { position: fixed; bottom: 0; width: 100%; background: #1e293b; padding: 20px; border-top: 1px solid var(--border); z-index: 100; box-sizing: border-box; box-shadow: 0 -5px 15px rgba(0,0,0,0.3); }
         .btn-enlistar { background: var(--primary); color: #000; border: none; padding: 16px; border-radius: 50px; font-weight: bold; width: 100%; cursor: pointer; font-size: 18px; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); }
         
@@ -129,7 +127,7 @@
                 let c = f.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(item => item.replace(/"/g, '').trim());
                 if(c.length < 2) return null;
                 return {
-                    id: i + 2, // ID basado en el número de fila real del Excel (empieza en 2)
+                    id: i + 2, // Fila real en Excel
                     nombre: c[0] || 'Reloj',
                     marca: (c[0] || '').split(' ')[0],
                     precio: parseFloat(c[1]?.replace('$', '').replace(/[^\d.,]/g, '')) || 0,
@@ -141,7 +139,105 @@
             generarMarcas();
             document.getElementById('loading').style.display = 'none';
             aplicarFiltros();
-        } catch (e) { console.error(e); }
+        } catch (e) { console.error("Error cargando:", e); }
     }
 
-    function toggleFiltros(e) { e.stopPropagation(); document.getElementById('panelFiltros').classList.
+    function toggleFiltros(e) { e.stopPropagation(); document.getElementById('panelFiltros').classList.toggle('active'); }
+    function cerrarFiltrosFuera(e) { if (!document.getElementById('areaFiltros').contains(e.target)) document.getElementById('panelFiltros').classList.remove('active'); }
+
+    function generarMarcas() {
+        const cont = document.getElementById('contenedorMarcas');
+        const marcas = [...new Set(productos.map(p => p.marca))];
+        marcas.forEach(m => {
+            const btn = document.createElement('button');
+            btn.className = 'chip chip-marca';
+            btn.innerText = m;
+            btn.onclick = (e) => { e.stopPropagation(); filtrarMarca(m, btn); };
+            cont.appendChild(btn);
+        });
+    }
+
+    function filtrarMarca(m, el) {
+        document.querySelectorAll('.chip-marca').forEach(c => c.classList.remove('active'));
+        el.classList.add('active'); marcaSeleccionada = m; aplicarFiltros();
+    }
+
+    function filtrarPrecio(r, el) {
+        document.querySelectorAll('.chip-precio').forEach(c => c.classList.remove('active'));
+        el.classList.add('active'); rangoPrecio = r; aplicarFiltros();
+    }
+
+    function aplicarFiltros() {
+        const query = document.getElementById('busqueda').value.toLowerCase();
+        productosFiltrados = productos.filter(p => {
+            const mMarca = marcaSeleccionada === "Todas" || p.marca === marcaSeleccionada;
+            const mBusqueda = p.nombre.toLowerCase().includes(query);
+            let mPrecio = true;
+            if(rangoPrecio === '50-100') mPrecio = (p.precio >= 50 && p.precio <= 100);
+            if(rangoPrecio === '100-200') mPrecio = (p.precio > 100 && p.precio <= 200);
+            return mMarca && mBusqueda && mPrecio;
+        });
+        dibujar();
+    }
+
+    function dibujar() {
+        const cont = document.getElementById('contenedor');
+        cont.innerHTML = productosFiltrados.map(p => `
+            <div class="card ${seleccionados.has(p.id) ? 'selected' : ''}" onclick="toggleSelect(${p.id})">
+                <div class="btn-info" onclick="toggleDetalles(event, ${p.id})">i</div>
+                <div id="detalles-${p.id}" class="detalles-overlay" onclick="toggleDetalles(event, ${p.id})">
+                    <strong style="color:var(--primary)">ESPECIFICACIONES</strong><br><br>
+                    ${p.descripcion}<br><br><small style="opacity:0.7">(Toca para cerrar)</small>
+                </div>
+                <div class="select-indicator"></div>
+                <div class="carrusel" onclick="event.stopPropagation()">
+                    ${p.fotos.length > 0 && p.fotos[0].startsWith('http') ? p.fotos.map(img => `<img src="${img}" loading="lazy">`).join('') : '<img src="https://via.placeholder.com/400x300?text=Ver+Fotos">'}
+                </div>
+                <div class="info">
+                    <p style="margin:0; font-size:0.85em; height:2.5em; overflow:hidden;"><b>${p.nombre}</b></p>
+                    <div class="pago-60">60%: $${(p.precio * 0.6).toFixed(2)}</div>
+                </div>
+            </div>`).join('');
+    }
+
+    function toggleDetalles(e, id) { e.stopPropagation(); document.getElementById(`detalles-${id}`).classList.toggle('active'); }
+
+    function toggleSelect(id) {
+        if (seleccionados.has(id)) seleccionados.delete(id);
+        else seleccionados.add(id);
+        actualizarResumen(); dibujar();
+    }
+
+    function actualizarResumen() {
+        let f = 0, a = 0;
+        productos.forEach(p => { if(seleccionados.has(p.id)){ f += p.precio; a += (p.precio * 0.6); }});
+        document.getElementById('resumenTotalFull').innerText = `$${f.toFixed(2)}`;
+        document.getElementById('resumenAbono').innerText = `$${a.toFixed(2)}`;
+    }
+
+    function abrirModal() {
+        if(!seleccionados.size) return alert("Selecciona un producto.");
+        let h = "<ul>", a = 0;
+        productos.forEach(p => { if(seleccionados.has(p.id)){ h += `<li>${p.nombre}</li>`; a += (p.precio * 0.6); }});
+        document.getElementById('listaResumen').innerHTML = h + "</ul>";
+        document.getElementById('modalAbonoHoy').innerText = `$${a.toFixed(2)}`;
+        document.getElementById('miModal').style.display = "block";
+    }
+
+    function cerrarModal() { document.getElementById('miModal').style.display = "none"; }
+
+    function enviarWhatsAppFinal() {
+        let m = "¡Hola Brylexroda! Mi pedido:\n", a = 0;
+        productos.forEach(p => { if(seleccionados.has(p.id)) { 
+            // EL CAMBIO CLAVE: Enviamos Nombre + REF (Fila de Excel)
+            m += `▪️ ${p.nombre} (REF: ${p.id})\n`; 
+            a += (p.precio * 0.6); 
+        }});
+        m += `\n*Abono 60%: $${a.toFixed(2)}*`;
+        window.open(`https://wa.me/${miTelefono}?text=${encodeURIComponent(m)}`);
+    }
+
+    cargar();
+</script>
+</body>
+</html>
