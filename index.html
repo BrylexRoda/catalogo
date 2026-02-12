@@ -8,13 +8,12 @@
     
     <style>
         :root { 
-            --primary: #c5a059; /* Dorado Champagne */
+            --primary: #c5a059; 
             --bg: #05070a;      
             --card-bg: #111827; 
             --text-main: #ffffff; 
             --text-secondary: #9ca3af; 
             --border: #1f2937; 
-            --accent: #856404; 
         }
         
         body { 
@@ -22,79 +21,84 @@
             background-color: var(--bg);
             color: var(--text-main); 
             margin: 0; 
-            padding-bottom: 160px; 
+            padding-bottom: 140px; 
             line-height: 1.6;
         }
 
-        /* HEADER */
-        .header { background: #000; padding: 40px 20px; text-align: center; border-bottom: 1px solid var(--border); }
+        .header { background: #000; padding: 30px 20px; text-align: center; border-bottom: 1px solid var(--border); }
         .header h1 { 
             margin: 0; 
-            font-size: 3.8em; 
+            font-size: 3.5em; 
             font-family: 'Great Vibes', cursive; 
-            font-weight: 400;
             color: #fff;
-            text-shadow: 0 0 10px rgba(197, 160, 89, 0.8), 0 0 20px rgba(197, 160, 89, 0.5);
-            line-height: 1; 
+            text-shadow: 0 0 10px rgba(197, 160, 89, 0.5);
         }
-        .header p { margin-top: 15px; color: var(--primary); font-weight: 300; font-size: 0.75em; letter-spacing: 5px; text-transform: uppercase; opacity: 0.8; }
+        .header p { margin-top: 10px; color: var(--primary); font-size: 0.7em; letter-spacing: 4px; text-transform: uppercase; opacity: 0.8; }
 
-        /* ESTILOS SECCIÓN EXPERIENCIAS (OCULTA) */
-        .seccion-experiencias { padding: 25px 0; background: #0a0c10; border-bottom: 1px solid var(--border); text-align: center; }
-        .seccion-experiencias h3 { font-size: 0.75em; letter-spacing: 3px; color: var(--primary); text-transform: uppercase; margin-bottom: 15px; }
-        .carrusel-testimonios { display: flex; overflow-x: auto; gap: 15px; padding: 0 20px 15px; scrollbar-width: none; }
-        .carrusel-testimonios::-webkit-scrollbar { display: none; }
-        .testimonio-img { flex: 0 0 140px; height: 220px; border-radius: 12px; object-fit: cover; border: 1px solid var(--border); box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .video-presentacion { background: #0a0c10; padding: 20px 15px; text-align: center; border-bottom: 1px solid var(--border); position: relative; }
+        .video-wrapper { position: relative; width: 100%; max-width: 300px; margin: 0 auto; border-radius: 20px; overflow: hidden; border: 1px solid var(--border); aspect-ratio: 9/16; }
 
-        .video-presentacion { background: #0a0c10; padding: 25px 15px; text-align: center; border-bottom: 1px solid var(--border); }
-        .video-presentacion p { color: var(--primary); font-size: 0.8em; font-weight: 600; margin-bottom: 18px; letter-spacing: 2px; text-transform: uppercase; }
-        .video-wrapper { position: relative; width: 100%; max-width: 300px; margin: 0 auto; border-radius: 20px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 0 30px rgba(197, 160, 89, 0.1); aspect-ratio: 9/16; }
+        /* BUSCADOR ACOPLADO AL VIDEO */
+        .contenedor-busqueda { 
+            position: absolute; 
+            bottom: 30px; 
+            right: calc(50% - 140px); 
+            z-index: 80;
+        }
+        .input-busqueda { 
+            width: 40px; 
+            height: 40px;
+            transition: width 0.4s ease;
+            padding: 10px; 
+            border-radius: 20px; 
+            border: 1px solid var(--primary); 
+            background: rgba(17, 24, 39, 0.9); 
+            color: white; 
+            font-size: 0.8em;
+            outline: none;
+            cursor: pointer;
+        }
+        .input-busqueda:focus { width: 180px; cursor: text; padding-left: 15px; }
 
-        .contenedor-busqueda { background: #0a0c10; padding: 15px 20px; display: flex; justify-content: center; }
-        .input-busqueda { width: 100%; max-width: 400px; padding: 14px; border-radius: 12px; border: 1px solid var(--border); background: #111827; color: white; text-align: center; font-size: 0.9em; }
-        .input-busqueda:focus { border-color: var(--primary); outline: none; }
-
-        .contenedor-filtros { background: #0a0c10; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-        .btn-abrir-filtros { width: 100%; padding: 10px; background: transparent; border: none; color: var(--text-secondary); font-size: 0.8em; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
-        .panel-filtros { display: none; padding: 10px 20px; }
+        .contenedor-filtros { background: #05070a; padding: 10px 20px; }
+        .btn-abrir-filtros { padding: 5px 0; background: transparent; border: none; color: var(--text-secondary); font-size: 0.75em; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; display: block; text-align: left; }
+        
+        .panel-filtros { display: none; padding: 10px 0; }
         .panel-filtros.active { display: block; }
         .chips-container { display: flex; gap: 8px; overflow-x: auto; padding: 5px 0; scrollbar-width: none; }
-        .chip { background: #1f2937; color: #fff; padding: 8px 16px; border-radius: 8px; font-size: 11px; cursor: pointer; border: 1px solid transparent; white-space: nowrap; }
-        .chip.active { background: var(--primary); color: #000; font-weight: bold; border-color: white; }
+        .chip { background: #1f2937; color: #fff; padding: 6px 12px; border-radius: 6px; font-size: 10px; cursor: pointer; border: 1px solid transparent; white-space: nowrap; }
+        .chip.active { background: var(--primary); color: #000; font-weight: bold; }
 
-        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 15px; }
-        @media (min-width: 768px) { .grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); } }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 12px; }
+        @media (min-width: 768px) { .grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); } }
 
-        .card { background: var(--card-bg); border-radius: 20px; overflow: hidden; cursor: pointer; position: relative; border: 1px solid var(--border); transition: all 0.3s ease; }
-        .card.selected { border-color: var(--primary); transform: scale(0.98); box-shadow: 0 0 20px rgba(197, 160, 89, 0.2); }
+        .card { background: var(--card-bg); border-radius: 15px; overflow: hidden; cursor: pointer; position: relative; border: 1px solid var(--border); transition: 0.3s; }
+        .card.selected { border-color: var(--primary); box-shadow: 0 0 15px rgba(197, 160, 89, 0.2); }
 
-        .btn-info { position: absolute; top: 12px; left: 12px; width: 38px; height: 38px; background: var(--primary); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 50; font-size: 9px; font-weight: 800; border: 2px solid #000; }
-
-        .detalles-overlay { position: absolute; bottom: -100%; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.98); backdrop-filter: blur(10px); color: white; padding: 25px; box-sizing: border-box; transition: 0.4s; font-size: 12px; display: flex; flex-direction: column; justify-content: center; text-align: center; z-index: 60; }
+        .btn-info { position: absolute; top: 10px; left: 10px; width: 35px; height: 35px; background: var(--primary); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 50; font-size: 8px; font-weight: 800; border: 2px solid #000; }
+        .detalles-overlay { position: absolute; bottom: -100%; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(8px); color: white; padding: 20px; box-sizing: border-box; transition: 0.4s; font-size: 11px; display: flex; flex-direction: column; justify-content: center; text-align: center; z-index: 60; }
         .detalles-overlay.active { bottom: 0; }
 
-        .select-indicator { position: absolute; top: 12px; right: 12px; width: 28px; height: 28px; background: rgba(0,0,0,0.6); border: 1px solid var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 10; }
-        .card.selected .select-indicator { background: #22c55e; border-color: #fff; color: white; }
-        .card.selected .select-indicator::after { content: "✓"; font-weight: bold; }
+        .select-indicator { position: absolute; top: 10px; right: 10px; width: 24px; height: 24px; background: rgba(0,0,0,0.6); border: 1px solid var(--primary); border-radius: 50%; z-index: 10; display: flex; align-items: center; justify-content: center; }
+        .card.selected .select-indicator { background: #22c55e; border-color: #fff; }
+        .card.selected .select-indicator::after { content: "✓"; color: white; font-size: 12px; font-weight: bold; }
 
-        .carrusel { width: 100%; height: 240px; background: #fff; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; border-bottom: 1px solid var(--border); }
+        .carrusel { width: 100%; height: 200px; background: #fff; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
         .carrusel img { flex: 0 0 100%; width: 100%; object-fit: contain; }
 
-        /* ESTRELLAS */
-        .rating-container { margin-top: 5px; display: flex; gap: 2px; }
-        .star { color: #374151; font-size: 14px; transition: color 0.2s; }
-        .star.filled { color: var(--primary); }
+        .info { padding: 12px; }
+        .info p { margin: 0; font-size: 0.75em; height: 2.8em; overflow: hidden; color: var(--text-secondary); line-height: 1.4; }
+        .precio-total-card { color: #fff; font-weight: 300; font-size: 0.75em; margin-top: 5px; opacity: 0.6; }
+        .pago-60 { color: var(--primary); font-weight: 700; font-size: 1em; display: block; }
 
-        .info { padding: 15px; }
-        .info p { margin: 0; font-size: 0.8em; height: 3em; overflow: hidden; color: var(--text-secondary); line-height: 1.4; }
-        .precio-total-card { color: #fff; font-weight: 400; font-size: 0.8em; margin-top: 8px; opacity: 0.7; }
-        .pago-60 { color: var(--primary); font-weight: 700; font-size: 1.1em; display: block; margin-top: 2px; }
-
-        .footer { position: fixed; bottom: 0; width: 100%; background: rgba(5, 7, 10, 0.95); backdrop-filter: blur(20px); padding: 20px; border-top: 1px solid var(--primary); z-index: 100; box-sizing: border-box; }
-        .btn-enlistar { background: linear-gradient(135deg, #c5a059, #856404); color: #000; border: none; padding: 16px; border-radius: 12px; font-weight: 700; width: 100%; cursor: pointer; font-size: 15px; text-transform: uppercase; }
+        .footer { position: fixed; bottom: 0; width: 100%; background: rgba(5, 7, 10, 0.98); backdrop-filter: blur(20px); padding: 15px 20px; border-top: 1px solid var(--primary); z-index: 100; box-sizing: border-box; }
+        .btn-enlistar { background: linear-gradient(135deg, #c5a059, #856404); color: #000; border: none; padding: 14px; border-radius: 10px; font-weight: 700; width: 100%; cursor: pointer; font-size: 13px; text-transform: uppercase; }
         
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); }
-        .modal-content { background: #111827; margin: 10% auto; padding: 25px; border-radius: 20px; width: 85%; max-width: 400px; color: #fff; border: 1px solid var(--primary); }
+        .modal-content { background: #111827; margin: 15% auto; padding: 20px; border-radius: 15px; width: 88%; max-width: 380px; color: #fff; border: 1px solid var(--primary); }
+        .instrucciones { background: rgba(197, 160, 89, 0.05); padding: 15px; border-radius: 10px; border-left: 3px solid var(--primary); margin: 15px 0; }
+        .instrucciones p { margin: 8px 0; font-size: 13px; color: #fff; }
+        .instrucciones b { color: var(--primary); }
     </style>
 </head>
 <body onclick="cerrarFiltrosFuera(event)">
@@ -105,23 +109,21 @@
 </div>
 
 <div class="video-presentacion">
-    <p>✦ Calidad de Importación Directa ✦</p>
     <div class="video-wrapper">
-        <iframe width="100%" height="100%" src="https://www.youtube.com/embed/kvgM0q_P3XQ?autoplay=1&mute=1&loop=1&playlist=kvgM0q_P3XQ&controls=0&modestbranding=1&rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe width="100%" height="100%" src="https://www.youtube.com/embed/kvgM0q_P3XQ?autoplay=1&mute=1&loop=1&playlist=kvgM0q_P3XQ&controls=0&modestbranding=1&rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
+    <div class="contenedor-busqueda">
+        <input type="text" id="busqueda" class="input-busqueda" placeholder="Buscar..." oninput="aplicarFiltros()">
     </div>
 </div>
 
-<div class="contenedor-busqueda">
-    <input type="text" id="busqueda" class="input-busqueda" placeholder="Buscar modelo o marca..." oninput="aplicarFiltros()">
-</div>
-
 <div class="contenedor-filtros" id="areaFiltros">
-    <button class="btn-abrir-filtros" onclick="toggleFiltros(event)">Filtrar por Marca o Precio ▼</button>
+    <button class="btn-abrir-filtros" onclick="toggleFiltros(event)">FILTROS ▼</button>
     <div class="panel-filtros" id="panelFiltros">
         <div class="chips-container">
             <button class="chip chip-precio active" onclick="filtrarPrecio('todas', this)">Todo</button>
-            <button class="chip chip-precio" onclick="filtrarPrecio('50-100', this)">$50 - $100</button>
-            <button class="chip chip-precio" onclick="filtrarPrecio('100-200', this)">$100 - $200</button>
+            <button class="chip chip-precio" onclick="filtrarPrecio('50-100', this)">$50-$100</button>
+            <button class="chip chip-precio" onclick="filtrarPrecio('100-200', this)">$100-$200</button>
         </div>
         <div class="chips-container" id="contenedorMarcas">
             <button class="chip chip-marca active" onclick="filtrarMarca('Todas', this)">Todas las marcas</button>
@@ -129,33 +131,36 @@
     </div>
 </div>
 
-<div id="loading" style="text-align:center; padding:50px; color: var(--text-secondary); font-size: 12px; letter-spacing: 2px;">CARGANDO COLECCIÓN...</div>
+<div id="loading" style="text-align:center; padding:50px; color: var(--text-secondary); font-size: 10px; letter-spacing: 2px;">CONECTANDO CON COLECCIÓN...</div>
 <div class="grid" id="contenedor"></div>
 
 <div class="footer">
-    <div style="display:flex; justify-content:space-between; margin-bottom:15px; align-items: center;">
-        <div><span style="color:var(--text-secondary); font-size:10px; text-transform:uppercase;">Valor Total</span><br><span id="resumenTotalFull" style="color:#fff; font-weight:bold; font-size:1.1em;">$0.00</span></div>
-        <div style="text-align:right;"><span style="color:var(--primary); font-size:10px; text-transform:uppercase;">Abono inicial</span><br><span id="resumenAbono" style="color:var(--primary); font-weight:bold; font-size:1.4em;">$0.00</span></div>
+    <div style="display:flex; justify-content:space-between; margin-bottom:12px; align-items: center;">
+        <div><span style="color:var(--text-secondary); font-size:9px; text-transform:uppercase;">Total</span><br><span id="resumenTotalFull" style="color:#fff; font-weight:bold; font-size:1em;">$0.00</span></div>
+        <div style="text-align:right;"><span style="color:var(--primary); font-size:9px; text-transform:uppercase;">Abono Inicial (60%)</span><br><span id="resumenAbono" style="color:var(--primary); font-weight:bold; font-size:1.2em;">$0.00</span></div>
     </div>
     <button class="btn-enlistar" onclick="abrirModal()">Confirmar Selección 📋</button>
 </div>
 
 <div id="miModal" class="modal">
     <div class="modal-content">
-        <h2 style="color:var(--primary); text-align:center; font-family:'Great Vibes'; font-size:2.5em; margin:0 0 15px 0;">Tu Pedido</h2>
+        <h3 style="color:var(--primary); text-align:center; font-size:14px; letter-spacing:1px; margin-top:0;">REQUISITOS PARA REALIZAR LA IMPORTACIÓN</h3>
+        
         <div class="instrucciones">
-            <b style="color:var(--primary); text-transform:uppercase; font-size:9px;">Condiciones de Importación:</b><br><br>
-            • Abono inicial del <b>60%</b> para proceder con la compra.<br>
-            • Entrega estimada en 30 días hábiles.<br>
-            • Saldo pendiente al recibir el producto.<br>
+            <p>• <b>Abono inicial:</b> Se requiere el <b>60%</b> del valor total.</p>
+            <p>• <b>Tiempo de entrega:</b> Estimado de 30 días hábiles.</p>
+            <p>• <b>Liquidación:</b> El saldo se cancela al recibir el producto.</p>
         </div>
-        <div id="listaResumen" style="max-height:150px; overflow-y:auto; border-bottom:1px solid var(--border); margin-bottom:15px; font-size:12px; color: #cbd5e1;"></div>
-        <div style="padding:10px 0; text-align:center;">
-            <span style="color:var(--text-secondary); font-size:11px;">ABONO INICIAL REQUERIDO:</span><br>
-            <span id="modalAbonoHoy" style="color:var(--primary); font-size:1.8em; font-weight:bold;">$0.00</span>
+
+        <div id="listaResumen" style="max-height:120px; overflow-y:auto; margin-bottom:15px; font-size:12px; border-bottom:1px solid var(--border);"></div>
+        
+        <div style="text-align:center; padding:10px 0;">
+            <span style="color:var(--text-secondary); font-size:10px; text-transform:uppercase;">Total Abono Hoy:</span><br>
+            <span id="modalAbonoHoy" style="color:var(--primary); font-size:1.6em; font-weight:bold;">$0.00</span>
         </div>
-        <button onclick="enviarWhatsAppFinal()" style="background:var(--primary); color:#000; width:100%; padding:16px; border-radius:12px; font-weight:bold; cursor:pointer; border:none; text-transform:uppercase;">Enviar a WhatsApp 📲</button>
-        <p onclick="cerrarModal()" style="text-align:center; cursor:pointer; color:var(--text-secondary); margin-top:20px; font-size:11px; text-transform:uppercase;">Cerrar</p>
+
+        <button onclick="enviarWhatsAppFinal()" style="background:var(--primary); color:#000; width:100%; padding:14px; border-radius:10px; font-weight:bold; cursor:pointer; border:none; text-transform:uppercase; font-size:13px;">Enviar a WhatsApp 📲</button>
+        <p onclick="cerrarModal()" style="text-align:center; cursor:pointer; color:var(--text-secondary); margin-top:15px; font-size:10px; text-transform:uppercase;">Volver al catálogo</p>
     </div>
 </div>
 
@@ -169,16 +174,7 @@
     let marcaSeleccionada = "Todas";
     let rangoPrecio = "todas";
 
-    // Función para manejar estrellas por dispositivo
-    function setRating(id, rating) {
-        const key = `rating_prod_${id}`;
-        if (localStorage.getItem(key)) return; // Bloqueo: solo un voto por dispositivo
-        localStorage.setItem(key, rating);
-        aplicarFiltros(); // Redibujar para mostrar estrellas
-    }
-
     async function cargar() {
-        window.scrollTo(0, 0);
         try {
             const res = await fetch(SHEET_URL + '&cache=' + new Date().getTime());
             const text = await res.text();
@@ -193,14 +189,14 @@
                     marca: (c[0] || '').split(' ')[0],
                     precio: parseFloat(c[1]?.replace('$', '').replace(/[^\d.,]/g, '')) || 0,
                     fotos: (c[2] || '').split('|').map(link => link.trim()),
-                    descripcion: (c[3] || 'Consultar detalles por interno').split('|').join('<br>')
+                    descripcion: (c[3] || 'Consultar detalles').split('|').join('<br>')
                 };
             }).filter(p => p !== null);
 
             generarMarcas();
             document.getElementById('loading').style.display = 'none';
             aplicarFiltros();
-        } catch (e) { console.error("Error cargando:", e); }
+        } catch (e) { console.error(e); }
     }
 
     function toggleFiltros(e) { e.stopPropagation(); document.getElementById('panelFiltros').classList.toggle('active'); }
@@ -243,47 +239,31 @@
 
     function dibujar() {
         const cont = document.getElementById('contenedor');
-        cont.innerHTML = productosFiltrados.map(p => {
-            // Lógica de estrellas guardadas
-            const savedRating = localStorage.getItem(`rating_prod_${p.id}`) || 5; // Por defecto 5 visuales
-            let starsHtml = '';
-            for(let i=1; i<=5; i++) {
-                starsHtml += `<span class="star ${i <= savedRating ? 'filled' : ''}" onclick="event.stopPropagation(); setRating(${p.id}, ${i})">★</span>`;
-            }
-
-            return `
+        cont.innerHTML = productosFiltrados.map(p => `
             <div id="card-${p.id}" class="card ${seleccionados.has(p.id) ? 'selected' : ''}" onclick="toggleSelect(${p.id})">
                 <div class="btn-info" onclick="toggleDetalles(event, ${p.id})">INFO</div>
                 <div id="detalles-${p.id}" class="detalles-overlay" onclick="toggleDetalles(event, ${p.id})">
-                    <strong style="color:var(--primary); letter-spacing:1px; font-size:10px;">ESPECIFICACIONES</strong><br><br>
-                    ${p.descripcion}<br><br><small style="opacity:0.5; text-transform:uppercase;">(Toca para cerrar)</small>
+                    <strong>ESPECIFICACIONES</strong><br><br>${p.descripcion}
                 </div>
                 <div class="select-indicator"></div>
                 <div class="carrusel" onclick="event.stopPropagation()">
-                    ${p.fotos.length > 0 && p.fotos[0].startsWith('http') ? p.fotos.map(img => `<img src="${img}" loading="lazy">`).join('') : '<img src="https://via.placeholder.com/400x300?text=Ver+Fotos">'}
+                    ${p.fotos.length > 0 && p.fotos[0].startsWith('http') ? p.fotos.map(img => `<img src="${img}" loading="lazy">`).join('') : '<img src="https://via.placeholder.com/300x300?text=Sin+Foto">'}
                 </div>
                 <div class="info">
-                    <div class="rating-container">${starsHtml}</div>
                     <p>${p.nombre}</p>
-                    <div class="pago-60">Abono inicial: $${(p.precio * 0.6).toFixed(2)}</div>
+                    <div class="pago-60">Abono: $${(p.precio * 0.6).toFixed(2)}</div>
                     <div class="precio-total-card">Total: $${p.precio.toFixed(2)}</div>
                 </div>
-            </div>`;
-        }).join('');
+            </div>`).join('');
     }
 
     function toggleDetalles(e, id) { e.stopPropagation(); document.getElementById(`detalles-${id}`).classList.toggle('active'); }
 
     function toggleSelect(id) {
-        const card = document.getElementById(`card-${id}`);
-        if (seleccionados.has(id)) {
-            seleccionados.delete(id);
-            card.classList.remove('selected');
-        } else {
-            seleccionados.add(id);
-            card.classList.add('selected');
-        }
+        if (seleccionados.has(id)) seleccionados.delete(id);
+        else seleccionados.add(id);
         actualizarResumen();
+        dibujar();
     }
 
     function actualizarResumen() {
@@ -294,9 +274,9 @@
     }
 
     function abrirModal() {
-        if(!seleccionados.size) return alert("Por favor, selecciona al menos un reloj.");
-        let h = "<ul style='padding-left:15px;'>", a = 0;
-        productos.forEach(p => { if(seleccionados.has(p.id)){ h += `<li>${p.nombre}</li>`; a += (p.precio * 0.6); }});
+        if(!seleccionados.size) return alert("Selecciona un reloj.");
+        let h = "<ul style='padding:0; list-style:none;'>", a = 0;
+        productos.forEach(p => { if(seleccionados.has(p.id)){ h += `<li>• ${p.nombre}</li>`; a += (p.precio * 0.6); }});
         document.getElementById('listaResumen').innerHTML = h + "</ul>";
         document.getElementById('modalAbonoHoy').innerText = `$${a.toFixed(2)}`;
         document.getElementById('miModal').style.display = "block";
@@ -305,12 +285,11 @@
     function cerrarModal() { document.getElementById('miModal').style.display = "none"; }
 
     function enviarWhatsAppFinal() {
-        let m = "¡Hola Brylexroda! He revisado el catálogo y me gustaría importar estos modelos:\n\n", a = 0;
+        let m = "¡Hola Brylexroda! Me interesa importar estos modelos:\n\n", a = 0;
         productos.forEach(p => { if(seleccionados.has(p.id)) { 
-            m += `⌚ ${p.nombre} (ID: ${p.id})\n`; 
-            a += (p.precio * 0.6); 
+            m += `⌚ ${p.nombre}\n`; a += (p.precio * 0.6); 
         }});
-        m += `\n*Abono inicial del 60%: $${a.toFixed(2)}*\n\n¿Me podrían confirmar disponibilidad para proceder?`;
+        m += `\n*Abono inicial requerido: $${a.toFixed(2)}*\n\n¿Disponibilidad confirmada?`;
         window.open(`https://wa.me/${miTelefono}?text=${encodeURIComponent(m)}`);
     }
 
