@@ -22,18 +22,18 @@
             padding-bottom: 160px; 
         }
 
-        /* TÍTULO MÁS BRILLANTE Y SIN CORTES */
+        /* TÍTULO CON BRILLO MÁXIMO */
         .header { background: #1e293b; padding: 20px 20px; text-align: center; border-bottom: 1px solid var(--border); }
         .header h1 { 
             margin: 0; 
             font-size: 3.8em; 
             font-family: 'Great Vibes', cursive; 
             font-weight: 400;
-            /* Efecto Platino Brillante */
-            background: linear-gradient(to bottom, #ffffff 20%, #e2e8f0 40%, #ffffff 50%, #94a3b8 80%);
+            background: linear-gradient(to bottom, #ffffff 10%, #f8fafc 40%, #ffffff 60%, #cbd5e1 90%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 12px rgba(255,255,255,0.6));
+            /* Resplandor aumentado */
+            filter: drop-shadow(0 0 15px rgba(255,255,255,0.8)) drop-shadow(0 0 5px rgba(37, 211, 102, 0.2));
             line-height: 1.3; 
             padding: 10px 0;
         }
@@ -52,12 +52,11 @@
             padding-bottom: 5px;
         }
         
-        /* VIDEO SIN INTERACCIÓN (PROTEGIDO) */
         .video-wrapper { 
             position: relative; width: 100%; max-width: 320px; margin: 0 auto; border-radius: 15px; 
             overflow: hidden; border: 2px solid var(--primary); 
             box-shadow: 0 0 25px rgba(37, 211, 102, 0.25); aspect-ratio: 9/16;
-            pointer-events: none; /* Bloquea clics en el video para proteger tu canal */
+            pointer-events: none; 
         }
 
         .contenedor-busqueda { background: #1e293b; padding: 10px 20px; display: flex; justify-content: center; }
@@ -90,7 +89,8 @@
         .carrusel img { flex: 0 0 100%; width: 100%; object-fit: contain; scroll-snap-align: center; }
 
         .info { padding: 10px; }
-        .pago-60 { color: var(--primary); font-weight: bold; font-size: 0.9em; }
+        .precio-total-card { color: var(--text-secondary); font-size: 0.75em; text-decoration: none; margin-bottom: 2px; }
+        .pago-60 { color: var(--primary); font-weight: bold; font-size: 0.82em; line-height: 1.2; }
 
         .footer { position: fixed; bottom: 0; width: 100%; background: #1e293b; padding: 20px; border-top: 1px solid var(--border); z-index: 100; box-sizing: border-box; box-shadow: 0 -5px 15px rgba(0,0,0,0.3); }
         .btn-enlistar { background: var(--primary); color: #000; border: none; padding: 16px; border-radius: 50px; font-weight: bold; width: 100%; cursor: pointer; font-size: 18px; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); }
@@ -173,7 +173,6 @@
     let rangoPrecio = "todas";
 
     async function cargar() {
-        // Asegurar que la página cargue al principio
         window.scrollTo(0, 0);
         try {
             const res = await fetch(SHEET_URL + '&cache=' + new Date().getTime());
@@ -196,7 +195,6 @@
             generarMarcas();
             document.getElementById('loading').style.display = 'none';
             aplicarFiltros();
-            // Refuerzo de scroll al inicio después de cargar contenido
             setTimeout(() => window.scrollTo(0,0), 100);
         } catch (e) { console.error("Error cargando:", e); }
     }
@@ -254,7 +252,8 @@
                 </div>
                 <div class="info">
                     <p style="margin:0; font-size:0.85em; height:2.5em; overflow:hidden;"><b>${p.nombre}</b></p>
-                    <div class="pago-60">60%: $${(p.precio * 0.6).toFixed(2)}</div>
+                    <div class="precio-total-card">Precio: $${p.precio.toFixed(2)}</div>
+                    <div class="pago-60">Abono Inicial (60%): $${(p.precio * 0.6).toFixed(2)}</div>
                 </div>
             </div>`).join('');
     }
