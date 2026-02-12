@@ -80,6 +80,11 @@
         .carrusel { width: 100%; height: 240px; background: #fff; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; border-bottom: 1px solid var(--border); }
         .carrusel img { flex: 0 0 100%; width: 100%; object-fit: contain; }
 
+        /* ESTRELLAS */
+        .rating-container { margin-top: 5px; display: flex; gap: 2px; }
+        .star { color: #374151; font-size: 14px; transition: color 0.2s; }
+        .star.filled { color: var(--primary); }
+
         .info { padding: 15px; }
         .info p { margin: 0; font-size: 0.8em; height: 3em; overflow: hidden; color: var(--text-secondary); line-height: 1.4; }
         .precio-total-card { color: #fff; font-weight: 400; font-size: 0.8em; margin-top: 8px; opacity: 0.7; }
@@ -99,7 +104,6 @@
     <p>Importación de Relojería</p>
 </div>
 
-" de abajo -->
 <div class="video-presentacion">
     <p>✦ Calidad de Importación Directa ✦</p>
     <div class="video-wrapper">
@@ -164,6 +168,14 @@
     let seleccionados = new Set();
     let marcaSeleccionada = "Todas";
     let rangoPrecio = "todas";
+
+    // Función para manejar estrellas por dispositivo
+    function setRating(id, rating) {
+        const key = `rating_prod_${id}`;
+        if (localStorage.getItem(key)) return; // Bloqueo: solo un voto por dispositivo
+        localStorage.setItem(key, rating);
+        aplicarFiltros(); // Redibujar para mostrar estrellas
+    }
 
     async function cargar() {
         window.scrollTo(0, 0);
@@ -231,7 +243,15 @@
 
     function dibujar() {
         const cont = document.getElementById('contenedor');
-        cont.innerHTML = productosFiltrados.map(p => `
+        cont.innerHTML = productosFiltrados.map(p => {
+            // Lógica de estrellas guardadas
+            const savedRating = localStorage.getItem(`rating_prod_${p.id}`) || 5; // Por defecto 5 visuales
+            let starsHtml = '';
+            for(let i=1; i<=5; i++) {
+                starsHtml += `<span class="star ${i <= savedRating ? 'filled' : ''}" onclick="event.stopPropagation(); setRating(${p.id}, ${i})">★</span>`;
+            }
+
+            return `
             <div id="card-${p.id}" class="card ${seleccionados.has(p.id) ? 'selected' : ''}" onclick="toggleSelect(${p.id})">
                 <div class="btn-info" onclick="toggleDetalles(event, ${p.id})">INFO</div>
                 <div id="detalles-${p.id}" class="detalles-overlay" onclick="toggleDetalles(event, ${p.id})">
@@ -243,11 +263,13 @@
                     ${p.fotos.length > 0 && p.fotos[0].startsWith('http') ? p.fotos.map(img => `<img src="${img}" loading="lazy">`).join('') : '<img src="https://via.placeholder.com/400x300?text=Ver+Fotos">'}
                 </div>
                 <div class="info">
+                    <div class="rating-container">${starsHtml}</div>
                     <p>${p.nombre}</p>
                     <div class="pago-60">Abono inicial: $${(p.precio * 0.6).toFixed(2)}</div>
                     <div class="precio-total-card">Total: $${p.precio.toFixed(2)}</div>
                 </div>
-            </div>`).join('');
+            </div>`;
+        }).join('');
     }
 
     function toggleDetalles(e, id) { e.stopPropagation(); document.getElementById(`detalles-${id}`).classList.toggle('active'); }
