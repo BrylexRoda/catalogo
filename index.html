@@ -342,11 +342,21 @@
     function cerrarModal() { document.getElementById('miModal').style.display = "none"; }
 
     function enviarWhatsAppFinal() {
-        let m = "¡Hola Brylexroda! Me interesa importar estos modelos:\n\n", a = 0;
-        productos.forEach(p => { if(seleccionados.has(p.id)) { 
-            m += `⌚ ${p.nombre}\n`; a += (p.precio * 0.6); 
-        }});
-        m += `\n*Abono inicial requerido: $${a.toFixed(2)}*\n\n¿Disponibilidad confirmada?`;
+        let m = "¡Hola Brylexroda! Me interesa importar estos modelos:\n\n", a = 0, total = 0;
+        productos.forEach(p => { 
+            if(seleccionados.has(p.id)) { 
+                // Añadimos el ID como referencia para ubicarlo en el Excel fácilmente
+                m += `⌚ ${p.nombre} (Ref: #${p.id})\n`; 
+                a += (p.precio * 0.6); 
+                total += p.precio;
+            }
+        });
+        
+        m += `\n--------------------------\n`;
+        m += `*TOTAL COMPRA:* $${total.toFixed(2)}\n`;
+        m += `*ABONO 60% (REQUERIDO):* $${a.toFixed(2)}\n`;
+        m += `\n¿Disponibilidad confirmada para proceder?`;
+        
         window.open(`https://wa.me/${miTelefono}?text=${encodeURIComponent(m)}`);
     }
 
