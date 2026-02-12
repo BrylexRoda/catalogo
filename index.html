@@ -7,16 +7,12 @@
     <style>
         :root { --primary: #25d366; --bg: #0f172a; --card-bg: #1e293b; --text-main: #ffffff; --text-secondary: #94a3b8; --border: #334155; --accent: #128c7e; }
         
-        /* CAMBIO: Se añade textura de líneas finas al fondo */
         body { 
             font-family: sans-serif; 
             background-color: var(--bg);
             background-image: 
                 linear-gradient(30deg, #162035 12%, transparent 12.5%, transparent 87%, #162035 87.5%, #162035),
                 linear-gradient(150deg, #162035 12%, transparent 12.5%, transparent 87%, #162035 87.5%, #162035),
-                linear-gradient(30deg, #162035 12%, transparent 12.5%, transparent 87%, #162035 87.5%, #162035),
-                linear-gradient(150deg, #162035 12%, transparent 12.5%, transparent 87%, #162035 87.5%, #162035),
-                linear-gradient(60deg, #1c273d 25%, transparent 25.5%, transparent 75%, #1c273d 75%, #1c273d),
                 linear-gradient(60deg, #1c273d 25%, transparent 25.5%, transparent 75%, #1c273d 75%, #1c273d);
             background-size: 80px 140px;
             color: var(--text-main); 
@@ -24,23 +20,28 @@
             padding-bottom: 160px; 
         }
 
-        .header { background: #1e293b; padding: 20px; text-align: center; border-bottom: 1px solid var(--border); }
-        .header h1 { margin: 0; font-size: 1.8em; }
-        .header p { margin: 5px 0; color: var(--primary); font-weight: bold; }
+        /* Título con diseño más profesional */
+        .header { background: #1e293b; padding: 25px 20px; text-align: center; border-bottom: 1px solid var(--border); }
+        .header h1 { 
+            margin: 0; 
+            font-size: 2.2em; 
+            font-family: 'Georgia', serif; 
+            letter-spacing: 3px; 
+            text-transform: uppercase;
+            background: linear-gradient(to bottom, #fff, var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .header p { margin: 5px 0; color: var(--primary); font-weight: bold; font-size: 0.9em; letter-spacing: 1px; }
 
-        /* Estilo para el contenedor del video con efecto Glow */
-        .video-presentacion { background: rgba(30, 41, 59, 0.5); padding: 15px; text-align: center; border-bottom: 1px solid var(--border); backdrop-filter: blur(5px); }
+        /* Mejora texto sobre video */
+        .video-presentacion { background: rgba(30, 41, 59, 0.7); padding: 20px 15px; text-align: center; border-bottom: 1px solid var(--border); backdrop-filter: blur(8px); }
+        .video-presentacion p { color: #fff; font-size: 1em; font-weight: 600; margin-bottom: 15px; letter-spacing: 1.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        
         .video-wrapper { 
-            position: relative; 
-            width: 100%; 
-            max-width: 320px; 
-            margin: 0 auto; 
-            border-radius: 15px; 
-            overflow: hidden; 
-            border: 2px solid var(--primary); 
-            /* CAMBIO: Brillo sutil verde para que resalte del fondo */
-            box-shadow: 0 0 20px rgba(37, 211, 102, 0.2), 0 10px 30px rgba(0,0,0,0.5); 
-            aspect-ratio: 9/16; 
+            position: relative; width: 100%; max-width: 320px; margin: 0 auto; border-radius: 15px; 
+            overflow: hidden; border: 2px solid var(--primary); 
+            box-shadow: 0 0 25px rgba(37, 211, 102, 0.25); aspect-ratio: 9/16; 
         }
 
         .contenedor-busqueda { background: #1e293b; padding: 10px 20px; display: flex; justify-content: center; }
@@ -69,8 +70,9 @@
         .card.selected .select-indicator { background: var(--primary); border-color: var(--primary); color: #000; }
         .card.selected .select-indicator::after { content: "✓"; }
 
-        .carrusel { width: 100%; height: 280px; background: #000; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
-        .carrusel img { flex: 0 0 100%; object-fit: contain; }
+        /* Ajuste de carrusel para centrado perfecto */
+        .carrusel { width: 100%; height: 280px; background: #000; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; }
+        .carrusel img { flex: 0 0 100%; width: 100%; object-fit: contain; scroll-snap-align: center; }
 
         .info { padding: 10px; }
         .pago-60 { color: var(--primary); font-weight: bold; font-size: 0.9em; }
@@ -91,7 +93,7 @@
 </div>
 
 <div class="video-presentacion">
-    <p style="color: var(--text-secondary); font-size: 0.85em; margin-bottom: 12px; letter-spacing: 1px;">✨ ASÍ RECIBES TU PEDIDO</p>
+    <p>✨ ASÍ RECIBES TU PEDIDO</p>
     <div class="video-wrapper">
         <iframe width="100%" height="100%" src="https://www.youtube.com/embed/kvgM0q_P3XQ?autoplay=1&mute=1&loop=1&playlist=kvgM0q_P3XQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
@@ -221,7 +223,7 @@
     function dibujar() {
         const cont = document.getElementById('contenedor');
         cont.innerHTML = productosFiltrados.map(p => `
-            <div class="card ${seleccionados.has(p.id) ? 'selected' : ''}" onclick="toggleSelect(${p.id})">
+            <div id="card-${p.id}" class="card ${seleccionados.has(p.id) ? 'selected' : ''}" onclick="toggleSelect(${p.id})">
                 <div class="btn-info" onclick="toggleDetalles(event, ${p.id})">INF</div>
                 <div id="detalles-${p.id}" class="detalles-overlay" onclick="toggleDetalles(event, ${p.id})">
                     <strong style="color:var(--primary)">ESPECIFICACIONES</strong><br><br>
@@ -240,10 +242,17 @@
 
     function toggleDetalles(e, id) { e.stopPropagation(); document.getElementById(`detalles-${id}`).classList.toggle('active'); }
 
+    /* SOLUCIÓN AL RESET DE IMÁGENES: Actualización manual de clases */
     function toggleSelect(id) {
-        if (seleccionados.has(id)) seleccionados.delete(id);
-        else seleccionados.add(id);
-        actualizarResumen(); dibujar();
+        const card = document.getElementById(`card-${id}`);
+        if (seleccionados.has(id)) {
+            seleccionados.delete(id);
+            card.classList.remove('selected');
+        } else {
+            seleccionados.add(id);
+            card.classList.add('selected');
+        }
+        actualizarResumen();
     }
 
     function actualizarResumen() {
