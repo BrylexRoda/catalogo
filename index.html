@@ -177,6 +177,7 @@
     let rangoPrecio = "todas";
 
     async function cargar() {
+        window.scrollTo(0, 0); // Esto obliga a la página a subir al cargar
         try {
             const res = await fetch(SHEET_URL + '&cache=' + new Date().getTime());
             const text = await res.text();
@@ -295,7 +296,10 @@
         window.open(`https://wa.me/${miTelefono}?text=${encodeURIComponent(m)}`);
     }
 
-    cargar();
+    window.onload = () => {
+        window.scrollTo(0, 0);
+        cargar();
+    };
 </script>
 </body>
 </html>
