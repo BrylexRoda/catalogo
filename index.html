@@ -178,11 +178,19 @@
 <div class="contenedor-filtros" id="areaFiltros">
     <button class="btn-abrir-filtros" onclick="toggleFiltros(event)">FILTROS ▼</button>
     <div class="panel-filtros" id="panelFiltros">
+        
         <div class="chips-container">
-            <button class="chip chip-precio active" onclick="filtrarPrecio('todas', this)">Todo</button>
+            <button class="chip chip-genero active" onclick="filtrarGenero('Todos', this)">Todos</button>
+            <button class="chip chip-genero" onclick="filtrarGenero('Hombre', this)">Caballeros</button>
+            <button class="chip chip-genero" onclick="filtrarGenero('Mujer', this)">Damas</button>
+        </div>
+
+        <div class="chips-container">
+            <button class="chip chip-precio active" onclick="filtrarPrecio('todas', this)">Todo Precio</button>
             <button class="chip chip-precio" onclick="filtrarPrecio('50-100', this)">$50-$100</button>
             <button class="chip chip-precio" onclick="filtrarPrecio('100-200', this)">$100-$200</button>
         </div>
+
         <div class="chips-container" id="contenedorMarcas">
             <button class="chip chip-marca active" onclick="filtrarMarca('Todas', this)">Todas las marcas</button>
         </div>
@@ -253,6 +261,7 @@
                     id: i + 2,
                     nombre: c[0] || 'Reloj Luxury',
                     marca: (c[0] || '').split(' ')[0],
+                    genero: c[0].toLowerCase().includes('mujer') ? 'Mujer' : (c[0].toLowerCase().includes('hombre') ? 'Hombre' : 'Unisex'),
                     precio: parseFloat(c[1]?.replace('$', '').replace(/[^\d.,]/g, '')) || 0,
                     fotos: (c[2] || '').split('|').map(link => link.trim()),
                     descripcion: (c[3] || 'Consultar detalles').split('|').join('<br>')
