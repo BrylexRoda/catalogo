@@ -245,7 +245,8 @@
     let marcaSeleccionada = "Todas";
     let rangoPrecio = "todas";
     let cantidadAMostrar = 10;
-    let incremento = 10;    
+    let incremento = 10;
+    let generoSeleccionado = "Todos";
     
     async function cargar() {
         window.scrollTo(0, 0); // Esto obliga a la página a subir al cargar
@@ -261,7 +262,9 @@
                     id: i + 2,
                     nombre: c[0] || 'Reloj Luxury',
                     marca: (c[0] || '').split(' ')[0],
+                    // ESTA ES LA LÍNEA QUE AGREGAS:
                     genero: c[0].toLowerCase().includes('mujer') ? 'Mujer' : (c[0].toLowerCase().includes('hombre') ? 'Hombre' : 'Unisex'),
+                    // Y ESTA ES LA QUE YA TENÍAS (revisa que termine en coma):
                     precio: parseFloat(c[1]?.replace('$', '').replace(/[^\d.,]/g, '')) || 0,
                     fotos: (c[2] || '').split('|').map(link => link.trim()),
                     descripcion: (c[3] || 'Consultar detalles').split('|').join('<br>')
@@ -298,19 +301,29 @@
         document.querySelectorAll('.chip-precio').forEach(c => c.classList.remove('active'));
         el.classList.add('active'); rangoPrecio = r; aplicarFiltros();
     }
-
+function filtrarGenero(g, el) {
+        document.querySelectorAll('.chip-genero').forEach(c => c.classList.remove('active'));
+        el.classList.add('active');
+        generoSeleccionado = g;
+        aplicarFiltros();
+    }
     function aplicarFiltros() {
-        cantidadAMostrar = 10; // Resetear la cuenta al filtrar o buscar
+        cantidadAMostrar = 10; 
         const query = document.getElementById('busqueda').value.toLowerCase();
-        // ... el resto de tu código de filtros igual ...
         
         productosFiltrados = productos.filter(p => {
             const mMarca = marcaSeleccionada === "Todas" || p.marca === marcaSeleccionada;
             const mBusqueda = p.nombre.toLowerCase().includes(query);
+            
+            // Lógica para el nuevo filtro de género
+            const mGenero = generoSeleccionado === "Todos" || p.genero === generoSeleccionado;
+            
             let mPrecio = true;
             if(rangoPrecio === '50-100') mPrecio = (p.precio >= 50 && p.precio <= 100);
             if(rangoPrecio === '100-200') mPrecio = (p.precio > 100 && p.precio <= 200);
-            return mMarca && mBusqueda && mPrecio;
+            
+            // Ahora retornamos incluyendo mGenero
+            return mMarca && mBusqueda && mPrecio && mGenero;
         });
         dibujar();
     }
