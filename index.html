@@ -236,7 +236,9 @@
     let seleccionados = new Set();
     let marcaSeleccionada = "Todas";
     let rangoPrecio = "todas";
-
+    let cantidadAMostrar = 10;
+    let incremento = 10;    
+    
     async function cargar() {
         window.scrollTo(0, 0); // Esto obliga a la página a subir al cargar
         try {
@@ -289,7 +291,10 @@
     }
 
     function aplicarFiltros() {
+        cantidadAMostrar = 10; // Resetear la cuenta al filtrar o buscar
         const query = document.getElementById('busqueda').value.toLowerCase();
+        // ... el resto de tu código de filtros igual ...
+        
         productosFiltrados = productos.filter(p => {
             const mMarca = marcaSeleccionada === "Todas" || p.marca === marcaSeleccionada;
             const mBusqueda = p.nombre.toLowerCase().includes(query);
@@ -303,7 +308,10 @@
 
     function dibujar() {
         const cont = document.getElementById('contenedor');
-        cont.innerHTML = productosFiltrados.map(p => `
+        // Solo tomamos una parte de la lista según 'cantidadAMostrar'
+        const mostrarAhora = productosFiltrados.slice(0, cantidadAMostrar);
+        
+        cont.innerHTML = mostrarAhora.map(p => `
             <div id="card-${p.id}" class="card ${seleccionados.has(p.id) ? 'selected' : ''}" onclick="toggleSelect(${p.id})">
                 <div class="btn-info" onclick="toggleDetalles(event, ${p.id})">INFO</div>
                 <div id="detalles-${p.id}" class="detalles-overlay" onclick="toggleDetalles(event, ${p.id})">
@@ -319,8 +327,27 @@
                     <div class="precio-total-card">Total: $${p.precio.toFixed(2)}</div>
                 </div>
             </div>`).join('');
-    }
 
+        actualizarBotonVerMas();
+    }
+    function actualizarBotonVerMas() {
+        // Eliminamos el botón viejo si existe
+        const btnViejo = document.getElementById('btnVerMas');
+        if(btnViejo) btnViejo.remove();
+
+        // Si todavía hay más productos por mostrar, creamos el botón
+        if (cantidadAMostrar < productosFiltrados.length) {
+            const btn = document.createElement('button');
+            btn.id = 'btnVerMas';
+            btn.innerText = "VER MÁS MODELOS ↓";
+            btn.style = "grid-column: 1 / -1; margin: 30px auto; padding: 15px 40px; background: transparent; border: 1px solid var(--primary); color: var(--primary); border-radius: 30px; cursor: pointer; font-weight: bold; font-size: 11px; letter-spacing: 2px; display: block; width: fit-content; text-transform: uppercase;";
+            btn.onclick = () => {
+                cantidadAMostrar += incremento;
+                dibujar();
+            };
+            document.getElementById('contenedor').appendChild(btn);
+        }
+    }
     function toggleDetalles(e, id) { e.stopPropagation(); document.getElementById(`detalles-${id}`).classList.toggle('active'); }
 
     function toggleSelect(id) {
@@ -375,7 +402,7 @@
         }
     };
 
-    function cerrarModal() { document.getElementById('miModal').style.display = "none"; }
+    
 
     function enviarWhatsAppFinal() {
         let m = "¡Hola Brylexroda! Me interesa importar estos modelos:\n\n", a = 0, total = 0;
