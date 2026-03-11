@@ -334,7 +334,6 @@
         let h = "<div style='display:flex; flex-direction:column; gap:8px;'>", a = 0, total = 0;
         productos.forEach(p => { 
             if(seleccionados.has(p.id)){ 
-                // Marca llamativa con emoji y nombre
                 h += `<div style="display:flex; align-items:center; gap:10px; color:#fff; font-size:13px;">
                        <span style="color:var(--primary);">⌚</span> 
                        <span>${p.nombre} <small style="opacity:0.5;">(#${p.id})</small></span>
@@ -347,7 +346,26 @@
         document.getElementById('modalTotalFull').innerText = `$${total.toFixed(2)}`;
         document.getElementById('modalAbonoHoy').innerText = `$${a.toFixed(2)}`;
         document.getElementById('miModal').style.display = "block";
+        
+        // Esto crea el "punto de retorno" para el botón atrás
+        history.pushState({modalAbierto: true}, "");
     }
+
+    function cerrarModal() { 
+        document.getElementById('miModal').style.display = "none";
+        // Si el usuario cierra con la X, limpiamos el historial
+        if (history.state && history.state.modalAbierto) {
+            history.back();
+        }
+    }
+
+    // Esto detecta cuando el usuario le da "Atrás" en su celular
+    window.onpopstate = function(event) {
+        const modal = document.getElementById('miModal');
+        if (modal && modal.style.display === "block") {
+            modal.style.display = "none";
+        }
+    };
 
     function cerrarModal() { document.getElementById('miModal').style.display = "none"; }
 
