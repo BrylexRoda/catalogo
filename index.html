@@ -36,19 +36,22 @@
         .video-wrapper::after {
             content: "ASÍ LLEGA TU PRODUCTO 📦";
             position: absolute;
-            top: 25px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(197, 160, 89, 0.98);
+            top: 0; /* Lo pegamos al borde superior exacto */
+            left: 0;
+            right: 0; /* Esto hace que cubra todo el ancho del video */
+            transform: none; /* Quitamos el centrado manual para que se ajuste al marco */
+            background: rgba(197, 160, 89, 0.98); 
             color: #000;
-            padding: 10px 25px;
-            border-radius: 50px;
-            font-size: 15px; /* Aquí es donde crece la letra y el emoji */
+            padding: 12px 0; /* Un poco de altura para que el texto respire */
+            font-size: 14px;
             font-weight: 800;
+            text-align: center; /* Centramos el texto dentro del recuadro */
             letter-spacing: 1px;
             z-index: 15;
-            white-space: nowrap;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            /* Solo redondeamos las esquinas de abajo para que arriba encaje con el marco */
+            border-bottom-left-radius: 0px; 
+            border-bottom-right-radius: 0px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
             pointer-events: none;
         }
         /* BUSCADOR ACOPLADO AL VIDEO */
