@@ -36,23 +36,29 @@
         .video-wrapper::after {
             content: "ASÍ LLEGA TU PRODUCTO 📦";
             position: absolute;
-            top: 0; /* Lo pegamos al borde superior exacto */
+            top: 0;
             left: 0;
-            right: 0; /* Esto hace que cubra todo el ancho del video */
-            transform: none; /* Quitamos el centrado manual para que se ajuste al marco */
+            right: 0;
+            transform: none;
             background: rgba(197, 160, 89, 0.98); 
             color: #000;
-            padding: 12px 0; /* Un poco de altura para que el texto respire */
+            
+            /* --- AJUSTES DE ESTIRAMIENTO Y CENTRADO --- */
+            padding: 20px 0; /* Aumentamos de 12px a 20px para que se estire hacia abajo */
+            display: flex; /* Usamos flex para asegurar centrado total */
+            align-items: center; 
+            justify-content: center;
+            /* ------------------------------------------ */
+            
             font-size: 14px;
             font-weight: 800;
-            text-align: center; /* Centramos el texto dentro del recuadro */
             letter-spacing: 1px;
             z-index: 15;
-            /* Solo redondeamos las esquinas de abajo para que arriba encaje con el marco */
             border-bottom-left-radius: 0px; 
             border-bottom-right-radius: 0px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
             pointer-events: none;
+            white-space: nowrap;
         }
         /* BUSCADOR ACOPLADO AL VIDEO */
         .contenedor-busqueda { 
