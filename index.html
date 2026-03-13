@@ -89,7 +89,26 @@
         .input-busqueda:focus { width: 140px; text-align: left; }
 
         .contenedor-filtros { background: #05070a; padding: 10px 20px; }
-        .btn-abrir-filtros { padding: 5px 0; background: transparent; border: none; color: var(--text-secondary); font-size: 0.75em; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; display: block; text-align: left; }
+        .btn-abrir-filtros { 
+            padding: 10px 20px; 
+            background: transparent; 
+            border: 1px solid var(--primary); /* Marco dorado */
+            color: var(--primary); 
+            font-size: 0.8em; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            display: inline-block; 
+            margin-bottom: 10px;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: 0.3s;
+         }
+/* Efecto cuando pasas el mouse o tocas */
+        .btn-abrir-filtros:active {
+            background: var(--primary);
+            color: #000;
+         }
         
         .panel-filtros { display: none; padding: 10px 0; }
         .panel-filtros.active { display: block; }
@@ -261,7 +280,7 @@
                 return {
                     id: i + 2,
                     nombre: c[0] || 'Reloj Luxury',
-                    marca: (c[0] || '').split(' ')[0],
+                    marca: (c[0].match(/[A-Z]{2,}(?:\s+[A-Z]{2,})*/) || ["RELOJ"])[0],
                     // ESTA ES LA LÍNEA QUE AGREGAS:
                     genero: c[0].toLowerCase().includes('mujer') ? 'Mujer' : (c[0].toLowerCase().includes('hombre') ? 'Hombre' : 'Unisex'),
                     // Y ESTA ES LA QUE YA TENÍAS (revisa que termine en coma):
@@ -316,7 +335,10 @@ function filtrarGenero(g, el) {
             const mBusqueda = p.nombre.toLowerCase().includes(query);
             
             // Lógica para el nuevo filtro de género
-            const mGenero = generoSeleccionado === "Todos" || p.genero === generoSeleccionado;
+            // El producto se muestra si: es de la categoría elegida O es Unisex
+            const mGenero = generoSeleccionado === "Todos" || 
+                 p.genero === generoSeleccionado || 
+                 p.genero === "Unisex";
             
             let mPrecio = true;
             if(rangoPrecio === '50-100') mPrecio = (p.precio >= 50 && p.precio <= 100);
