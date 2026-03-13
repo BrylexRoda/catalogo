@@ -74,19 +74,26 @@
             z-index: 90;
         }
         .input-busqueda { 
-            width: 35px; 
+            width: 35px;
             height: 35px;
-            transition: width 0.4s ease;
-            padding: 0 10px; 
-            border-radius: 20px; 
-            border: 1px solid var(--primary); 
-            background: rgba(17, 24, 39, 0.9); 
-            color: white; 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Transición más suave */
+            padding: 0 10px;
+            border-radius: 20px;
+            border: 1px solid var(--primary); /* Borde dorado */
+            background: rgba(17, 24, 39, 0.9);
+            color: white;
             font-size: 0.8em;
             outline: none;
             text-align: center;
+            box-shadow: 0 0 5px rgba(197, 160, 89, 0.2); /* Brillo sutil */
         }
-        .input-busqueda:focus { width: 140px; text-align: left; }
+
+         .input-busqueda:focus { 
+            width: 200px; /* Se expande más para que sea cómodo escribir */
+            text-align: left;
+            border: 2px solid var(--primary); /* Resalta el dorado al escribir */
+            box-shadow: 0 0 15px rgba(197, 160, 89, 0.4);
+        }
 
         .contenedor-filtros { background: #05070a; padding: 10px 20px; }
         .btn-abrir-filtros { 
@@ -205,18 +212,22 @@
         </div>
 
         <div class="chips-container">
-            <button class="chip chip-precio active" onclick="filtrarPrecio('todas', this)">Todo Precio</button>
-            <button class="chip chip-precio" onclick="filtrarPrecio('50-100', this)">$50-$100</button>
-            <button class="chip chip-precio" onclick="filtrarPrecio('100-200', this)">$100-$200</button>
-        </div>
+    <button class="chip chip-precio active" onclick="filtrarPrecio('todas', this)">Todo Precio</button>
+    <button class="chip chip-precio" onclick="filtrarPrecio('0-60', this)">Bajo $60</button>
+    <button class="chip chip-precio" onclick="filtrarPrecio('60-100', this)">$60 - $100</button>
+    <button class="chip chip-precio" onclick="filtrarPrecio('100-150', this)">$100 - $150</button>
+    <button class="chip chip-precio" onclick="filtrarPrecio('150-up', this)">Premium (+$150)</button>
+</div>
 
         <div class="chips-container" id="contenedorMarcas">
             <button class="chip chip-marca active" onclick="filtrarMarca('Todas', this)">Todas las marcas</button>
         </div>
     </div>
 </div>
-
-<div id="loading" style="text-align:center; padding:50px; color: var(--text-secondary); font-size: 10px; letter-spacing: 2px;">CONECTANDO CON COLECCIÓN...</div>
+<div id="contador-resultados" style="color: var(--primary); font-size: 0.9em; text-align: center; margin: 15px 0; letter-spacing: 2px; font-weight: bold; text-transform: uppercase;">
+    Cargando modelos...
+</div>
+    <div id="loading" style="text-align:center; padding:50px; color: var(--text-secondary); font-size: 10px; letter-spacing: 2px;">CONECTANDO CON COLECCIÓN...</div>
 <div class="grid" id="contenedor"></div>
 
 <div class="footer">
@@ -341,15 +352,51 @@ function filtrarGenero(g, el) {
                  p.genero === "Unisex";
             
             let mPrecio = true;
-            if(rangoPrecio === '50-100') mPrecio = (p.precio >= 50 && p.precio <= 100);
-            if(rangoPrecio === '100-200') mPrecio = (p.precio > 100 && p.precio <= 200);
+            if(rangoPrecio === '0-60') mPrecio = (p.precio < 60);
+            if(rangoPrecio === '60-100') mPrecio = (p.precio >= 60 && p.precio <= 100);
+            if(rangoPrecio === '100-150') mPrecio = (p.precio > 100 && p.precio <= 150);
+            if(rangoPrecio === '150-up') mPrecio = (p.precio > 150);
             
             // Ahora retornamos incluyendo mGenero
             return mMarca && mBusqueda && mPrecio && mGenero;
         });
+        const contador = document.getElementById('contador-resultados');
+        if (contador) {
+            if (productosFiltrados.length === 0) {
+                contador.innerHTML = `
+                    <div>NO SE ENCONTRARON MODELOS</div>
+                    <button onclick="reiniciarFiltros()" style="margin-top:10px; background:none; border:1px solid var(--primary); color:var(--primary); padding:5px 15px; cursor:pointer; border-radius:5px; font-size:0.7em;">LIMPIAR FILTROS</button>
+                `;
+            } else {
+                contador.innerText = productosFiltrados.length + " MODELOS ENCONTRADOS";
+            }
+        }
         dibujar();
-    }
+        }
+    function reiniciarFiltros() {
+    // 1. Reseteamos las variables a sus valores iniciales
+    marcaSeleccionada = "Todas";
+    generoSeleccionado = "Todos";
+    rangoPrecio = "todas";
+    
+    // 2. Limpiamos el buscador visualmente
+    const buscador = document.getElementById('busqueda');
+    if(buscador) buscador.value = "";
+    
+    // 3. Quitamos el color dorado de todos los botones (chips)
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    
+    // 4. Marcamos los botones de "Todos" como activos para que el usuario vea el cambio
+    // Buscamos los botones que dicen "Todo", "Todas" o "Todos" y les ponemos la clase active
+    document.querySelectorAll('.chip').forEach(c => {
+        if(c.innerText.includes("Todo") || c.innerText.includes("Todas")) {
+            c.classList.add('active');
+        }
+    });
 
+    // 5. Ejecutamos los filtros para que la página se actualice sola
+    aplicarFiltros();
+}
     function dibujar() {
         const cont = document.getElementById('contenedor');
         // Solo tomamos una parte de la lista según 'cantidadAMostrar'
