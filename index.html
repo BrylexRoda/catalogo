@@ -362,8 +362,10 @@
                     precio: parseFloat(c[1]?.replace('$', '').replace(/[^\d.,]/g, '')) || 0,
                     fotos: (c[2] || '').split('|').map(link => link.trim()),
                     descripcion: (c[3] || 'Consultar detalles').split('|').join('<br>')
-                };
-            }).filter(p => p !== null);
+                    stock: (c[5] || '').toLowerCase() // c[5] es la sexta columna (F)                
+            };
+            })
+                .filter(p => p !== null);
 
             generarMarcas();
             document.getElementById('loading').style.display = 'none';
@@ -414,6 +416,7 @@ function filtrarGenero(g, el) {
             const mGenero = generoSeleccionado === "Todos" || 
                  p.genero === generoSeleccionado || 
                  p.genero === "Unisex";
+            const mStock = p.stock !== 'no';
             
             let mPrecio = true;
             if(rangoPrecio === '0-60') mPrecio = (p.precio < 60);
@@ -422,17 +425,21 @@ function filtrarGenero(g, el) {
             if(rangoPrecio === '150-up') mPrecio = (p.precio > 150);
             
             // Ahora retornamos incluyendo mGenero
-            return mMarca && mBusqueda && mPrecio && mGenero;
+            return mMarca && mBusqueda && mPrecio && mGenero && mStock;
         });
         const contador = document.getElementById('contador-resultados');
         if (contador) {
             if (productosFiltrados.length === 0) {
                 contador.innerHTML = `
-                    <div>NO SE ENCONTRARON MODELOS</div>
-                    <button onclick="reiniciarFiltros()" style="margin-top:10px; background:none; border:1px solid var(--primary); color:var(--primary); padding:5px 15px; cursor:pointer; border-radius:5px; font-size:0.7em;">LIMPIAR FILTROS</button>
+                    <div style="opacity: 0.6;">NO SE ENCONTRARON MODELOS</div>
+                    <button onclick="reiniciarFiltros()" style="margin-top:10px; background:none; border:1px solid var(--primary); color:var(--primary); padding:5px 15px; cursor:pointer; border-radius:5px; font-size:0.7em; font-weight:bold;">LIMPIAR BÚSQUEDA</button>
                 `;
             } else {
-                contador.innerText = productosFiltrados.length + " MODELOS ENCONTRADOS";
+                // Aquí es donde mostramos el total de modelos disponibles
+                contador.innerHTML = `
+                    <span style="opacity: 0.5; font-size: 0.8em;">STOCK DISPONIBLE:</span><br>
+                    <span style="font-size: 1.2em;">${productosFiltrados.length} MODELOS EXCLUSIVOS</span>
+                `;
             }
         }
         dibujar();
