@@ -363,9 +363,9 @@
                     fotos: (c[2] || '').split('|').map(link => link.trim()),
                     descripcion: (c[3] || 'Consultar detalles').split('|').join('<br>')
                     stock: (c[5] || '').toLowerCase() // c[5] es la sexta columna (F)                
-            };
-            })
-                .filter(p => p !== null);
+                };
+            
+             }).filter(p => p !== null);
 
             generarMarcas();
             document.getElementById('loading').style.display = 'none';
