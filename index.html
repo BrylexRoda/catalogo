@@ -76,12 +76,17 @@
             gap: 5px;
             margin-bottom: 15px;
         }
-
+        /* Ajuste para que el texto legal sea legible */
+        #listaResumen p {
+            line-height: 1.4;
+            margin-bottom: 5px;
+        }
         .btn-requisitos:hover {
             background: var(--primary);
             color: #000;
             box-shadow: 0 0 15px rgba(197, 160, 89, 0.3);
-        }        .video-presentacion { background: #0a0c10; padding: 20px 15px; text-align: center; border-bottom: 1px solid var(--border); position: relative; }
+        }        
+        .video-presentacion { background: #0a0c10; padding: 20px 15px; text-align: center; border-bottom: 1px solid var(--border); position: relative; }
         .video-wrapper { position: relative; width: 100%; max-width: 300px; margin: 0 auto; border-radius: 20px; overflow: hidden; border: 1px solid var(--border); aspect-ratio: 9/16; }
         .video-wrapper::after {
             content: "ASI LLEGA SU PRODUCTO 📦✅";
@@ -502,19 +507,17 @@ function filtrarGenero(g, el) {
         document.getElementById('resumenAbono').innerText = `$${a.toFixed(2)}`;
     }
     function abrirModalInfo() {
-    // Esto limpia la lista para mostrar solo un mensaje de bienvenida
     document.getElementById('listaResumen').innerHTML = `
-        <div style="text-align:center; padding: 10px; border: 1px dashed #c5a059; border-radius:10px;">
-            <p style="margin:0; font-size:12px; color: #9ca3af;">
-                Consulta los términos de importación antes de elegir tus modelos favoritos.
-            </p>
+        <div style="text-align:left; padding: 10px; border: 1px dashed #c5a059; border-radius:10px; font-size:12px; color: #fff;">
+            <p style="text-align:center; color: #c5a059; font-weight:bold; margin-bottom:10px;">📋 TÉRMINOS IMPORTANTES</p>
+            <p>• Los precios incluyen importación y entrega final.</p>
+            <p style="margin:8px 0;">• <b>Política de Abandono:</b> Una vez notificada la llegada de su producto, dispone de <b>30 días calendario</b> para liquidar el saldo. Pasado este tiempo, el producto se liberará para la venta y el abono <b>no será reembolsable</b> por gastos logísticos.</p>
+            <p style="text-align:center; opacity:0.6; margin-top:10px;">Consulte antes de elegir sus modelos favoritos.</p>
         </div>`;
     
-    // Ponemos guiones en los precios para que no confundan
     document.getElementById('modalTotalFull').innerText = "---";
     document.getElementById('modalAbonoHoy').innerText = "---";
     
-    // Abrimos el modal
     document.getElementById('miModal').style.display = "block";
     history.pushState({modalAbierto: true}, "");
 }
