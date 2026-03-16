@@ -356,16 +356,13 @@
                     id: i + 2,
                     nombre: c[0] || 'Reloj Luxury',
                     marca: (c[0].match(/[A-Z]{2,}(?:\s+[A-Z]{2,})*/) || ["RELOJ"])[0],
-                    // ESTA ES LA LÍNEA QUE AGREGAS:
                     genero: c[0].toLowerCase().includes('mujer') ? 'Mujer' : (c[0].toLowerCase().includes('hombre') ? 'Hombre' : 'Unisex'),
-                    // Y ESTA ES LA QUE YA TENÍAS (revisa que termine en coma):
                     precio: parseFloat(c[1]?.replace('$', '').replace(/[^\d.,]/g, '')) || 0,
                     fotos: (c[2] || '').split('|').map(link => link.trim()),
-                    descripcion: (c[3] || 'Consultar detalles').split('|').join('<br>')
+                    descripcion: (c[3] || 'Consultar detalles').split('|').join('<br>'), // <-- AQUÍ FALTABA ESTA COMA
                     stock: (c[5] || '').toLowerCase() // c[5] es la sexta columna (F)                
                 };
-            
-             }).filter(p => p !== null);
+            }).filter(p => p !== null); // <-- Y AQUÍ ASEGÚRATE QUE EL CIERRE ESTÉ ASÍ
 
             generarMarcas();
             document.getElementById('loading').style.display = 'none';
