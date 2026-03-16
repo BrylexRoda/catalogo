@@ -58,7 +58,30 @@
             filter: drop-shadow(0 0 20px rgba(197, 160, 89, 0.7));
             transform: scale(1.03);
         }
-        .video-presentacion { background: #0a0c10; padding: 20px 15px; text-align: center; border-bottom: 1px solid var(--border); position: relative; }
+        /* Estilo del botón de requisitos */
+        .btn-requisitos {
+            background: rgba(197, 160, 89, 0.05);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 8px 18px;
+            border-radius: 25px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        .btn-requisitos:hover {
+            background: var(--primary);
+            color: #000;
+            box-shadow: 0 0 15px rgba(197, 160, 89, 0.3);
+        }        .video-presentacion { background: #0a0c10; padding: 20px 15px; text-align: center; border-bottom: 1px solid var(--border); position: relative; }
         .video-wrapper { position: relative; width: 100%; max-width: 300px; margin: 0 auto; border-radius: 20px; overflow: hidden; border: 1px solid var(--border); aspect-ratio: 9/16; }
         .video-wrapper::after {
             content: "ASI LLEGA SU PRODUCTO 📦✅";
@@ -210,6 +233,11 @@
 
 <div class="header">
     <img src="https://i.postimg.cc/HLt7Kqk1/Untitled-(1).png" alt="BrylexRoda Logo" class="logo-premium">
+</div>
+    <div style="text-align: center;">
+    <button onclick="abrirModalInfo()" class="btn-requisitos">
+        <span>ⓘ</span> PROCESO DE IMPORTACIÓN
+    </button>
 </div>
 <div class="contenedor-busqueda">
     <input type="text" id="busqueda" class="input-busqueda" placeholder="Buscar..." oninput="aplicarFiltros()">
@@ -473,7 +501,23 @@ function filtrarGenero(g, el) {
         document.getElementById('resumenTotalFull').innerText = `$${f.toFixed(2)}`;
         document.getElementById('resumenAbono').innerText = `$${a.toFixed(2)}`;
     }
-
+    function abrirModalInfo() {
+    // Esto limpia la lista para mostrar solo un mensaje de bienvenida
+    document.getElementById('listaResumen').innerHTML = `
+        <div style="text-align:center; padding: 10px; border: 1px dashed #c5a059; border-radius:10px;">
+            <p style="margin:0; font-size:12px; color: #9ca3af;">
+                Consulta los términos de importación antes de elegir tus modelos favoritos.
+            </p>
+        </div>`;
+    
+    // Ponemos guiones en los precios para que no confundan
+    document.getElementById('modalTotalFull').innerText = "---";
+    document.getElementById('modalAbonoHoy').innerText = "---";
+    
+    // Abrimos el modal
+    document.getElementById('miModal').style.display = "block";
+    history.pushState({modalAbierto: true}, "");
+}
     function abrirModal() {
         if(!seleccionados.size) return alert("Por favor, selecciona al menos un reloj.");
         let h = "<div style='display:flex; flex-direction:column; gap:8px;'>", a = 0, total = 0;
