@@ -3,10 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo BrylexRoda</title>
+    <title>Tienda de Importación Brylex Roda</title>
     <link rel="icon" href="https://i.postimg.cc/HLt7Kqk1/Untitled-(1).png" type="image/png">
+    
+    <meta property="og:title" content="Tienda de Importación Brylex Roda">
+    <meta property="og:description" content="Explora nuestro catálogo exclusivo de relojes y artículos de lujo importados.">
     <meta property="og:image" content="https://i.postimg.cc/HLt7Kqk1/Untitled-(1).png">
+    
     <meta name="twitter:image" content="https://i.postimg.cc/HLt7Kqk1/Untitled-(1).png">
+    
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     
     <style>
@@ -35,8 +40,24 @@
             text-align: center; 
             border-bottom: 1px solid var(--border); 
         }
-        
+        /* Efecto de brillo y movimiento para el logo */
+        .logo-premium {
+            width: 100%;
+            max-width: 320px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            /* Brillo dorado constante */
+            filter: drop-shadow(0 0 12px rgba(197, 160, 89, 0.4));
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
 
+        .logo-premium:hover {
+            /* El brillo se intensifica y el logo se agranda un poquito al tocarlo */
+            filter: drop-shadow(0 0 20px rgba(197, 160, 89, 0.7));
+            transform: scale(1.03);
+        }
         .video-presentacion { background: #0a0c10; padding: 20px 15px; text-align: center; border-bottom: 1px solid var(--border); position: relative; }
         .video-wrapper { position: relative; width: 100%; max-width: 300px; margin: 0 auto; border-radius: 20px; overflow: hidden; border: 1px solid var(--border); aspect-ratio: 9/16; }
         .video-wrapper::after {
@@ -188,9 +209,7 @@
 <body onclick="cerrarFiltrosFuera(event)">
 
 <div class="header">
-    <img src="https://i.postimg.cc/HLt7Kqk1/Untitled-(1).png" 
-         alt="BrylexRoda Logo" 
-         style="width: 100%; max-width: 320px; height: auto; display: block; margin: 0 auto; filter: drop-shadow(0 0 15px rgba(197, 160, 89, 0.3));">
+    <img src="https://i.postimg.cc/HLt7Kqk1/Untitled-(1).png" alt="BrylexRoda Logo" class="logo-premium">
 </div>
 <div class="contenedor-busqueda">
     <input type="text" id="busqueda" class="input-busqueda" placeholder="Buscar..." oninput="aplicarFiltros()">
