@@ -388,10 +388,13 @@
         </div>
     </div>
 </div>
+    
 <script>
+    
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1ZSSPWWk7VS3L1BHNBFAw8Lo3KFUiOKwFJwKXOoRKvk4/gviz/tq?tqx=out:csv';
 const miTelefono = "593990267974"; 
 
+// Variables de Estado
 let productos = [];
 let productosFiltrados = [];
 let seleccionados = new Set();
@@ -402,7 +405,7 @@ let cantidadAMostrar = 12;
 let incremento = 12;
 let productoActualId = null;
 
-// --- CARGA DE DATOS ---
+// --- 1. CARGA Y PROCESAMIENTO ---
 async function cargar() {
     try {
         const res = await fetch(SHEET_URL + '&cache=' + new Date().getTime());
@@ -431,11 +434,11 @@ async function cargar() {
         document.getElementById('loading').style.display = 'none';
         aplicarFiltros();
     } catch (e) { 
-        console.error("Error cargando inventario:", e);
+        console.error("Error en la carga:", e);
     }
 }
 
-// --- FILTROS Y RENDERIZADO ---
+// --- 2. FILTROS Y LÓGICA DE DIBUJO ---
 function aplicarFiltros() {
     const query = document.getElementById('busqueda').value.toLowerCase();
     productosFiltrados = productos.filter(p => {
@@ -458,9 +461,8 @@ function dibujar() {
     const parcial = productosFiltrados.slice(0, cantidadAMostrar);
     
     parcial.forEach(p => {
-        const isSelected = seleccionados.has(p.id);
         const card = document.createElement('div');
-        card.className = `card ${isSelected ? 'selected' : ''}`;
+        card.className = `card ${seleccionados.has(p.id) ? 'selected' : ''}`;
         card.onclick = () => abrirDetalle(p.id);
         card.innerHTML = `
             <div class="select-indicator"></div>
@@ -477,7 +479,7 @@ function dibujar() {
     actualizarBotonVerMas();
 }
 
-// --- MODAL DE DETALLES ---
+// --- 3. MODALES Y DETALLES ---
 function abrirDetalle(id) {
     const p = productos.find(x => x.id === id);
     if (!p) return;
@@ -500,10 +502,10 @@ function abrirDetalle(id) {
 
 function actualizarBotonModal(btn, id) {
     if (seleccionados.has(id)) {
-        btn.innerText = "QUITAR DE MI LISTA";
+        btn.innerText = "REMOVER DE MI LISTA";
         btn.style.background = "#333";
     } else {
-        btn.innerText = "AÑADIR A MI SELECCIÓN";
+        btn.innerText = "AÑADIR A MI LISTA 📋";
         btn.style.background = "linear-gradient(45deg, #d4af37, #f2d06b)";
     }
     btn.onclick = (e) => {
@@ -517,7 +519,7 @@ function cerrarDetalle() {
     document.getElementById('modal-producto').style.display = 'none';
 }
 
-// --- FUNCIONES DE SELECCIÓN Y WHATSAPP ---
+// --- 4. ACCIONES (WHATSAPP Y SELECCIÓN) ---
 function toggleSelect(id) {
     if (seleccionados.has(id)) seleccionados.delete(id);
     else seleccionados.add(id);
@@ -548,7 +550,7 @@ function enviarWhatsAppFinal() {
     window.open(`https://wa.me/${miTelefono}?text=${encodeURIComponent(m)}`);
 }
 
-// --- MARCAS DINÁMICAS ---
+// --- 5. INTERFAZ DINÁMICA ---
 function generarMarcas() {
     const cont = document.getElementById('contenedorMarcas');
     const marcas = ["Todas", ...new Set(productos.map(p => p.marca))];
@@ -567,8 +569,23 @@ function generarMarcas() {
     });
 }
 
+function actualizarBotonVerMas() {
+    const b = document.getElementById('btnVerMas');
+    if(b) b.remove();
+    if (cantidadAMostrar < productosFiltrados.length) {
+        const btn = document.createElement('button');
+        btn.id = 'btnVerMas';
+        btn.innerText = "VER MÁS MODELOS ↓";
+        btn.style = "grid-column: 1 / -1; margin: 30px auto; padding: 15px 40px; background: transparent; border: 1px solid var(--primary); color: var(--primary); border-radius: 30px; cursor: pointer; font-weight: bold; font-size: 11px; display: block; width: fit-content;";
+        btn.onclick = () => { cantidadAMostrar += incremento; dibujar(); };
+        document.getElementById('contenedor').appendChild(btn);
+    }
+}
+
+// Inicialización
 window.onpopstate = () => { cerrarDetalle(); document.getElementById('miModal').style.display='none'; };
 window.onload = cargar;
+    
 </script>
 </body>
 </html>
