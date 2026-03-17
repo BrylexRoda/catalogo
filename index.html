@@ -244,66 +244,7 @@
 .btn-requisitos {
     animation: brilloLatido 3s infinite ease-in-out;
 }    
-/* --- NUEVOS ESTILOS PARA DETALLE DE PRODUCTO --- */
-.modal-detalle {
-    display: none; 
-    position: fixed;
-    z-index: 2000; /* Por encima de todo */
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.98);
-    overflow-y: auto;
-    backdrop-filter: blur(10px);
-}
-
-.contenido-detalle {
-    margin: 5% auto;
-    width: 90%;
-    max-width: 500px;
-    background: #111827;
-    border: 1px solid var(--primary);
-    border-radius: 20px;
-    padding: 20px;
-    position: relative;
-    text-align: center;
-}
-
-.btn-cerrar-detalle {
-    color: var(--primary);
-    font-size: 24px;
-    cursor: pointer;
-    display: block;
-    text-align: left;
-    margin-bottom: 10px;
-}
-
-.img-detalle {
-    width: 100%;
-    border-radius: 15px;
-    margin-bottom: 15px;
-}
-
-.info-detalle h2 { color: var(--primary); margin: 10px 0; }
-.info-detalle p { color: #ccc; font-size: 14px; margin-bottom: 20px; }
-
-.btn-comprar-modal {
-    width: 100%;
-    padding: 15px;
-    border-radius: 10px;
-    border: none;
-    font-weight: 700;
-    cursor: pointer;
-    text-transform: uppercase;
-}
-
-/* Colores para el botón de compra */
-.estado-agregar { background: var(--primary); color: #000; }
-.estado-quitar { background: #ef4444; color: #fff; }
-
     </style>
-
 </head>
 <body onclick="cerrarFiltrosFuera(event)">
 
@@ -387,13 +328,7 @@
         <p onclick="cerrarModal()" style="text-align:center; cursor:pointer; color:var(--text-secondary); margin-top:15px; font-size:10px; text-transform:uppercase;">Volver al catálogo</p>
     </div>
 </div>
-        <div id="modalDetalle" class="modal-detalle">
-    <div class="contenido-detalle">
-        <span class="btn-cerrar-detalle" onclick="cerrarDetalle()">← Volver</span>
-        <div id="cuerpoDetalle">
-            </div>
-    </div>
-</div>
+
 <script>
     const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1ZSSPWWk7VS3L1BHNBFAw8Lo3KFUiOKwFJwKXOoRKvk4/gviz/tq?tqx=out:csv';
     const miTelefono = "593990267974"; 
@@ -536,8 +471,7 @@ function filtrarGenero(g, el) {
         const mostrarAhora = productosFiltrados.slice(0, cantidadAMostrar);
         
         cont.innerHTML = mostrarAhora.map(p => `
-            // CÓDIGO NUEVO PARA LA LÍNEA 539:
-                <div id="card-${p.id}" class="card ${seleccionados.has(p.id) ? 'selected' : ''}" onclick="abrirModalDetalle(${p.id})">
+            <div id="card-${p.id}" class="card ${seleccionados.has(p.id) ? 'selected' : ''}" onclick="toggleSelect(${p.id})">
                 <div class="btn-info" onclick="toggleDetalles(event, ${p.id})">INFO</div>
                 <div id="detalles-${p.id}" class="detalles-overlay" onclick="toggleDetalles(event, ${p.id})">
                     <strong>ESPECIFICACIONES</strong><br><br>${p.descripcion}
@@ -666,102 +600,6 @@ function filtrarGenero(g, el) {
         window.scrollTo(0, 0);
         cargar();
     };
-    
-    function mostrarDetalle(id, nombre, imagen, descripcion) {
-    const modal = document.getElementById('modalDetalle');
-    const cuerpo = document.getElementById('cuerpoDetalle');
-    
-    // Revisamos si el producto ya está seleccionado en la cuadrícula
-    const cardOriginal = document.querySelector(`.card[data-id="${id}"]`);
-    const estaSeleccionado = cardOriginal && cardOriginal.classList.contains('selected');
-    
-    const textoBoton = estaSeleccionado ? "QUITAR DE MI LISTA" : "MARCAR PARA COMPRAR";
-    const claseBoton = estaSeleccionado ? "estado-quitar" : "estado-agregar";
-
-    cuerpo.innerHTML = `
-        <img src="${imagen}" class="img-detalle">
-        <div class="info-detalle">
-            <h2>${nombre}</h2>
-            <p>${descripcion}</p>
-            <button class="btn-comprar-modal ${claseBoton}" onclick="toggleDesdeModal('${id}', this)">
-                ${textoBoton}
-            </button>
-        </div>
-    `;
-    modal.style.display = "block";
-}
-
-function cerrarDetalle() {
-    document.getElementById('modalDetalle').style.display = "none";
-}
-
-function toggleDesdeModal(id, btnModal) {
-    const cardOriginal = document.querySelector(`.card[data-id="${id}"]`);
-    
-    if (cardOriginal) {
-        // Ejecutamos el clic en la card original para que tus funciones de conteo y lista sigan funcionando igual
-        cardOriginal.click(); 
-        
-        // Actualizamos el botón visual de la modal inmediatamente
-        const ahoraSeleccionado = cardOriginal.classList.contains('selected');
-        btnModal.innerText = ahoraSeleccionado ? "QUITAR DE MI LISTA" : "MARCAR PARA COMPRAR";
-        btnModal.className = `btn-comprar-modal ${ahoraSeleccionado ? 'estado-quitar' : 'estado-agregar'}`;
-    }
-}
-    function abrirModalDetalle(id) {
-    // Buscamos el producto en tu lista de productosOriginales o productosFiltrados
-    const p = productosOriginales.find(item => item.id === id);
-    if (!p) return;
-
-    const modal = document.getElementById('modalDetalle');
-    const cuerpo = document.getElementById('cuerpoDetalle');
-    
-    // Verificamos si ya está marcado usando tu Set 'seleccionados'
-    const estaMarcado = seleccionados.has(id);
-    const textoBoton = estaMarcado ? "QUITAR DE LA LISTA" : "MARCAR PARA COMPRAR";
-    const claseBoton = estaMarcado ? "estado-quitar" : "estado-agregar";
-
-    // Creamos el contenido de la ventana
-    cuerpo.innerHTML = `
-        <img src="${p.fotos[0]}" class="img-detalle">
-        <div class="info-detalle">
-            <h2>${p.nombre}</h2>
-            <p style="margin: 15px 0; line-height: 1.5;">${p.descripcion}</p>
-            <div style="font-size: 1.2em; color: var(--primary); font-weight: bold; margin-bottom: 20px;">
-                Precio Total: $${p.precio.toFixed(2)}
-            </div>
-            <button id="btn-modal-${id}" class="btn-comprar-modal ${claseBoton}" onclick="procesarSeleccionDesdeModal(${id})">
-                ${textoBoton}
-            </button>
-        </div>
-    `;
-    modal.style.display = "block";
-}
-
-function procesarSeleccionDesdeModal(id) {
-    const btn = document.getElementById(`btn-modal-${id}`);
-    const cardPrincipal = document.getElementById(`card-${id}`);
-
-    // Usamos la misma lógica de tu Set 'seleccionados'
-    if (seleccionados.has(id)) {
-        seleccionados.delete(id);
-        btn.innerText = "MARCAR PARA COMPRAR";
-        btn.className = "btn-comprar-modal estado-agregar";
-        if (cardPrincipal) cardPrincipal.classList.remove('selected');
-    } else {
-        seleccionados.add(id);
-        btn.innerText = "QUITAR DE LA LISTA";
-        btn.className = "btn-comprar-modal estado-quitar";
-        if (cardPrincipal) cardPrincipal.classList.add('selected');
-    }
-    
-    // Si tienes una función que actualiza el contador total de la página, llámala aquí:
-    // actualizarResumen(); 
-}
-
-function cerrarDetalle() {
-    document.getElementById('modalDetalle').style.display = "none";
-}
 </script>
 </body>
 </html>
