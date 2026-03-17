@@ -330,276 +330,215 @@
 </div>
 
 <script>
+    
     const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1ZSSPWWk7VS3L1BHNBFAw8Lo3KFUiOKwFJwKXOoRKvk4/gviz/tq?tqx=out:csv';
-    const miTelefono = "593990267974"; 
+const miTelefono = "593990267974"; 
 
-    let productos = [];
-    let productosFiltrados = [];
-    let seleccionados = new Set();
-    let marcaSeleccionada = "Todas";
-    let rangoPrecio = "todas";
-    let cantidadAMostrar = 10;
-    let incremento = 10;
-    let generoSeleccionado = "Todos";
-    
-    async function cargar() {
-        window.scrollTo(0, 0); // Esto obliga a la página a subir al cargar
-        try {
-            const res = await fetch(SHEET_URL + '&cache=' + new Date().getTime());
-            const text = await res.text();
-            const filas = text.trim().split(/\r?\n/).slice(1);
-            
-            productos = filas.map((f, i) => {
-                let c = f.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(item => item.replace(/"/g, '').trim());
-                if(c.length < 2) return null;
-                return {
-                    id: i + 2,
-                    nombre: c[0] || 'Reloj Luxury',
-                    marca: (c[0].match(/[A-Z]{2,}(?:\s+[A-Z]{2,})*/) || ["RELOJ"])[0],
-                    genero: c[0].toLowerCase().includes('mujer') ? 'Mujer' : (c[0].toLowerCase().includes('hombre') ? 'Hombre' : 'Unisex'),
-                    precio: parseFloat(c[1]?.replace('$', '').replace(/[^\d.,]/g, '')) || 0,
-                    fotos: (c[2] || '').split('|').map(link => link.trim()),
-                    descripcion: (c[3] || 'Consultar detalles').split('|').join('<br>'), // <-- AQUÍ FALTABA ESTA COMA
-                    stock: (c[5] || '').toLowerCase() // c[5] es la sexta columna (F)                
-                };
-            }).filter(p => p !== null); // <-- Y AQUÍ ASEGÚRATE QUE EL CIERRE ESTÉ ASÍ
+// Variables de Estado (Protegidas)
+let productos = [];
+let productosFiltrados = [];
+let seleccionados = new Set();
+let marcaSeleccionada = "Todas";
+let rangoPrecio = "todas";
+let generoSeleccionado = "Todos";
+let cantidadAMostrar = 12;
+let incremento = 12;
+let productoActualId = null;
 
-            generarMarcas();
-            document.getElementById('loading').style.display = 'none';
-            aplicarFiltros();
-        } catch (e) { console.error(e); }
-    }
-
-    function toggleFiltros(e) { e.stopPropagation(); document.getElementById('panelFiltros').classList.toggle('active'); }
-    function cerrarFiltrosFuera(e) { if (!document.getElementById('areaFiltros').contains(e.target)) document.getElementById('panelFiltros').classList.remove('active'); }
-
-    function generarMarcas() {
-        const cont = document.getElementById('contenedorMarcas');
-        const marcas = [...new Set(productos.map(p => p.marca))];
-        marcas.forEach(m => {
-            const btn = document.createElement('button');
-            btn.className = 'chip chip-marca';
-            btn.innerText = m;
-            btn.onclick = (e) => { e.stopPropagation(); filtrarMarca(m, btn); };
-            cont.appendChild(btn);
-        });
-    }
-
-    function filtrarMarca(m, el) {
-        document.querySelectorAll('.chip-marca').forEach(c => c.classList.remove('active'));
-        el.classList.add('active'); marcaSeleccionada = m; aplicarFiltros();
-    }
-
-    function filtrarPrecio(r, el) {
-        document.querySelectorAll('.chip-precio').forEach(c => c.classList.remove('active'));
-        el.classList.add('active'); rangoPrecio = r; aplicarFiltros();
-    }
-function filtrarGenero(g, el) {
-        document.querySelectorAll('.chip-genero').forEach(c => c.classList.remove('active'));
-        el.classList.add('active');
-        generoSeleccionado = g;
-        aplicarFiltros();
-    }
-    function aplicarFiltros() {
-        cantidadAMostrar = 10; 
-        const query = document.getElementById('busqueda').value.toLowerCase();
+// --- 1. CARGA DE DATOS ---
+async function cargar() {
+    try {
+        const res = await fetch(SHEET_URL + '&cache=' + new Date().getTime());
+        const text = await res.text();
+        const filas = text.trim().split(/\r?\n/).slice(1);
         
-        productosFiltrados = productos.filter(p => {
-            const mMarca = marcaSeleccionada === "Todas" || p.marca === marcaSeleccionada;
-            const mBusqueda = p.nombre.toLowerCase().includes(query);
-            
-            // Lógica para el nuevo filtro de género
-            // El producto se muestra si: es de la categoría elegida O es Unisex
-            const mGenero = generoSeleccionado === "Todos" || 
-                 p.genero === generoSeleccionado || 
-                 p.genero === "Unisex";
-            const mStock = p.stock !== 'no';
-            
-            let mPrecio = true;
-            if(rangoPrecio === '0-60') mPrecio = (p.precio < 60);
-            if(rangoPrecio === '60-100') mPrecio = (p.precio >= 60 && p.precio <= 100);
-            if(rangoPrecio === '100-150') mPrecio = (p.precio > 100 && p.precio <= 150);
-            if(rangoPrecio === '150-up') mPrecio = (p.precio > 150);
-            
-            // Ahora retornamos incluyendo mGenero
-            return mMarca && mBusqueda && mPrecio && mGenero && mStock;
-        });
-        const contador = document.getElementById('contador-resultados');
-        if (contador) {
-            if (productosFiltrados.length === 0) {
-                contador.innerHTML = `
-                    <div style="opacity: 0.6;">NO SE ENCONTRARON MODELOS</div>
-                    <button onclick="reiniciarFiltros()" style="margin-top:10px; background:none; border:1px solid var(--primary); color:var(--primary); padding:5px 15px; cursor:pointer; border-radius:5px; font-size:0.7em; font-weight:bold;">LIMPIAR BÚSQUEDA</button>
-                `;
-            } else {
-                // Aquí es donde mostramos el total de modelos disponibles
-                contador.innerHTML = `
-                    <span style="opacity: 0.5; font-size: 0.8em;">STOCK DISPONIBLE:</span><br>
-                    <span style="font-size: 1.2em;">${productosFiltrados.length} MODELOS EXCLUSIVOS</span>
-                `;
-            }
-        }
-        dibujar();
-        }
-    function reiniciarFiltros() {
-    // 1. Reseteamos las variables a sus valores iniciales
-    marcaSeleccionada = "Todas";
-    generoSeleccionado = "Todos";
-    rangoPrecio = "todas";
+        productos = filas.map((f, i) => {
+            let c = f.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(item => item.replace(/"/g, '').trim());
+            if(c.length < 2) return null;
+
+            const nombreLower = (c[0] || '').toLowerCase();
+            return {
+                id: i + 2,
+                nombre: c[0] || 'Reloj Luxury',
+                marca: (c[0].split(' ')[0] || "RELOJ").toUpperCase(),
+                genero: nombreLower.includes('mujer') || nombreLower.includes('dama') ? 'Mujer' : 
+                        (nombreLower.includes('hombre') || nombreLower.includes('caballero') ? 'Hombre' : 'Unisex'),
+                precio: parseFloat(c[1]?.replace(/[^\d.]/g, '')) || 0,
+                fotos: (c[2] || '').split('|').map(link => link.trim()),
+                descripcion: (c[3] || 'Consultar detalles').split('|').join('<br>'),
+                stock: (c[5] || '').toLowerCase()
+            };
+        }).filter(p => p !== null && p.stock !== 'no');
+
+        generarMarcas();
+        document.getElementById('loading').style.display = 'none';
+        aplicarFiltros(); // Esto activa los filtros desde el inicio
+    } catch (e) { 
+        console.error("Error cargando inventario:", e);
+    }
+}
+
+// --- 2. MECÁNICA DE FILTROS (REPARADA) ---
+function aplicarFiltros() {
+    cantidadAMostrar = 12; // Resetea el paginado al filtrar
+    const query = document.getElementById('busqueda').value.toLowerCase();
     
-    // 2. Limpiamos el buscador visualmente
-    const buscador = document.getElementById('busqueda');
-    if(buscador) buscador.value = "";
-    
-    // 3. Quitamos el color dorado de todos los botones (chips)
-    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-    
-    // 4. Marcamos los botones de "Todos" como activos para que el usuario vea el cambio
-    // Buscamos los botones que dicen "Todo", "Todas" o "Todos" y les ponemos la clase active
-    document.querySelectorAll('.chip').forEach(c => {
-        if(c.innerText.includes("Todo") || c.innerText.includes("Todas")) {
-            c.classList.add('active');
-        }
+    productosFiltrados = productos.filter(p => {
+        const mMarca = marcaSeleccionada === "Todas" || p.marca === marcaSeleccionada;
+        const mBusqueda = p.nombre.toLowerCase().includes(query) || p.marca.toLowerCase().includes(query);
+        const mGenero = generoSeleccionado === "Todos" || p.genero === generoSeleccionado || p.genero === "Unisex";
+        
+        let mPrecio = true;
+        if(rangoPrecio === '0-60') mPrecio = (p.precio < 60);
+        else if(rangoPrecio === '60-100') mPrecio = (p.precio >= 60 && p.precio <= 100);
+        else if(rangoPrecio === '100-150') mPrecio = (p.precio > 100 && p.precio <= 150);
+        else if(rangoPrecio === '150-up') mPrecio = (p.precio > 150);
+        
+        return mMarca && mBusqueda && mPrecio && mGenero;
     });
 
-    // 5. Ejecutamos los filtros para que la página se actualice sola
-    aplicarFiltros();
+    // Actualiza el contador de resultados (Mecánica recuperada)
+    const contador = document.getElementById('contador-resultados');
+    if (contador) contador.innerHTML = `MOSTRANDO ${productosFiltrados.length} MODELOS`;
+    
+    dibujar();
 }
-    function dibujar() {
-        const cont = document.getElementById('contenedor');
-        // Solo tomamos una parte de la lista según 'cantidadAMostrar'
-        const mostrarAhora = productosFiltrados.slice(0, cantidadAMostrar);
-        
-        cont.innerHTML = mostrarAhora.map(p => `
-            <div id="card-${p.id}" class="card ${seleccionados.has(p.id) ? 'selected' : ''}" onclick="toggleSelect(${p.id})">
-                <div class="btn-info" onclick="toggleDetalles(event, ${p.id})">INFO</div>
-                <div id="detalles-${p.id}" class="detalles-overlay" onclick="toggleDetalles(event, ${p.id})">
-                    <strong>ESPECIFICACIONES</strong><br><br>${p.descripcion}
-                </div>
-                <div class="select-indicator"></div>
-                <div class="carrusel">
-                    ${p.fotos.filter(link => link.length > 5).map(img => `<img src="${img}" loading="lazy" style="pointer-events:none;">`).join('')}
-                </div>
-                <div class="info">
-                    <p>${p.nombre}</p>
-                    <div class="pago-60">Abono: $${(p.precio * 0.6).toFixed(2)}</div>
-                    <div class="precio-total-card">Total: $${p.precio.toFixed(2)}</div>
-                </div>
-            </div>`).join('');
 
-        actualizarBotonVerMas();
-    }
-    function actualizarBotonVerMas() {
-        // Eliminamos el botón viejo si existe
-        const btnViejo = document.getElementById('btnVerMas');
-        if(btnViejo) btnViejo.remove();
-
-        // Si todavía hay más productos por mostrar, creamos el botón
-        if (cantidadAMostrar < productosFiltrados.length) {
-            const btn = document.createElement('button');
-            btn.id = 'btnVerMas';
-            btn.innerText = "VER MÁS MODELOS ↓";
-            btn.style = "grid-column: 1 / -1; margin: 30px auto; padding: 15px 40px; background: transparent; border: 1px solid var(--primary); color: var(--primary); border-radius: 30px; cursor: pointer; font-weight: bold; font-size: 11px; letter-spacing: 2px; display: block; width: fit-content; text-transform: uppercase;";
-            btn.onclick = () => {
-                cantidadAMostrar += incremento;
-                dibujar();
-            };
-            document.getElementById('contenedor').appendChild(btn);
-        }
-    }
-    function toggleDetalles(e, id) { e.stopPropagation(); document.getElementById(`detalles-${id}`).classList.toggle('active'); }
-
-    function toggleSelect(id) {
-        if (seleccionados.has(id)) seleccionados.delete(id);
-        else seleccionados.add(id);
-        actualizarResumen();
-        dibujar();
-    }
-
-    function actualizarResumen() {
-        let f = 0, a = 0;
-        productos.forEach(p => { if(seleccionados.has(p.id)){ f += p.precio; a += (p.precio * 0.6); }});
-        document.getElementById('resumenTotalFull').innerText = `$${f.toFixed(2)}`;
-        document.getElementById('resumenAbono').innerText = `$${a.toFixed(2)}`;
-    }
-    function abrirModalInfo() {
-    document.getElementById('listaResumen').innerHTML = `
-        <div style="text-align:left; padding: 10px; border: 1px dashed #c5a059; border-radius:10px; font-size:12px; color: #fff;">
-            <p style="text-align:center; color: #c5a059; font-weight:bold; margin-bottom:10px;">📋 TÉRMINOS IMPORTANTES</p>
-            <p>• Los precios incluyen importación y entrega final.</p>
-            <p style="margin:8px 0;">• <b>Política de Abandono:</b> Una vez notificada la llegada de su producto, dispone de <b>30 días calendario</b> para liquidar el saldo. Pasado este tiempo, el producto se liberará para la venta y el abono <b style="color: var(--primary);">NO SERÁ REEMBOLSABLE</b> por gastos logísticos.</p>
-            <p style="text-align:center; opacity:0.6; margin-top:10px;">Consulte antes de elegir sus modelos favoritos.</p>
-        </div>`;
+// --- 3. RENDERIZADO Y BOTÓN VER MÁS ---
+function dibujar() {
+    const contenedor = document.getElementById('contenedor');
+    contenedor.innerHTML = '';
     
-    document.getElementById('modalTotalFull').innerText = "---";
-    document.getElementById('modalAbonoHoy').innerText = "---";
+    const parcial = productosFiltrados.slice(0, cantidadAMostrar);
     
-    document.getElementById('miModal').style.display = "block";
-    history.pushState({modalAbierto: true}, "");
+    parcial.forEach(p => {
+        const card = document.createElement('div');
+        card.className = `card ${seleccionados.has(p.id) ? 'selected' : ''}`;
+        card.onclick = () => abrirDetalle(p.id);
+        card.innerHTML = `
+            <div class="select-indicator"></div>
+            <div class="carrusel"><img src="${p.fotos[0]}" loading="lazy"></div>
+            <div class="info">
+                <p class="marca-tag">${p.marca}</p>
+                <p><b>${p.nombre}</b></p>
+                <span class="pago-60">Abono: $${(p.precio * 0.6).toFixed(2)}</span>
+                <span class="precio-total-card">Total: $${p.precio.toFixed(2)}</span>
+            </div>
+        `;
+        contenedor.appendChild(card);
+    });
+
+    actualizarBotonVerMas();
 }
-    function abrirModal() {
-        if(!seleccionados.size) return alert("Por favor, selecciona al menos un reloj.");
-        let h = "<div style='display:flex; flex-direction:column; gap:8px;'>", a = 0, total = 0;
-        productos.forEach(p => { 
-            if(seleccionados.has(p.id)){ 
-                h += `<div style="display:flex; align-items:center; gap:10px; color:#fff; font-size:13px;">
-                       <span style="color:var(--primary);">⌚</span> 
-                       <span>${p.nombre} <small style="opacity:0.5;">(#${p.id})</small></span>
-                      </div>`; 
-                a += (p.precio * 0.6);
-                total += p.precio;
-            }
-        });
-        document.getElementById('listaResumen').innerHTML = h + "</div>";
-        document.getElementById('modalTotalFull').innerText = `$${total.toFixed(2)}`;
-        document.getElementById('modalAbonoHoy').innerText = `$${a.toFixed(2)}`;
-        document.getElementById('miModal').style.display = "block";
-        
-        // Esto crea el "punto de retorno" para el botón atrás
-        history.pushState({modalAbierto: true}, "");
-    }
 
-    function cerrarModal() { 
-        document.getElementById('miModal').style.display = "none";
-        // Si el usuario cierra con la X, limpiamos el historial
-        if (history.state && history.state.modalAbierto) {
-            history.back();
-        }
-    }
-
-    // Esto detecta cuando el usuario le da "Atrás" en su celular
-    window.onpopstate = function(event) {
-        const modal = document.getElementById('miModal');
-        if (modal && modal.style.display === "block") {
-            modal.style.display = "none";
-        }
-    };
-
+function actualizarBotonVerMas() {
+    const b = document.getElementById('btnVerMas');
+    if(b) b.remove();
     
-
-    function enviarWhatsAppFinal() {
-        let m = "¡Hola Brylexroda! Me interesa importar estos modelos:\n\n", a = 0, total = 0;
-        productos.forEach(p => { 
-            if(seleccionados.has(p.id)) { 
-                // Añadimos el ID como referencia para ubicarlo en el Excel fácilmente
-                m += `⌚ ${p.nombre} (Ref: #${p.id})\n`; 
-                a += (p.precio * 0.6); 
-                total += p.precio;
-            }
-        });
-        
-        m += `\n--------------------------\n`;
-        m += `*TOTAL COMPRA:* $${total.toFixed(2)}\n`;
-        m += `*ABONO 60% (REQUERIDO):* $${a.toFixed(2)}\n`;
-        m += `\n¿Disponibilidad confirmada para proceder?`;
-        
-        window.open(`https://wa.me/${miTelefono}?text=${encodeURIComponent(m)}`);
+    if (cantidadAMostrar < productosFiltrados.length) {
+        const btn = document.createElement('button');
+        btn.id = 'btnVerMas';
+        btn.innerText = "VER MÁS MODELOS ↓";
+        btn.className = "btn-ver-mas"; // Asegúrate de tener este estilo o usa el de abajo:
+        btn.style = "grid-column: 1 / -1; margin: 30px auto; padding: 15px 40px; background: transparent; border: 1px solid #d4af37; color: #d4af37; border-radius: 30px; cursor: pointer; font-weight: bold; display: block;";
+        btn.onclick = () => { 
+            cantidadAMostrar += incremento; 
+            dibujar(); 
+        };
+        document.getElementById('contenedor').appendChild(btn);
     }
+}
 
-    window.onload = () => {
-        window.scrollTo(0, 0);
-        cargar();
+// --- 4. VENTANA DE DETALLES Y SELECCIÓN ---
+function abrirDetalle(id) {
+    const p = productos.find(x => x.id === id);
+    if (!p) return;
+    productoActualId = id;
+    
+    const galeria = document.getElementById('detalle-galeria');
+    galeria.innerHTML = p.fotos.map(f => `<img src="${f}" class="foto-detalle">`).join('');
+    
+    document.getElementById('detalle-nombre').innerText = p.nombre;
+    document.getElementById('detalle-marca').innerText = p.marca;
+    document.getElementById('detalle-precio').innerText = `VALOR TOTAL: $${p.precio.toFixed(2)}`;
+    document.getElementById('detalle-descripcion').innerHTML = p.descripcion;
+
+    const btnSel = document.getElementById('btn-seleccionar-modal');
+    actualizarBotonModal(btnSel, id);
+
+    document.getElementById('modal-producto').style.display = 'flex';
+    history.pushState({modal: 'detalle'}, '');
+}
+
+function toggleSelect(id) {
+    if (seleccionados.has(id)) seleccionados.delete(id);
+    else seleccionados.add(id);
+    actualizarResumen();
+    dibujar();
+}
+
+function actualizarResumen() {
+    let t = 0;
+    productos.forEach(p => { if(seleccionados.has(p.id)) t += p.precio; });
+    document.getElementById('resumenTotalFull').innerText = `$${t.toFixed(2)}`;
+    document.getElementById('resumenAbono').innerText = `$${(t * 0.6).toFixed(2)}`;
+}
+
+// --- 5. INTERFAZ Y MARCAS ---
+function generarMarcas() {
+    const cont = document.getElementById('contenedorMarcas');
+    const marcas = ["Todas", ...new Set(productos.map(p => p.marca))];
+    cont.innerHTML = '';
+    marcas.forEach(m => {
+        const btn = document.createElement('button');
+        btn.className = `chip chip-marca ${m === 'Todas' ? 'active' : ''}`;
+        btn.innerText = m;
+        btn.onclick = () => {
+            document.querySelectorAll('.chip-marca').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            marcaSeleccionada = m;
+            aplicarFiltros();
+        };
+        cont.appendChild(btn);
+    });
+}
+
+function actualizarBotonModal(btn, id) {
+    if (seleccionados.has(id)) {
+        btn.innerText = "REMOVER DE MI LISTA";
+        btn.style.background = "#333";
+    } else {
+        btn.innerText = "AÑADIR A MI LISTA 📋";
+        btn.style.background = "linear-gradient(45deg, #d4af37, #f2d06b)";
+    }
+    btn.onclick = (e) => {
+        e.stopPropagation();
+        toggleSelect(id);
+        actualizarBotonModal(btn, id);
     };
+}
+
+// Funciones de cierre y WhatsApp
+function cerrarDetalle() { document.getElementById('modal-producto').style.display = 'none'; }
+function cerrarModal() { document.getElementById('miModal').style.display = "none"; }
+function abrirModal() { if(seleccionados.size > 0) document.getElementById('miModal').style.display = "block"; else alert("Selecciona al menos un reloj"); }
+
+function enviarWhatsAppDirecto() {
+    const p = productos.find(x => x.id === productoActualId);
+    const m = `¡Hola Brylex Roda! Me interesa este modelo:\n⌚ *${p.nombre}*\n💰 Precio: $${p.precio.toFixed(2)}\nRef: #${p.id}`;
+    window.open(`https://wa.me/${miTelefono}?text=${encodeURIComponent(m)}`);
+}
+
+function enviarWhatsAppFinal() {
+    let m = "¡Hola! Quiero importar estos modelos:\n\n", total = 0;
+    productos.forEach(p => { if(seleccionados.has(p.id)) { m += `• ${p.nombre} ($${p.precio})\n`; total += p.precio; } });
+    m += `\n*Total:* $${total.toFixed(2)}\n*Abono (60%):* $${(total * 0.6).toFixed(2)}`;
+    window.open(`https://wa.me/${miTelefono}?text=${encodeURIComponent(m)}`);
+}
+
+window.onpopstate = () => { cerrarDetalle(); cerrarModal(); };
+window.onload = cargar;
+  
 </script>
 </body>
 </html>
