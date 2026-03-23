@@ -3,342 +3,603 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo Interactivo 60%</title>
-    <meta name="theme-color" content="#25d366">
-    <link rel="manifest" href="manifest.json">
+    <title>Tienda de Importación Brylex Roda</title>
+    <link rel="icon" href="https://i.postimg.cc/HLt7Kqk1/Untitled-(1).png" type="image/png">
+    
+    <meta property="og:title" content="Tienda de Importación Brylex Roda">
+    <meta property="og:description" content="Explora nuestro catálogo exclusivo de relojes y artículos de lujo importados.">
+    <meta property="og:image" content="https://i.postimg.cc/HLt7Kqk1/Untitled-(1).png">
+    
+    <meta name="twitter:image" content="https://i.postimg.cc/HLt7Kqk1/Untitled-(1).png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
     <style>
-        :root { --primary: #25d366; --bg: #f0f2f5; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; padding-bottom: 140px; }
-        .header { background: white; padding: 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 20px; }
-        .card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative; transition: 0.3s; }
-        .card.selected { outline: 4px solid var(--primary); background: #f0fff4; }
-        
-        /* Carrusel de imágenes */
-        .carrusel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; height: 280px; background: #eee; }
-        .carrusel img { flex: 0 0 100%; object-fit: cover; scroll-snap-align: start; }
-        .carrusel::-webkit-scrollbar { height: 6px; }
-        .carrusel::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
-
-        .info { padding: 15px; }
-        .nombre { font-size: 1.2rem; font-weight: bold; margin: 0; color: #333; }
-        .precio { font-size: 1rem; color: #666; margin: 5px 0; }
-        .pago-60 { color: #128c7e; font-weight: bold; background: #e8f9f0; padding: 5px 10px; border-radius: 8px; display: inline-block; margin-top: 5px; }
-
-        .select-indicator {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            z-index: 25;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: rgba(0,0,0,0.12);
-            border: 2px solid rgba(37,211,102,0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
-        }
-
-        .select-indicator span {
-            color: #fff;
-            font-size: 22px;
-            font-weight: 900;
-            opacity: 0;
-            transform: translateY(-1px);
-            user-select: none;
-        }
-
-        .card.selected .select-indicator {
-            background: rgba(37,211,102,0.95);
-            border-color: rgba(37,211,102,0.95);
-        }
-
-        .card.selected .select-indicator span {
-            opacity: 1;
+        :root { 
+            --primary: #c5a059; 
+            --bg: #05070a;      
+            --card-bg: #111827; 
+            --text-main: #ffffff; 
+            --text-secondary: #9ca3af; 
+            --border: #1f2937; 
         }
         
-        .footer { position: fixed; bottom: 0; width: 100%; background: white; padding: 20px; box-sizing: border-box; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); text-align: center; z-index: 100; }
-        .btn-ws { background: var(--primary); color: white; border: none; padding: 15px 30px; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%; max-width: 400px; box-shadow: 0 4px 10px rgba(37,211,102,0.3); }
-
-        /* Modal de detalle */
-        #modalDetalle {
-            position: fixed;
-            inset: 0;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 18px;
-            z-index: 1000;
-            background: rgba(0,0,0,0.68);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg);
+            color: var(--text-main); 
+            margin: 0; 
+            padding-bottom: 180px; 
+            line-height: 1.6;
         }
 
-        .modal-detalle-content {
-            position: relative;
+        /* Copia y reemplaza por este nuevo bloque compacto */
+        .header { 
+            background: #000; 
+            padding: 15px 20px; 
+            text-align: center; 
+            border-bottom: 1px solid var(--border); 
+        }
+        /* Efecto de brillo y movimiento para el logo */
+        .logo-premium {
             width: 100%;
-            max-width: 620px;
-            max-height: 85vh;
-            overflow: auto;
-            background: rgba(20,20,20,0.92);
-            border-radius: 18px;
-            border: 1px solid rgba(255,255,255,0.10);
-            color: #fff;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 14px;
-            right: 14px;
-            width: 56px;
-            height: 56px;
-            border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.15);
-            background: rgba(255,255,255,0.08);
-            color: #fff;
-            font-size: 34px;
-            line-height: 1;
+            max-width: 320px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            /* Brillo dorado constante */
+            filter: drop-shadow(0 0 12px rgba(197, 160, 89, 0.4));
+            transition: all 0.4s ease;
             cursor: pointer;
-            display: flex;
+        }
+
+        .logo-premium:hover {
+            /* El brillo se intensifica y el logo se agranda un poquito al tocarlo */
+            filter: drop-shadow(0 0 20px rgba(197, 160, 89, 0.7));
+            transform: scale(1.03);
+        }
+        /* Estilo del botón de requisitos */
+        .btn-requisitos {
+            background: rgba(197, 160, 89, 0.05);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 8px 18px;
+            border-radius: 25px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
+            gap: 5px;
+            margin-bottom: 15px;
         }
-
-        .modal-fotos {
-            padding: 70px 18px 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+        /* Ajuste para que el texto legal sea legible */
+        #listaResumen p {
+            line-height: 1.4;
+            margin-bottom: 5px;
         }
-
-        .modal-foto {
-            width: 100%;
-            height: 240px;
-            object-fit: cover;
-            border-radius: 14px;
-            background: rgba(255,255,255,0.06);
-        }
-
-        .modal-detalle-info {
-            padding: 8px 18px 18px;
-        }
-
-        .modal-nombre { margin: 0 0 8px; font-size: 1.4rem; font-weight: 800; }
-        .modal-descripcion { margin: 0 0 12px; color: rgba(255,255,255,0.85); line-height: 1.35; white-space: pre-wrap; }
-
-        .modal-precios { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
-        .modal-line { display: flex; justify-content: space-between; gap: 12px; font-size: 1.05rem; padding: 10px 12px; background: rgba(255,255,255,0.06); border-radius: 12px; }
-        .modal-line span:first-child { color: rgba(255,255,255,0.82); }
-
-        .modal-actions {
-            padding: 0 18px 18px;
-        }
-
-        .modal-back-btn {
-            width: 100%;
-            border: none;
+        .btn-requisitos:hover {
             background: var(--primary);
-            color: #fff;
-            border-radius: 14px;
-            padding: 14px 16px;
-            font-weight: 900;
-            font-size: 1.05rem;
-            cursor: pointer;
-            box-shadow: 0 10px 30px rgba(37,211,102,0.25);
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
+            color: #000;
+            box-shadow: 0 0 15px rgba(197, 160, 89, 0.3);
+        }        
+        .video-presentacion { background: #0a0c10; padding: 20px 15px; text-align: center; border-bottom: 1px solid var(--border); position: relative; }
+        .video-wrapper { position: relative; width: 100%; max-width: 300px; margin: 0 auto; border-radius: 20px; overflow: hidden; border: 1px solid var(--border); aspect-ratio: 9/16; }
+        .video-wrapper::after {
+            content: "ASI LLEGA SU PRODUCTO 📦✅";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            transform: none;
+            background: rgba(197, 160, 89, 0.98); 
+            color: #000;
+            
+            /* --- AJUSTES DE ESTIRAMIENTO Y CENTRADO --- */
+            padding: 30px 0; /* Aumentamos de 12px a 20px para que se estire hacia abajo */
+            display: flex; /* Usamos flex para asegurar centrado total */
+            align-items: center; 
+            justify-content: center;
+            /* ------------------------------------------ */
+            
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            z-index: 15;
+            border-bottom-left-radius: 0px; 
+            border-bottom-right-radius: 0px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            pointer-events: none;
+            white-space: nowrap;
         }
+        /* BUSCADOR ACOPLADO AL VIDEO */
+        .contenedor-busqueda { 
+            position: absolute; 
+            top: 130px; /* Ajuste para que quede debajo del título */
+            right: 20px; 
+            z-index: 90;
+        }
+        .input-busqueda { 
+            width: 35px;
+            height: 35px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Transición más suave */
+            padding: 0 10px;
+            border-radius: 20px;
+            border: 1px solid var(--primary); /* Borde dorado */
+            background: rgba(17, 24, 39, 0.9);
+            color: white;
+            font-size: 0.8em;
+            outline: none;
+            text-align: center;
+            box-shadow: 0 0 5px rgba(197, 160, 89, 0.2); /* Brillo sutil */
+        }
+
+         .input-busqueda:focus { 
+            width: 200px; /* Se expande más para que sea cómodo escribir */
+            text-align: left;
+            border: 2px solid var(--primary); /* Resalta el dorado al escribir */
+            box-shadow: 0 0 15px rgba(197, 160, 89, 0.4);
+        }
+
+        .contenedor-filtros { background: #05070a; padding: 10px 20px; }
+        .btn-abrir-filtros { 
+            padding: 10px 20px; 
+            background: transparent; 
+            border: 1px solid var(--primary); /* Marco dorado */
+            color: var(--primary); 
+            font-size: 0.8em; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            display: inline-block; 
+            margin-bottom: 10px;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: 0.3s;
+         }
+/* Efecto cuando pasas el mouse o tocas */
+        .btn-abrir-filtros:active {
+            background: var(--primary);
+            color: #000;
+         }
+        
+        .panel-filtros { display: none; padding: 10px 0; }
+        .panel-filtros.active { display: block; }
+        .chips-container { display: flex; gap: 8px; overflow-x: auto; padding: 5px 0; scrollbar-width: none; }
+        .chip { background: #1f2937; color: #fff; padding: 6px 12px; border-radius: 6px; font-size: 10px; cursor: pointer; border: 1px solid transparent; white-space: nowrap; }
+        .chip.active { background: var(--primary); color: #000; font-weight: bold; }
+
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 12px; }
+        @media (min-width: 768px) { .grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); } }
+
+        .card { background: var(--card-bg); border-radius: 15px; overflow: hidden; cursor: pointer; position: relative; border: 1px solid var(--border); transition: 0.3s; }
+        .card.selected { border-color: var(--primary); box-shadow: 0 0 15px rgba(197, 160, 89, 0.2); }
+
+        .btn-info { position: absolute; top: 10px; left: 10px; width: 35px; height: 35px; background: var(--primary); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 50; font-size: 8px; font-weight: 800; border: 2px solid #000; }
+        .detalles-overlay { position: absolute; bottom: -100%; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(8px); color: white; padding: 20px; box-sizing: border-box; transition: 0.4s; font-size: 11px; display: flex; flex-direction: column; justify-content: center; text-align: center; z-index: 60; }
+        .detalles-overlay.active { bottom: 0; }
+
+        .select-indicator { position: absolute; top: 10px; right: 10px; width: 24px; height: 24px; background: rgba(0,0,0,0.6); border: 1px solid var(--primary); border-radius: 50%; z-index: 10; display: flex; align-items: center; justify-content: center; }
+        .card.selected .select-indicator { background: #22c55e; border-color: #fff; }
+        .card.selected .select-indicator::after { content: "✓"; color: white; font-size: 12px; font-weight: bold; }
+
+        .carrusel { 
+            width: 100%; 
+            height: 220px; /* Un poco más de altura para que luzcan */
+            background: #000; 
+            display: flex; 
+            overflow-x: auto; 
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory; 
+            scrollbar-width: none; 
+            -webkit-overflow-scrolling: touch;
+            align-items: center;
+        }
+        
+        .carrusel img { 
+            flex: 0 0 100%; 
+            min-width: 100%;
+            height: 100%; 
+            object-fit: contain; 
+            scroll-snap-align: center; /* ESTO es lo que mantiene el centrado */
+            display: block;
+            pointer-events: none; /* Esto hace que el clic 'atraviese' la foto para marcar el cuadro */
+        }
+
+        .info { padding: 12px; }
+        .info p { margin: 0; font-size: 0.75em; height: 2.8em; overflow: hidden; color: var(--text-secondary); line-height: 1.4; }
+        .precio-total-card { color: #fff; font-weight: 300; font-size: 0.75em; margin-top: 5px; opacity: 0.6; }
+        .pago-60 { color: var(--primary); font-weight: 700; font-size: 1em; display: block; }
+
+        .footer { 
+            position: fixed; 
+            bottom: 0; 
+            width: 100%; 
+            background: rgba(5, 7, 10, 0.98); 
+            backdrop-filter: blur(20px); 
+            padding: 8px 20px; /* Muy fino */
+            border-top: 1px solid var(--primary); 
+            z-index: 100; 
+            box-sizing: border-box; 
+        }
+        .btn-enlistar { background: linear-gradient(135deg, #c5a059, #856404); color: #000; border: none; padding: 14px; border-radius: 10px; font-weight: 700; width: 100%; cursor: pointer; font-size: 13px; text-transform: uppercase; }
+        
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); }
+        .modal-content { background: #111827; margin: 15% auto; padding: 20px; border-radius: 15px; width: 88%; max-width: 380px; color: #fff; border: 1px solid var(--primary); }
+        .instrucciones { background: rgba(197, 160, 89, 0.05); padding: 15px; border-radius: 10px; border-left: 3px solid var(--primary); margin: 15px 0; }
+        .instrucciones p { margin: 8px 0; font-size: 13px; color: #fff; }
+        .instrucciones b { color: var(--primary); }
+
+        /* Animación de latido brillante */
+@keyframes brilloLatido {
+    0% { box-shadow: 0 0 5px rgba(197, 160, 89, 0.2); transform: scale(1); }
+    50% { box-shadow: 0 0 20px rgba(197, 160, 89, 0.6); transform: scale(1.02); }
+    100% { box-shadow: 0 0 5px rgba(197, 160, 89, 0.2); transform: scale(1); }
+}
+
+/* Aplicar la animación al botón de requisitos */
+.btn-requisitos {
+    animation: brilloLatido 3s infinite ease-in-out;
+}    
     </style>
 </head>
-<body>
+<body onclick="cerrarFiltrosFuera(event)">
 
 <div class="header">
-    <h1 style="margin:0;">✨ Mi Catálogo Oficial</h1>
-    <p style="margin:5px 0 0; color: #666;">Selecciona tus modelos favoritos</p>
+    <img src="https://i.postimg.cc/HLt7Kqk1/Untitled-(1).png" alt="BrylexRoda Logo" class="logo-premium">
 </div>
-
-<div id="loading" style="text-align:center; padding: 50px;">Cargando productos...</div>
-<div class="grid" id="contenedor"></div>
-
-<div class="footer">
-    <div id="resumen" style="margin-bottom:15px; font-size: 1.2rem; font-weight: bold;">Total Entradas (60%): $0.00</div>
-    <button class="btn-ws" onclick="enviarPedido()">Enviar Pedido por WhatsApp 📲</button>
+    <div style="text-align: center;">
+    <button onclick="abrirModalInfo()" class="btn-requisitos">
+        <span>ⓘ</span> PROCESO DE IMPORTACIÓN
+    </button>
 </div>
-
-<script>
-    // TU ENLACE CSV PUBLICADO
-    const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQuAq6Z_HRak2BFSbvMcCpeLtIR5iXL6ETn4rqejBHxbevf-5k5JN-6IC1g7TV6cgLByhaz2WKHSZ5g/pub?output=csv';
-
-    let productos = [];
-    let productosOriginales = [];
-    let seleccionados = new Set();
-
-    // Función para limpiar links de Google Drive y que funcionen como imágenes directas
-    function limpiarLink(url) {
-        url = url.trim();
-        if (url.includes('drive.google.com')) {
-            const id = url.split('/d/')[1]?.split('/')[0] || url.split('id=')[1];
-            return `https://lh3.googleusercontent.com/d/${id}`;
-        }
-        return url;
-    }
-
-    async function cargarCatalogo() {
-        try {
-            const res = await fetch(SHEET_URL);
-            const data = await res.text();
-            const filas = data.split('\n').slice(1);
-
-            productos = filas.map((fila, i) => {
-                const columnas = fila.split(',');
-                // Separamos las fotos por el símbolo |
-                const fotosRaw = columnas[2] ? columnas[2].split('|') : [];
-                const fotosLimpias = fotosRaw.map(f => limpiarLink(f));
-
-                return {
-                    id: i,
-                    nombre: columnas[0]?.trim(),
-                    precio: parseFloat(columnas[1]) || 0,
-                    fotos: fotosLimpias,
-                    descripcion: columnas[3]?.trim() || ''
-                };
-            }).filter(p => p.nombre);
-            productosOriginales = [...productos];
-
-            document.getElementById('loading').style.display = 'none';
-            dibujar();
-        } catch (error) {
-            document.getElementById('loading').innerText = "Error al conectar con el inventario.";
-        }
-    }
-
-    function dibujar() {
-        const grid = document.getElementById('contenedor');
-        grid.innerHTML = productos.map(p => `
-            <div class="card ${seleccionados.has(p.id) ? 'selected' : ''}">
-                <div class="select-indicator" onclick="event.stopPropagation(); toggleSelect(${p.id})">
-                    <span>✓</span>
-                </div>
-                <div class="carrusel" onclick="abrirModalDetalle(${p.id})">
-                    ${p.fotos.length > 0 
-                        ? p.fotos.map(img => `<img src="${img}" onerror="this.src='https://via.placeholder.com/400x300?text=Cargando+Imagen...'">`).join('')
-                        : '<img src="https://via.placeholder.com/400x300?text=Sin+Foto">'
-                    }
-                </div>
-                <div class="info" onclick="abrirModalDetalle(${p.id})">
-                    <p class="nombre">${p.nombre}</p>
-                    <p class="precio">Precio Total: $${p.precio.toFixed(2)}</p>
-                    <div class="pago-60">Pago Inicial (60%): $${(p.precio * 0.6).toFixed(2)}</div>
-                </div>
-            </div>
-        `).join('');
-        calcular();
-    }
-
-    function toggle(id) {
-        if(seleccionados.has(id)) seleccionados.delete(id);
-        else seleccionados.add(id);
-        dibujar();
-    }
-
-    // Wrapper requerido para el nuevo flujo de clics.
-    // Mantiene la lógica original del Set a través de `toggle(id)`.
-    function toggleSelect(id) {
-        toggle(id);
-    }
-
-    function calcular() {
-        let total60 = 0;
-        productos.forEach(p => {
-            if(seleccionados.has(p.id)) total60 += (p.precio * 0.6);
-        });
-        document.getElementById('resumen').innerHTML = `Total Entradas (60%): <span style="color:#128c7e">$${total60.toFixed(2)}</span>`;
-    }
-
-    function abrirModalDetalle(id) {
-        const p = productosOriginales.find(prod => prod.id === id);
-        if (!p) return;
-
-        const fotos = Array.isArray(p.fotos) ? p.fotos : [];
-        document.getElementById('modalFotos').innerHTML = fotos.length > 0
-            ? fotos.map(img => `<img class="modal-foto" src="${img}" onerror="this.src='https://via.placeholder.com/800x600?text=Sin+Imagen'">`).join('')
-            : `<img class="modal-foto" src="https://via.placeholder.com/800x600?text=Sin+Foto" alt="Sin foto">`;
-
-        document.getElementById('modalNombre').textContent = p.nombre || '';
-        document.getElementById('modalDescripcion').textContent = p.descripcion || '';
-
-        const precio = Number(p.precio) || 0;
-        document.getElementById('modalPrecioTotal').textContent = `$${precio.toFixed(2)}`;
-        document.getElementById('modalAbono60').textContent = `$${(precio * 0.6).toFixed(2)}`;
-
-        document.getElementById('modalDetalle').style.display = 'flex';
-    }
-
-    function cerrarDetalle() {
-        document.getElementById('modalDetalle').style.display = 'none';
-    }
-
-    function enviarPedido() {
-        if(seleccionados.size === 0) return alert("Por favor, selecciona al menos un modelo.");
-        
-        let mensaje = "¡Hola! 👋 Me interesan estos modelos de tu catálogo:\n\n";
-        let totalE = 0;
-
-        productos.forEach(p => {
-            if(seleccionados.has(p.id)) {
-                const cuota = p.precio * 0.6;
-                mensaje += `⭐ *${p.nombre}*\n`;
-                mensaje += `   Precio: $${p.precio.toFixed(2)}\n`;
-                mensaje += `   Entrada (60%): $${cuota.toFixed(2)}\n\n`;
-                totalE += cuota;
-            }
-        });
-
-        mensaje += `--------------------------\n`;
-        mensaje += `💰 *TOTAL A PAGAR (Entradas): $${totalE.toFixed(2)}*`;
-
-        // REEMPLAZA CON TU NÚMERO (Ejemplo: 593999999999)
-        const miTelefono = "593990267974"; 
-        window.open(`https://wa.me/${miTelefono}?text=${encodeURIComponent(mensaje)}`);
-    }
-
-    cargarCatalogo();
-</script>
-
-<div id="modalDetalle">
-    <div class="modal-detalle-content">
-        <button type="button" class="modal-close" onclick="cerrarDetalle()" aria-label="Cerrar detalle">✕</button>
-
-        <div class="modal-fotos" id="modalFotos"></div>
-
-        <div class="modal-detalle-info">
-            <h2 class="modal-nombre" id="modalNombre"></h2>
-            <p class="modal-descripcion" id="modalDescripcion"></p>
-
-            <div class="modal-precios">
-                <div class="modal-line">
-                    <span>Precio Total:</span>
-                    <span id="modalPrecioTotal"></span>
-                </div>
-                <div class="modal-line">
-                    <span>Abono (60%):</span>
-                    <span id="modalAbono60"></span>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal-actions">
-            <button type="button" class="modal-back-btn" onclick="cerrarDetalle()">← VOLVER ATRÁS</button>
-        </div>
+<div class="contenedor-busqueda">
+    <input type="text" id="busqueda" class="input-busqueda" placeholder="Buscar..." oninput="aplicarFiltros()">
+</div>
+<div class="video-presentacion">
+    <div class="video-wrapper">
+        <iframe width="100%" height="100%" src="https://www.youtube.com/embed/266kYQHJX9I?autoplay=1&mute=1&loop=1&playlist=266kYQHJX9I&controls=0&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1" frameborder="0" style="pointer-events: none;" allow="autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
     </div>
 </div>
 
+<div class="contenedor-filtros" id="areaFiltros">
+    <button class="btn-abrir-filtros" onclick="toggleFiltros(event)">FILTROS ▼</button>
+    <div class="panel-filtros" id="panelFiltros">
+        
+        <div class="chips-container">
+            <button class="chip chip-genero active" onclick="filtrarGenero('Todos', this)">Todos</button>
+            <button class="chip chip-genero" onclick="filtrarGenero('Hombre', this)">Caballeros</button>
+            <button class="chip chip-genero" onclick="filtrarGenero('Mujer', this)">Damas</button>
+        </div>
+
+        <div class="chips-container">
+    <button class="chip chip-precio active" onclick="filtrarPrecio('todas', this)">Todo Precio</button>
+    <button class="chip chip-precio" onclick="filtrarPrecio('0-60', this)">Bajo $60</button>
+    <button class="chip chip-precio" onclick="filtrarPrecio('60-100', this)">$60 - $100</button>
+    <button class="chip chip-precio" onclick="filtrarPrecio('100-150', this)">$100 - $150</button>
+    <button class="chip chip-precio" onclick="filtrarPrecio('150-up', this)">Premium (+$150)</button>
+</div>
+
+        <div class="chips-container" id="contenedorMarcas">
+            <button class="chip chip-marca active" onclick="filtrarMarca('Todas', this)">Todas las marcas</button>
+        </div>
+    </div>
+</div>
+<div id="contador-resultados" style="color: var(--primary); font-size: 0.9em; text-align: center; margin: 15px 0; letter-spacing: 2px; font-weight: bold; text-transform: uppercase;">
+    Cargando modelos...
+</div>
+    <div id="loading" style="text-align:center; padding:50px; color: var(--text-secondary); font-size: 10px; letter-spacing: 2px;">CONECTANDO CON COLECCIÓN...</div>
+<div class="grid" id="contenedor"></div>
+
+<div class="footer">
+    <div style="display:flex; justify-content:space-between; margin-bottom:8px; align-items: center;">
+        <div><span style="color:var(--text-secondary); font-size:9px; text-transform:uppercase;">Total</span><br><span id="resumenTotalFull" style="color:#fff; font-weight:bold; font-size:1em;">$0.00</span></div>
+        <div style="text-align:right;"><span style="color:var(--primary); font-size:9px; text-transform:uppercase;">Abono Inicial (60%)</span><br><span id="resumenAbono" style="color:var(--primary); font-weight:bold; font-size:1.2em;">$0.00</span></div>
+    </div>
+    <button class="btn-enlistar" onclick="abrirModal()">Confirmar Selección 📋</button>
+</div>
+
+<div id="miModal" class="modal">
+    <div class="modal-content">
+        <h3 style="color:var(--primary); text-align:center; font-size:14px; letter-spacing:1px; margin-top:0;">REQUISITOS DE IMPORTACIÓN</h3>
+        
+        <div class="instrucciones">
+            <p style="font-size: 12px; margin: 8px 0;">• <b>Revision:</b> Se revisara al momento la disposicion en <b>stock</b> del producto de la lista de pedido.</p>            
+            <p style="font-size: 12px; margin: 8px 0;">• <b>Abono inicial:</b> Se requiere el <b>60%</b> del valor total de cada producto para proceder con la compra.</p>
+            <p style="font-size: 12px; margin: 8px 0;">• <b>Tiempo de entrega:</b> Estimado de <b>20 a 30 dias</b> laborales.</p>
+            <p style="font-size: 12px; margin: 8px 0;">• <b>Liquidación:</b> El saldo restante se cancela <b>antes del envio final del producto</b> hacia las puertas de su casa o cooperativa de transporte acordada.</p>
+            
+        </div>
+
+        <p style="font-size: 10px; color: var(--primary); text-transform: uppercase; margin-bottom: 10px; font-weight: bold;">Artículos en tu pedido:</p>
+        
+        <div id="listaResumen" style="max-height:120px; overflow-y:auto; margin-bottom:15px; font-size:13px; border-bottom:1px solid var(--border); padding-bottom: 10px;"></div>
+        
+        <div style="text-align:center; padding:10px 0; background: rgba(255,255,255,0.03); border-radius: 8px;">
+            <span style="color:var(--text-secondary); font-size:10px;">TOTAL DE COMPRA: <span id="modalTotalFull" style="color:#fff;">$0.00</span></span><br>
+            <span style="color:var(--primary); font-size:11px; font-weight: bold;">ABONO 60% REQUERIDO:</span><br>
+            <span id="modalAbonoHoy" style="color:var(--primary); font-size:1.8em; font-weight:bold;">$0.00</span>
+        </div>
+
+        <button onclick="enviarWhatsAppFinal()" style="background:#064e3b; color:#ffffff; width:100%; padding:16px; border-radius:12px; font-weight:bold; cursor:pointer; border:none; text-transform:uppercase; font-size:13px; margin-top:15px;">Enviar a WhatsApp 📲</button>
+        <p onclick="cerrarModal()" style="text-align:center; cursor:pointer; color:var(--text-secondary); margin-top:15px; font-size:10px; text-transform:uppercase;">Volver al catálogo</p>
+    </div>
+</div>
+
+<script>
+    const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1ZSSPWWk7VS3L1BHNBFAw8Lo3KFUiOKwFJwKXOoRKvk4/gviz/tq?tqx=out:csv';
+    const miTelefono = "593990267974"; 
+
+    let productos = [];
+    let productosFiltrados = [];
+    let seleccionados = new Set();
+    let marcaSeleccionada = "Todas";
+    let rangoPrecio = "todas";
+    let cantidadAMostrar = 10;
+    let incremento = 10;
+    let generoSeleccionado = "Todos";
+    
+    async function cargar() {
+        window.scrollTo(0, 0); // Esto obliga a la página a subir al cargar
+        try {
+            const res = await fetch(SHEET_URL + '&cache=' + new Date().getTime());
+            const text = await res.text();
+            const filas = text.trim().split(/\r?\n/).slice(1);
+            
+            productos = filas.map((f, i) => {
+                let c = f.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(item => item.replace(/"/g, '').trim());
+                if(c.length < 2) return null;
+                return {
+                    id: i + 2,
+                    nombre: c[0] || 'Reloj Luxury',
+                    marca: (c[0].match(/[A-Z]{2,}(?:\s+[A-Z]{2,})*/) || ["RELOJ"])[0],
+                    genero: c[0].toLowerCase().includes('mujer') ? 'Mujer' : (c[0].toLowerCase().includes('hombre') ? 'Hombre' : 'Unisex'),
+                    precio: parseFloat(c[1]?.replace('$', '').replace(/[^\d.,]/g, '')) || 0,
+                    fotos: (c[2] || '').split('|').map(link => link.trim()),
+                    descripcion: (c[3] || 'Consultar detalles').split('|').join('<br>'), // <-- AQUÍ FALTABA ESTA COMA
+                    stock: (c[5] || '').toLowerCase() // c[5] es la sexta columna (F)                
+                };
+            }).filter(p => p !== null); // <-- Y AQUÍ ASEGÚRATE QUE EL CIERRE ESTÉ ASÍ
+
+            generarMarcas();
+            document.getElementById('loading').style.display = 'none';
+            aplicarFiltros();
+        } catch (e) { console.error(e); }
+    }
+
+    function toggleFiltros(e) { e.stopPropagation(); document.getElementById('panelFiltros').classList.toggle('active'); }
+    function cerrarFiltrosFuera(e) { if (!document.getElementById('areaFiltros').contains(e.target)) document.getElementById('panelFiltros').classList.remove('active'); }
+
+    function generarMarcas() {
+        const cont = document.getElementById('contenedorMarcas');
+        const marcas = [...new Set(productos.map(p => p.marca))];
+        marcas.forEach(m => {
+            const btn = document.createElement('button');
+            btn.className = 'chip chip-marca';
+            btn.innerText = m;
+            btn.onclick = (e) => { e.stopPropagation(); filtrarMarca(m, btn); };
+            cont.appendChild(btn);
+        });
+    }
+
+    function filtrarMarca(m, el) {
+        document.querySelectorAll('.chip-marca').forEach(c => c.classList.remove('active'));
+        el.classList.add('active'); marcaSeleccionada = m; aplicarFiltros();
+    }
+
+    function filtrarPrecio(r, el) {
+        document.querySelectorAll('.chip-precio').forEach(c => c.classList.remove('active'));
+        el.classList.add('active'); rangoPrecio = r; aplicarFiltros();
+    }
+function filtrarGenero(g, el) {
+        document.querySelectorAll('.chip-genero').forEach(c => c.classList.remove('active'));
+        el.classList.add('active');
+        generoSeleccionado = g;
+        aplicarFiltros();
+    }
+    function aplicarFiltros() {
+        cantidadAMostrar = 10; 
+        const query = document.getElementById('busqueda').value.toLowerCase();
+        
+        productosFiltrados = productos.filter(p => {
+            const mMarca = marcaSeleccionada === "Todas" || p.marca === marcaSeleccionada;
+            const mBusqueda = p.nombre.toLowerCase().includes(query);
+            
+            // Lógica para el nuevo filtro de género
+            // El producto se muestra si: es de la categoría elegida O es Unisex
+            const mGenero = generoSeleccionado === "Todos" || 
+                 p.genero === generoSeleccionado || 
+                 p.genero === "Unisex";
+            const mStock = p.stock !== 'no';
+            
+            let mPrecio = true;
+            if(rangoPrecio === '0-60') mPrecio = (p.precio < 60);
+            if(rangoPrecio === '60-100') mPrecio = (p.precio >= 60 && p.precio <= 100);
+            if(rangoPrecio === '100-150') mPrecio = (p.precio > 100 && p.precio <= 150);
+            if(rangoPrecio === '150-up') mPrecio = (p.precio > 150);
+            
+            // Ahora retornamos incluyendo mGenero
+            return mMarca && mBusqueda && mPrecio && mGenero && mStock;
+        });
+        const contador = document.getElementById('contador-resultados');
+        if (contador) {
+            if (productosFiltrados.length === 0) {
+                contador.innerHTML = `
+                    <div style="opacity: 0.6;">NO SE ENCONTRARON MODELOS</div>
+                    <button onclick="reiniciarFiltros()" style="margin-top:10px; background:none; border:1px solid var(--primary); color:var(--primary); padding:5px 15px; cursor:pointer; border-radius:5px; font-size:0.7em; font-weight:bold;">LIMPIAR BÚSQUEDA</button>
+                `;
+            } else {
+                // Aquí es donde mostramos el total de modelos disponibles
+                contador.innerHTML = `
+                    <span style="opacity: 0.5; font-size: 0.8em;">STOCK DISPONIBLE:</span><br>
+                    <span style="font-size: 1.2em;">${productosFiltrados.length} MODELOS EXCLUSIVOS</span>
+                `;
+            }
+        }
+        dibujar();
+        }
+    function reiniciarFiltros() {
+    // 1. Reseteamos las variables a sus valores iniciales
+    marcaSeleccionada = "Todas";
+    generoSeleccionado = "Todos";
+    rangoPrecio = "todas";
+    
+    // 2. Limpiamos el buscador visualmente
+    const buscador = document.getElementById('busqueda');
+    if(buscador) buscador.value = "";
+    
+    // 3. Quitamos el color dorado de todos los botones (chips)
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    
+    // 4. Marcamos los botones de "Todos" como activos para que el usuario vea el cambio
+    // Buscamos los botones que dicen "Todo", "Todas" o "Todos" y les ponemos la clase active
+    document.querySelectorAll('.chip').forEach(c => {
+        if(c.innerText.includes("Todo") || c.innerText.includes("Todas")) {
+            c.classList.add('active');
+        }
+    });
+
+    // 5. Ejecutamos los filtros para que la página se actualice sola
+    aplicarFiltros();
+}
+    function dibujar() {
+        const cont = document.getElementById('contenedor');
+        // Solo tomamos una parte de la lista según 'cantidadAMostrar'
+        const mostrarAhora = productosFiltrados.slice(0, cantidadAMostrar);
+        
+        cont.innerHTML = mostrarAhora.map(p => `
+            <div id="card-${p.id}" class="card ${seleccionados.has(p.id) ? 'selected' : ''}" onclick="toggleSelect(${p.id})">
+                <div class="btn-info" onclick="toggleDetalles(event, ${p.id})">INFO</div>
+                <div id="detalles-${p.id}" class="detalles-overlay" onclick="toggleDetalles(event, ${p.id})">
+                    <strong>ESPECIFICACIONES</strong><br><br>${p.descripcion}
+                </div>
+                <div class="select-indicator"></div>
+                <div class="carrusel">
+                    ${p.fotos.filter(link => link.length > 5).map(img => `<img src="${img}" loading="lazy" style="pointer-events:none;">`).join('')}
+                </div>
+                <div class="info">
+                    <p>${p.nombre}</p>
+                    <div class="pago-60">Abono: $${(p.precio * 0.6).toFixed(2)}</div>
+                    <div class="precio-total-card">Total: $${p.precio.toFixed(2)}</div>
+                </div>
+            </div>`).join('');
+
+        actualizarBotonVerMas();
+    }
+    function actualizarBotonVerMas() {
+        // Eliminamos el botón viejo si existe
+        const btnViejo = document.getElementById('btnVerMas');
+        if(btnViejo) btnViejo.remove();
+
+        // Si todavía hay más productos por mostrar, creamos el botón
+        if (cantidadAMostrar < productosFiltrados.length) {
+            const btn = document.createElement('button');
+            btn.id = 'btnVerMas';
+            btn.innerText = "VER MÁS MODELOS ↓";
+            btn.style = "grid-column: 1 / -1; margin: 30px auto; padding: 15px 40px; background: transparent; border: 1px solid var(--primary); color: var(--primary); border-radius: 30px; cursor: pointer; font-weight: bold; font-size: 11px; letter-spacing: 2px; display: block; width: fit-content; text-transform: uppercase;";
+            btn.onclick = () => {
+                cantidadAMostrar += incremento;
+                dibujar();
+            };
+            document.getElementById('contenedor').appendChild(btn);
+        }
+    }
+    function toggleDetalles(e, id) { e.stopPropagation(); document.getElementById(`detalles-${id}`).classList.toggle('active'); }
+
+    function toggleSelect(id) {
+        if (seleccionados.has(id)) seleccionados.delete(id);
+        else seleccionados.add(id);
+        actualizarResumen();
+        dibujar();
+    }
+
+    function actualizarResumen() {
+        let f = 0, a = 0;
+        productos.forEach(p => { if(seleccionados.has(p.id)){ f += p.precio; a += (p.precio * 0.6); }});
+        document.getElementById('resumenTotalFull').innerText = `$${f.toFixed(2)}`;
+        document.getElementById('resumenAbono').innerText = `$${a.toFixed(2)}`;
+    }
+    function abrirModalInfo() {
+    document.getElementById('listaResumen').innerHTML = `
+        <div style="text-align:left; padding: 10px; border: 1px dashed #c5a059; border-radius:10px; font-size:12px; color: #fff;">
+            <p style="text-align:center; color: #c5a059; font-weight:bold; margin-bottom:10px;">📋 TÉRMINOS IMPORTANTES</p>
+            <p>• Los precios incluyen importación y entrega final.</p>
+            <p style="margin:8px 0;">• <b>Política de Abandono:</b> Una vez notificada la llegada de su producto, dispone de <b>30 días calendario</b> para liquidar el saldo. Pasado este tiempo, el producto se liberará para la venta y el abono <b style="color: var(--primary);">NO SERÁ REEMBOLSABLE</b> por gastos logísticos.</p>
+            <p style="text-align:center; opacity:0.6; margin-top:10px;">Consulte antes de elegir sus modelos favoritos.</p>
+        </div>`;
+    
+    document.getElementById('modalTotalFull').innerText = "---";
+    document.getElementById('modalAbonoHoy').innerText = "---";
+    
+    document.getElementById('miModal').style.display = "block";
+    history.pushState({modalAbierto: true}, "");
+}
+    function abrirModal() {
+        if(!seleccionados.size) return alert("Por favor, selecciona al menos un reloj.");
+        let h = "<div style='display:flex; flex-direction:column; gap:8px;'>", a = 0, total = 0;
+        productos.forEach(p => { 
+            if(seleccionados.has(p.id)){ 
+                h += `<div style="display:flex; align-items:center; gap:10px; color:#fff; font-size:13px;">
+                       <span style="color:var(--primary);">⌚</span> 
+                       <span>${p.nombre} <small style="opacity:0.5;">(#${p.id})</small></span>
+                      </div>`; 
+                a += (p.precio * 0.6);
+                total += p.precio;
+            }
+        });
+        document.getElementById('listaResumen').innerHTML = h + "</div>";
+        document.getElementById('modalTotalFull').innerText = `$${total.toFixed(2)}`;
+        document.getElementById('modalAbonoHoy').innerText = `$${a.toFixed(2)}`;
+        document.getElementById('miModal').style.display = "block";
+        
+        // Esto crea el "punto de retorno" para el botón atrás
+        history.pushState({modalAbierto: true}, "");
+    }
+
+    function cerrarModal() { 
+        document.getElementById('miModal').style.display = "none";
+        // Si el usuario cierra con la X, limpiamos el historial
+        if (history.state && history.state.modalAbierto) {
+            history.back();
+        }
+    }
+
+    // Esto detecta cuando el usuario le da "Atrás" en su celular
+    window.onpopstate = function(event) {
+        const modal = document.getElementById('miModal');
+        if (modal && modal.style.display === "block") {
+            modal.style.display = "none";
+        }
+    };
+
+    
+
+    function enviarWhatsAppFinal() {
+        let m = "¡Hola Brylexroda! Me interesa importar estos modelos:\n\n", a = 0, total = 0;
+        productos.forEach(p => { 
+            if(seleccionados.has(p.id)) { 
+                // Añadimos el ID como referencia para ubicarlo en el Excel fácilmente
+                m += `⌚ ${p.nombre} (Ref: #${p.id})\n`; 
+                a += (p.precio * 0.6); 
+                total += p.precio;
+            }
+        });
+        
+        m += `\n--------------------------\n`;
+        m += `*TOTAL COMPRA:* $${total.toFixed(2)}\n`;
+        m += `*ABONO 60% (REQUERIDO):* $${a.toFixed(2)}\n`;
+        m += `\n¿Disponibilidad confirmada para proceder?`;
+        
+        window.open(`https://wa.me/${miTelefono}?text=${encodeURIComponent(m)}`);
+    }
+
+    window.onload = () => {
+        window.scrollTo(0, 0);
+        cargar();
+    };
+</script>
 </body>
 </html>
