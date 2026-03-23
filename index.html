@@ -757,6 +757,7 @@ function filtrarGenero(g, el) {
         const modalContent = document.querySelector('#modalDetalle .modal-detalle-content');
         if (modalContent) modalContent.scrollTop = 0;
 
+        history.pushState({ modalAbierta: true }, '');
         document.getElementById('modalDetalle').style.display = 'flex';
     }
 
@@ -765,6 +766,8 @@ function filtrarGenero(g, el) {
         if (modalContent) modalContent.scrollTop = 0;
 
         document.getElementById('modalDetalle').style.display = 'none';
+
+        if (window.history.state?.modalAbierta) history.back();
     }
     function abrirModalInfo() {
     document.getElementById('listaResumen').innerHTML = `
@@ -813,6 +816,12 @@ function filtrarGenero(g, el) {
 
     // Esto detecta cuando el usuario le da "Atrás" en su celular
     window.onpopstate = function(event) {
+        const modalDetalle = document.getElementById('modalDetalle');
+        if (modalDetalle && modalDetalle.style.display === "flex") {
+            cerrarDetalle();
+            return;
+        }
+
         const modal = document.getElementById('miModal');
         if (modal && modal.style.display === "block") {
             modal.style.display = "none";
