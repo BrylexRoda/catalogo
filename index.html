@@ -4,15 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tienda de Importación Brylex Roda</title>
-    <meta name="theme-color" content="#c5a059">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Mi Catálogo Premium">
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="https://via.placeholder.com/192x192.png?text=Logo">
     <link rel="icon" href="https://i.postimg.cc/HLt7Kqk1/Untitled-(1).png" type="image/png">
-    <link rel="stylesheet" href="Tienda importacion de relojs.css">
     
     <meta property="og:title" content="Tienda de Importación Brylex Roda">
     <meta property="og:description" content="Explora nuestro catálogo exclusivo de relojes y artículos de lujo importados.">
@@ -22,13 +14,436 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js')
-                .then(registration => console.log('Service Worker registrado'))
-                .catch(error => console.log('Error en Service Worker:', error));
+    <style>
+        :root { 
+            --primary: #c5a059; 
+            --bg: #05070a;      
+            --card-bg: #111827; 
+            --text-main: #ffffff; 
+            --text-secondary: #9ca3af; 
+            --border: #1f2937; 
         }
-    </script>
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg);
+            color: var(--text-main); 
+            margin: 0; 
+            padding-bottom: 180px; 
+            line-height: 1.6;
+        }
+
+        /* Copia y reemplaza por este nuevo bloque compacto */
+        .header { 
+            background: #000; 
+            padding: 15px 20px; 
+            text-align: center; 
+            border-bottom: 1px solid var(--border); 
+        }
+        /* Efecto de brillo y movimiento para el logo */
+        .logo-premium {
+            width: 100%;
+            max-width: 320px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            /* Brillo dorado constante */
+            filter: drop-shadow(0 0 12px rgba(197, 160, 89, 0.4));
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .logo-premium:hover {
+            /* El brillo se intensifica y el logo se agranda un poquito al tocarlo */
+            filter: drop-shadow(0 0 20px rgba(197, 160, 89, 0.7));
+            transform: scale(1.03);
+        }
+        /* Estilo del botón de requisitos */
+        .btn-requisitos {
+            background: rgba(197, 160, 89, 0.05);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 8px 18px;
+            border-radius: 25px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+        /* Ajuste para que el texto legal sea legible */
+        #listaResumen p {
+            line-height: 1.4;
+            margin-bottom: 5px;
+        }
+        .btn-requisitos:hover {
+            background: var(--primary);
+            color: #000;
+            box-shadow: 0 0 15px rgba(197, 160, 89, 0.3);
+        }        
+        .video-presentacion { background: #0a0c10; padding: 20px 15px; text-align: center; border-bottom: 1px solid var(--border); position: relative; }
+        .video-wrapper { position: relative; width: 100%; max-width: 300px; margin: 0 auto; border-radius: 20px; overflow: hidden; border: 1px solid var(--border); aspect-ratio: 9/16; }
+        .video-wrapper::after {
+            content: "ASI LLEGA SU PRODUCTO 📦✅";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            transform: none;
+            background: rgba(197, 160, 89, 0.98); 
+            color: #000;
+            
+            /* --- AJUSTES DE ESTIRAMIENTO Y CENTRADO --- */
+            padding: 30px 0; /* Aumentamos de 12px a 20px para que se estire hacia abajo */
+            display: flex; /* Usamos flex para asegurar centrado total */
+            align-items: center; 
+            justify-content: center;
+            /* ------------------------------------------ */
+            
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            z-index: 15;
+            border-bottom-left-radius: 0px; 
+            border-bottom-right-radius: 0px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        /* BUSCADOR ACOPLADO AL VIDEO */
+        .contenedor-busqueda { 
+            position: absolute; 
+            top: 130px; /* Ajuste para que quede debajo del título */
+            right: 20px; 
+            z-index: 90;
+        }
+        .input-busqueda { 
+            width: 35px;
+            height: 35px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Transición más suave */
+            padding: 0 10px;
+            border-radius: 20px;
+            border: 1px solid var(--primary); /* Borde dorado */
+            background: rgba(17, 24, 39, 0.9);
+            color: white;
+            font-size: 0.8em;
+            outline: none;
+            text-align: center;
+            box-shadow: 0 0 5px rgba(197, 160, 89, 0.2); /* Brillo sutil */
+        }
+
+         .input-busqueda:focus { 
+            width: 200px; /* Se expande más para que sea cómodo escribir */
+            text-align: left;
+            border: 2px solid var(--primary); /* Resalta el dorado al escribir */
+            box-shadow: 0 0 15px rgba(197, 160, 89, 0.4);
+        }
+
+        .contenedor-filtros { background: #05070a; padding: 10px 20px; }
+        .btn-abrir-filtros { 
+            padding: 10px 20px; 
+            background: transparent; 
+            border: 1px solid var(--primary); /* Marco dorado */
+            color: var(--primary); 
+            font-size: 0.8em; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            display: inline-block; 
+            margin-bottom: 10px;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: 0.3s;
+         }
+/* Efecto cuando pasas el mouse o tocas */
+        .btn-abrir-filtros:active {
+            background: var(--primary);
+            color: #000;
+         }
+        
+        .panel-filtros { display: none; padding: 10px 0; }
+        .panel-filtros.active { display: block; }
+        .chips-container { display: flex; gap: 8px; overflow-x: auto; padding: 5px 0; scrollbar-width: none; }
+        .chip { background: #1f2937; color: #fff; padding: 6px 12px; border-radius: 6px; font-size: 10px; cursor: pointer; border: 1px solid transparent; white-space: nowrap; }
+        .chip.active { background: var(--primary); color: #000; font-weight: bold; }
+
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 12px; }
+        @media (min-width: 768px) { .grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); } }
+
+        .card { background: var(--card-bg); border-radius: 15px; overflow: hidden; cursor: pointer; position: relative; border: 1px solid var(--border); transition: 0.3s; }
+        .card.selected { border-color: var(--primary); box-shadow: 0 0 15px rgba(197, 160, 89, 0.2); }
+
+        .btn-info { position: absolute; top: 10px; left: 10px; width: 35px; height: 35px; background: var(--primary); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 50; font-size: 8px; font-weight: 800; border: 2px solid #000; }
+        .detalles-overlay { position: absolute; bottom: -100%; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(8px); color: white; padding: 20px; box-sizing: border-box; transition: 0.4s; font-size: 11px; display: flex; flex-direction: column; justify-content: center; text-align: center; z-index: 60; }
+        .detalles-overlay.active { bottom: 0; }
+
+        @keyframes selectIndicatorPulse {
+            0% { box-shadow: 0 0 0 rgba(197,160,89,0.0); transform: scale(1); }
+            50% { box-shadow: 0 0 18px rgba(197,160,89,0.55); transform: scale(1.03); }
+            100% { box-shadow: 0 0 0 rgba(197,160,89,0.0); transform: scale(1); }
+        }
+
+        .select-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 54px;
+            height: 54px;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid var(--primary);
+            border-radius: 50%;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            cursor: pointer;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            animation: selectIndicatorPulse 1.8s ease-in-out infinite;
+        }
+
+        /* ✓ arriba */
+        .select-indicator::before {
+            content: "✓";
+            color: rgba(255,255,255,0.98);
+            font-size: 22px;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        /* Texto pequeño */
+        .select-indicator::after {
+            content: "Añadir";
+            color: rgba(255,255,255,0.92);
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: 0.2px;
+            line-height: 1.05;
+        }
+
+        .card.selected .select-indicator {
+            background: #22c55e;
+            border-color: #fff;
+            animation: none;
+            box-shadow: 0 0 18px rgba(34,197,94,0.35);
+        }
+
+        .card.selected .select-indicator::before {
+            color: #05230f;
+            font-size: 24px;
+            text-shadow: 0 0 10px rgba(0,0,0,0.25);
+        }
+
+        .card.selected .select-indicator::after {
+            content: "Listo";
+            color: #05230f;
+        }
+
+        .carrusel { 
+            width: 100%; 
+            height: 220px; /* Un poco más de altura para que luzcan */
+            background: #000; 
+            display: flex; 
+            overflow-x: auto; 
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory; 
+            scrollbar-width: none; 
+            -webkit-overflow-scrolling: touch;
+            align-items: center;
+        }
+        
+        .carrusel img { 
+            flex: 0 0 100%; 
+            min-width: 100%;
+            height: 100%; 
+            object-fit: contain; 
+            scroll-snap-align: center; /* ESTO es lo que mantiene el centrado */
+            display: block;
+            pointer-events: none; /* Esto hace que el clic 'atraviese' la foto para marcar el cuadro */
+        }
+
+        .info { padding: 12px; }
+        .info p { margin: 0; font-size: 0.75em; height: 2.8em; overflow: hidden; color: var(--text-secondary); line-height: 1.4; }
+        .precio-total-card { color: #fff; font-weight: 300; font-size: 0.75em; margin-top: 5px; opacity: 0.6; }
+        .pago-60 { color: var(--primary); font-weight: 700; font-size: 1em; display: block; }
+
+        /* Modal detalle producto */
+        #modalDetalle {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100dvh;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            background: rgba(0,0,0,0.68);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 16px;
+            box-sizing: border-box;
+            overflow: hidden; /* El scroll lo maneja el contenedor interno */
+        }
+
+        .modal-detalle-content {
+            position: relative;
+            width: 95%;
+            max-width: 800px;
+            margin: auto;
+            background: rgba(15, 23, 42, 0.96);
+            border: 1px solid rgba(197,160,89,0.35);
+            border-radius: 18px;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.65);
+            color: #fff;
+            overflow-x: hidden;
+            overflow-y: auto;
+            max-height: 90vh;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .modal-detalle-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 58px;
+            height: 58px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.08);
+            color: #fff;
+            font-size: 34px;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        .modal-detalle-fotos {
+            padding: 105px 14px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 0px;
+        }
+
+        .modal-detalle-foto {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            background: transparent;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.06);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .modal-detalle-info {
+            padding: 6px 14px 16px;
+        }
+
+        .modal-detalle-nombre {
+            margin: 0 0 10px;
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: 0.2px;
+        }
+
+        .modal-detalle-descripcion {
+            margin: 0 0 12px;
+            color: rgba(255,255,255,0.86);
+            line-height: 1.45;
+            font-size: 12px;
+            white-space: pre-wrap;
+        }
+
+        .modal-detalle-precios {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .modal-detalle-line {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 12px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.06);
+            font-size: 13px;
+        }
+
+        .modal-detalle-line span:first-child {
+            color: rgba(255,255,255,0.80);
+        }
+
+        .modal-detalle-actions {
+            padding: 0 14px 16px;
+        }
+
+        .modal-detalle-back-btn {
+            width: 100%;
+            border: none;
+            background: var(--primary);
+            color: #000;
+            border-radius: 14px;
+            padding: 14px 16px;
+            font-weight: 950;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            font-size: 14px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 480px) {
+            .modal-detalle-close { width: 64px; height: 64px; font-size: 38px; }
+        }
+
+        .footer { 
+            position: fixed; 
+            bottom: 0; 
+            width: 100%; 
+            background: rgba(5, 7, 10, 0.98); 
+            backdrop-filter: blur(20px); 
+            padding: 8px 20px; /* Muy fino */
+            border-top: 1px solid var(--primary); 
+            z-index: 100; 
+            box-sizing: border-box; 
+        }
+        .btn-enlistar { background: linear-gradient(135deg, #c5a059, #856404); color: #000; border: none; padding: 14px; border-radius: 10px; font-weight: 700; width: 100%; cursor: pointer; font-size: 13px; text-transform: uppercase; }
+        
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); }
+        .modal-content { background: #111827; margin: 15% auto; padding: 20px; border-radius: 15px; width: 88%; max-width: 380px; color: #fff; border: 1px solid var(--primary); }
+        .instrucciones { background: rgba(197, 160, 89, 0.05); padding: 15px; border-radius: 10px; border-left: 3px solid var(--primary); margin: 15px 0; }
+        .instrucciones p { margin: 8px 0; font-size: 13px; color: #fff; }
+        .instrucciones b { color: var(--primary); }
+
+        /* Animación de latido brillante */
+@keyframes brilloLatido {
+    0% { box-shadow: 0 0 5px rgba(197, 160, 89, 0.2); transform: scale(1); }
+    50% { box-shadow: 0 0 20px rgba(197, 160, 89, 0.6); transform: scale(1.02); }
+    100% { box-shadow: 0 0 5px rgba(197, 160, 89, 0.2); transform: scale(1); }
+}
+
+/* Aplicar la animación al botón de requisitos */
+.btn-requisitos {
+    animation: brilloLatido 3s infinite ease-in-out;
+}    
+    </style>
 </head>
 <body onclick="cerrarFiltrosFuera(event)">
 
@@ -126,17 +541,9 @@
     let cantidadAMostrar = 10;
     let incremento = 10;
     let generoSeleccionado = "Todos";
-    let deferredInstallPrompt = null;
-    let installTriggerReached = false;
-    let installBannerVisible = false;
-    let observerProductos = null;
-    const productosVistos = new Set();
-    const installDismissedKey = 'pwaInstallDismissedThisSession';
-    const isIos = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
     
     async function cargar() {
-        window.scrollTo(0, 0);
+        window.scrollTo(0, 0); // Esto obliga a la página a subir al cargar
         try {
             const res = await fetch(SHEET_URL + '&cache=' + new Date().getTime());
             const text = await res.text();
@@ -152,16 +559,15 @@
                     genero: c[0].toLowerCase().includes('mujer') ? 'Mujer' : (c[0].toLowerCase().includes('hombre') ? 'Hombre' : 'Unisex'),
                     precio: parseFloat(c[1]?.replace('$', '').replace(/[^\d.,]/g, '')) || 0,
                     fotos: (c[2] || '').split('|').map(link => link.trim()),
-                    descripcion: (c[3] || 'Consultar detalles').split('|').join('<br>'),
-                    stock: (c[5] || '').toLowerCase()
+                    descripcion: (c[3] || 'Consultar detalles').split('|').join('<br>'), // <-- AQUÍ FALTABA ESTA COMA
+                    stock: (c[5] || '').toLowerCase() // c[5] es la sexta columna (F)                
                 };
-            }).filter(p => p !== null);
+            }).filter(p => p !== null); // <-- Y AQUÍ ASEGÚRATE QUE EL CIERRE ESTÉ ASÍ
             productosOriginales = [...productos];
 
             generarMarcas();
             document.getElementById('loading').style.display = 'none';
             aplicarFiltros();
-            prepararBannerInstalacion();
         } catch (e) { console.error(e); }
     }
 
@@ -203,6 +609,8 @@ function filtrarGenero(g, el) {
             const mMarca = marcaSeleccionada === "Todas" || p.marca === marcaSeleccionada;
             const mBusqueda = p.nombre.toLowerCase().includes(query);
             
+            // Lógica para el nuevo filtro de género
+            // El producto se muestra si: es de la categoría elegida O es Unisex
             const mGenero = generoSeleccionado === "Todos" || 
                  p.genero === generoSeleccionado || 
                  p.genero === "Unisex";
@@ -214,6 +622,7 @@ function filtrarGenero(g, el) {
             if(rangoPrecio === '100-150') mPrecio = (p.precio > 100 && p.precio <= 150);
             if(rangoPrecio === '150-up') mPrecio = (p.precio > 150);
             
+            // Ahora retornamos incluyendo mGenero
             return mMarca && mBusqueda && mPrecio && mGenero && mStock;
         });
         const contador = document.getElementById('contador-resultados');
@@ -224,6 +633,7 @@ function filtrarGenero(g, el) {
                     <button onclick="reiniciarFiltros()" style="margin-top:10px; background:none; border:1px solid var(--primary); color:var(--primary); padding:5px 15px; cursor:pointer; border-radius:5px; font-size:0.7em; font-weight:bold;">LIMPIAR BÚSQUEDA</button>
                 `;
             } else {
+                // Aquí es donde mostramos el total de modelos disponibles
                 contador.innerHTML = `
                     <span style="opacity: 0.5; font-size: 0.8em;">STOCK DISPONIBLE:</span><br>
                     <span style="font-size: 1.2em;">${productosFiltrados.length} MODELOS EXCLUSIVOS</span>
@@ -233,25 +643,32 @@ function filtrarGenero(g, el) {
         dibujar();
         }
     function reiniciarFiltros() {
+    // 1. Reseteamos las variables a sus valores iniciales
     marcaSeleccionada = "Todas";
     generoSeleccionado = "Todos";
     rangoPrecio = "todas";
     
+    // 2. Limpiamos el buscador visualmente
     const buscador = document.getElementById('busqueda');
     if(buscador) buscador.value = "";
     
+    // 3. Quitamos el color dorado de todos los botones (chips)
     document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
     
+    // 4. Marcamos los botones de "Todos" como activos para que el usuario vea el cambio
+    // Buscamos los botones que dicen "Todo", "Todas" o "Todos" y les ponemos la clase active
     document.querySelectorAll('.chip').forEach(c => {
         if(c.innerText.includes("Todo") || c.innerText.includes("Todas")) {
             c.classList.add('active');
         }
     });
 
+    // 5. Ejecutamos los filtros para que la página se actualice sola
     aplicarFiltros();
 }
     function dibujar() {
         const cont = document.getElementById('contenedor');
+        // Solo tomamos una parte de la lista según 'cantidadAMostrar'
         const mostrarAhora = productosFiltrados.slice(0, cantidadAMostrar);
         
         cont.innerHTML = mostrarAhora.map(p => `
@@ -273,104 +690,13 @@ function filtrarGenero(g, el) {
 
         actualizarBotonVerMas();
         actualizarBotonWhatsAppFinal();
-        observarProductosVisibles();
-    }
-    function prepararBannerInstalacion() {
-        setTimeout(() => {
-            installTriggerReached = true;
-            intentarMostrarBannerInstalacion();
-        }, 30000);
-    }
-
-    function observarProductosVisibles() {
-        if (isStandalone) return;
-
-        if (observerProductos) observerProductos.disconnect();
-
-        observerProductos = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (!entry.isIntersecting || entry.intersectionRatio < 0.55) return;
-                const id = entry.target.id?.replace('card-', '');
-                if (id) productosVistos.add(id);
-            });
-
-            if (productosVistos.size >= 3) {
-                installTriggerReached = true;
-                intentarMostrarBannerInstalacion();
-            }
-        }, { threshold: [0.55] });
-
-        document.querySelectorAll('.card[id^="card-"]').forEach(card => observerProductos.observe(card));
-    }
-
-    function crearBannerInstalacion() {
-        if (document.getElementById('installBanner')) return;
-
-        const banner = document.createElement('div');
-        banner.id = 'installBanner';
-        banner.className = 'install-banner';
-        banner.innerHTML = `
-            <button type="button" id="btnCerrarInstallBanner" class="install-banner-close" aria-label="Cerrar">✕</button>
-            <p class="install-banner-text">¿Te gustaría tener nuestro catálogo en tu pantalla de inicio?</p>
-            <div class="install-banner-actions">
-                <button type="button" id="btnInstalarCatalogo" class="install-banner-btn">INSTALAR</button>
-            </div>
-        `;
-        document.body.appendChild(banner);
-
-        document.getElementById('btnCerrarInstallBanner').addEventListener('click', () => {
-            sessionStorage.setItem(installDismissedKey, '1');
-            ocultarBannerInstalacion();
-        });
-
-        document.getElementById('btnInstalarCatalogo').addEventListener('click', async () => {
-            if (isIos && !deferredInstallPrompt) {
-                alert("En iPhone/iPad: toca 'Compartir' y luego 'Añadir a pantalla de inicio'.");
-                return;
-            }
-
-            if (!deferredInstallPrompt) return;
-
-            deferredInstallPrompt.prompt();
-            try {
-                await deferredInstallPrompt.userChoice;
-            } catch (_) {}
-            deferredInstallPrompt = null;
-            sessionStorage.setItem(installDismissedKey, '1');
-            ocultarBannerInstalacion();
-        });
-    }
-
-    function ocultarBannerInstalacion() {
-        const banner = document.getElementById('installBanner');
-        if (banner) banner.remove();
-        installBannerVisible = false;
-    }
-
-    function intentarMostrarBannerInstalacion() {
-        const dismissed = sessionStorage.getItem(installDismissedKey) === '1';
-        if (!installTriggerReached || dismissed || isStandalone || installBannerVisible) return;
-        if (!deferredInstallPrompt && !isIos) return;
-
-        crearBannerInstalacion();
-        installBannerVisible = true;
-    }
-
-    window.addEventListener('beforeinstallprompt', (event) => {
-        event.preventDefault();
-        deferredInstallPrompt = event;
-        intentarMostrarBannerInstalacion();
-    });
-
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js').catch(() => {});
-        });
     }
     function actualizarBotonVerMas() {
+        // Eliminamos el botón viejo si existe
         const btnViejo = document.getElementById('btnVerMas');
         if(btnViejo) btnViejo.remove();
 
+        // Si todavía hay más productos por mostrar, creamos el botón
         if (cantidadAMostrar < productosFiltrados.length) {
             const btn = document.createElement('button');
             btn.id = 'btnVerMas';
@@ -431,7 +757,6 @@ function filtrarGenero(g, el) {
         const modalContent = document.querySelector('#modalDetalle .modal-detalle-content');
         if (modalContent) modalContent.scrollTop = 0;
 
-        history.pushState({ modalAbierta: true }, '');
         document.getElementById('modalDetalle').style.display = 'flex';
     }
 
@@ -440,8 +765,6 @@ function filtrarGenero(g, el) {
         if (modalContent) modalContent.scrollTop = 0;
 
         document.getElementById('modalDetalle').style.display = 'none';
-
-        if (window.history.state?.modalAbierta) history.back();
     }
     function abrirModalInfo() {
     document.getElementById('listaResumen').innerHTML = `
@@ -476,28 +799,27 @@ function filtrarGenero(g, el) {
         document.getElementById('modalAbonoHoy').innerText = `$${a.toFixed(2)}`;
         document.getElementById('miModal').style.display = "block";
         
+        // Esto crea el "punto de retorno" para el botón atrás
         history.pushState({modalAbierto: true}, "");
     }
 
     function cerrarModal() { 
         document.getElementById('miModal').style.display = "none";
+        // Si el usuario cierra con la X, limpiamos el historial
         if (history.state && history.state.modalAbierto) {
             history.back();
         }
     }
 
+    // Esto detecta cuando el usuario le da "Atrás" en su celular
     window.onpopstate = function(event) {
-        const modalDetalle = document.getElementById('modalDetalle');
-        if (modalDetalle && modalDetalle.style.display === "flex") {
-            cerrarDetalle();
-            return;
-        }
-
         const modal = document.getElementById('miModal');
         if (modal && modal.style.display === "block") {
             modal.style.display = "none";
         }
     };
+
+    
 
     function enviarWhatsAppFinal() {
         if(seleccionados.size === 0) {
@@ -508,6 +830,7 @@ function filtrarGenero(g, el) {
         let m = "¡Hola Brylexroda! Me interesa importar estos modelos:\n\n", a = 0, total = 0;
         productos.forEach(p => { 
             if(seleccionados.has(p.id)) { 
+                // Añadimos el ID como referencia para ubicarlo en el Excel fácilmente
                 m += `⌚ ${p.nombre} (Ref: #${p.id})\n`; 
                 a += (p.precio * 0.6); 
                 total += p.precio;
