@@ -182,7 +182,7 @@
         .detalles-overlay { position: absolute; bottom: -100%; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(8px); color: white; padding: 20px; box-sizing: border-box; transition: 0.4s; font-size: 11px; display: flex; flex-direction: column; justify-content: center; text-align: center; z-index: 60; }
         .detalles-overlay.active { bottom: 0; }
 
-        .select-indicator { position: absolute; top: 10px; right: 10px; width: 24px; height: 24px; background: rgba(0,0,0,0.6); border: 1px solid var(--primary); border-radius: 50%; z-index: 10; display: flex; align-items: center; justify-content: center; }
+        .select-indicator { position: absolute; top: 10px; right: 10px; width: 24px; height: 24px; background: rgba(0,0,0,0.6); border: 1px solid var(--primary); border-radius: 50%; z-index: 10; display: flex; align-items: center; justify-content: center; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
         .card.selected .select-indicator { background: #22c55e; border-color: #fff; }
         .card.selected .select-indicator::after { content: "✓"; color: white; font-size: 12px; font-weight: bold; }
 
@@ -213,6 +213,133 @@
         .info p { margin: 0; font-size: 0.75em; height: 2.8em; overflow: hidden; color: var(--text-secondary); line-height: 1.4; }
         .precio-total-card { color: #fff; font-weight: 300; font-size: 0.75em; margin-top: 5px; opacity: 0.6; }
         .pago-60 { color: var(--primary); font-weight: 700; font-size: 1em; display: block; }
+
+        /* Modal detalle producto */
+        #modalDetalle {
+            position: fixed;
+            inset: 0;
+            display: none;
+            z-index: 2000;
+            background: rgba(0,0,0,0.68);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 16px;
+            overflow: auto;
+        }
+
+        .modal-detalle-content {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin: 40px auto 20px;
+            background: rgba(15, 23, 42, 0.96);
+            border: 1px solid rgba(197,160,89,0.35);
+            border-radius: 18px;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.65);
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .modal-detalle-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 58px;
+            height: 58px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.08);
+            color: #fff;
+            font-size: 34px;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        .modal-detalle-fotos {
+            padding: 74px 14px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .modal-detalle-foto {
+            width: 100%;
+            height: 230px;
+            object-fit: contain;
+            background: rgba(255,255,255,0.03);
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .modal-detalle-info {
+            padding: 6px 14px 16px;
+        }
+
+        .modal-detalle-nombre {
+            margin: 0 0 10px;
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: 0.2px;
+        }
+
+        .modal-detalle-descripcion {
+            margin: 0 0 12px;
+            color: rgba(255,255,255,0.86);
+            line-height: 1.45;
+            font-size: 12px;
+            white-space: pre-wrap;
+        }
+
+        .modal-detalle-precios {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .modal-detalle-line {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 12px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.06);
+            font-size: 13px;
+        }
+
+        .modal-detalle-line span:first-child {
+            color: rgba(255,255,255,0.80);
+        }
+
+        .modal-detalle-actions {
+            padding: 0 14px 16px;
+        }
+
+        .modal-detalle-back-btn {
+            width: 100%;
+            border: none;
+            background: var(--primary);
+            color: #000;
+            border-radius: 14px;
+            padding: 14px 16px;
+            font-weight: 950;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            font-size: 14px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 480px) {
+            .modal-detalle-close { width: 64px; height: 64px; font-size: 38px; }
+        }
 
         .footer { 
             position: fixed; 
@@ -334,6 +461,7 @@
     const miTelefono = "593990267974"; 
 
     let productos = [];
+    let productosOriginales = [];
     let productosFiltrados = [];
     let seleccionados = new Set();
     let marcaSeleccionada = "Todas";
@@ -363,6 +491,7 @@
                     stock: (c[5] || '').toLowerCase() // c[5] es la sexta columna (F)                
                 };
             }).filter(p => p !== null); // <-- Y AQUÍ ASEGÚRATE QUE EL CIERRE ESTÉ ASÍ
+            productosOriginales = [...productos];
 
             generarMarcas();
             document.getElementById('loading').style.display = 'none';
@@ -471,16 +600,16 @@ function filtrarGenero(g, el) {
         const mostrarAhora = productosFiltrados.slice(0, cantidadAMostrar);
         
         cont.innerHTML = mostrarAhora.map(p => `
-            <div id="card-${p.id}" class="card ${seleccionados.has(p.id) ? 'selected' : ''}" onclick="toggleSelect(${p.id})">
+            <div id="card-${p.id}" class="card ${seleccionados.has(p.id) ? 'selected' : ''}">
                 <div class="btn-info" onclick="toggleDetalles(event, ${p.id})">INFO</div>
                 <div id="detalles-${p.id}" class="detalles-overlay" onclick="toggleDetalles(event, ${p.id})">
                     <strong>ESPECIFICACIONES</strong><br><br>${p.descripcion}
                 </div>
-                <div class="select-indicator"></div>
-                <div class="carrusel">
+                <div class="select-indicator" onclick="event.stopPropagation(); toggleSelect(${p.id})"></div>
+                <div class="carrusel" onclick="abrirModalDetalle(${p.id})">
                     ${p.fotos.filter(link => link.length > 5).map(img => `<img src="${img}" loading="lazy" style="pointer-events:none;">`).join('')}
                 </div>
-                <div class="info">
+                <div class="info" onclick="abrirModalDetalle(${p.id})">
                     <p>${p.nombre}</p>
                     <div class="pago-60">Abono: $${(p.precio * 0.6).toFixed(2)}</div>
                     <div class="precio-total-card">Total: $${p.precio.toFixed(2)}</div>
@@ -521,6 +650,32 @@ function filtrarGenero(g, el) {
         productos.forEach(p => { if(seleccionados.has(p.id)){ f += p.precio; a += (p.precio * 0.6); }});
         document.getElementById('resumenTotalFull').innerText = `$${f.toFixed(2)}`;
         document.getElementById('resumenAbono').innerText = `$${a.toFixed(2)}`;
+    }
+
+    function abrirModalDetalle(id) {
+        const p = productosOriginales.find(prod => prod.id === id);
+        if (!p) return;
+
+        const fotos = Array.isArray(p.fotos) ? p.fotos.filter(link => link && link.trim().length > 0) : [];
+        const modalFotos = document.getElementById('modalDetalleFotos');
+        if (modalFotos) {
+            modalFotos.innerHTML = fotos.length
+                ? fotos.map(img => `<img class="modal-detalle-foto" src="${img}" alt="${p.nombre}" loading="lazy" onerror="this.src='https://via.placeholder.com/800x600?text=Sin+Foto'">`).join('')
+                : `<div style="opacity:0.7; padding:10px 0;">Sin fotos disponibles</div>`;
+        }
+
+        document.getElementById('modalDetalleNombre').innerText = p.nombre || '';
+        document.getElementById('modalDetalleDescripcion').innerHTML = p.descripcion || '';
+
+        const precio = Number(p.precio) || 0;
+        document.getElementById('modalDetallePrecioTotal').innerText = `$${precio.toFixed(2)}`;
+        document.getElementById('modalDetalleAbono60').innerText = `$${(precio * 0.6).toFixed(2)}`;
+
+        document.getElementById('modalDetalle').style.display = 'block';
+    }
+
+    function cerrarDetalle() {
+        document.getElementById('modalDetalle').style.display = 'none';
     }
     function abrirModalInfo() {
     document.getElementById('listaResumen').innerHTML = `
@@ -601,5 +756,34 @@ function filtrarGenero(g, el) {
         cargar();
     };
 </script>
+
+<div id="modalDetalle">
+    <div class="modal-detalle-content">
+        <button type="button" class="modal-detalle-close" onclick="cerrarDetalle()" aria-label="Cerrar detalle">✕</button>
+
+        <div class="modal-detalle-fotos" id="modalDetalleFotos"></div>
+
+        <div class="modal-detalle-info">
+            <h2 class="modal-detalle-nombre" id="modalDetalleNombre"></h2>
+            <div class="modal-detalle-descripcion" id="modalDetalleDescripcion"></div>
+
+            <div class="modal-detalle-precios">
+                <div class="modal-detalle-line">
+                    <span>Precio Total:</span>
+                    <span id="modalDetallePrecioTotal"></span>
+                </div>
+                <div class="modal-detalle-line">
+                    <span>Abono del 60%:</span>
+                    <span id="modalDetalleAbono60"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-detalle-actions">
+            <button type="button" class="modal-detalle-back-btn" onclick="cerrarDetalle()">← VOLVER ATRÁS</button>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
