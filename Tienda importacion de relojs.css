@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda de Importación Brylex Roda</title>
+    <meta name="theme-color" content="#c5a059">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Mi Catálogo Premium">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="https://via.placeholder.com/192x192.png?text=Logo">
+    <link rel="icon" href="https://i.postimg.cc/HLt7Kqk1/Untitled-(1).png" type="image/png">
+    
+    <meta property="og:title" content="Tienda de Importación Brylex Roda">
+    <meta property="og:description" content="Explora nuestro catálogo exclusivo de relojes y artículos de lujo importados.">
+    <meta property="og:image" content="https://i.postimg.cc/HLt7Kqk1/Untitled-(1).png">
+    
+    <meta name="twitter:image" content="https://i.postimg.cc/HLt7Kqk1/Untitled-(1).png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { 
+            --primary: #c5a059; 
+            --bg: #05070a;      
+            --card-bg: #111827; 
+            --text-main: #ffffff; 
+            --text-secondary: #9ca3af; 
+            --border: #1f2937; 
+        }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg);
+            color: var(--text-main); 
+            margin: 0; 
+            padding-bottom: 180px; 
+            line-height: 1.6;
+        }
+
+        /* Copia y reemplaza por este nuevo bloque compacto */
+        .header { 
+            background: #000; 
+            padding: 15px 20px; 
+            text-align: center; 
+            border-bottom: 1px solid var(--border); 
+        }
+        /* Efecto de brillo y movimiento para el logo */
+        .logo-premium {
+            width: 100%;
+            max-width: 320px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            /* Brillo dorado constante */
+            filter: drop-shadow(0 0 12px rgba(197, 160, 89, 0.4));
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .logo-premium:hover {
+            /* El brillo se intensifica y el logo se agranda un poquito al tocarlo */
+            filter: drop-shadow(0 0 20px rgba(197, 160, 89, 0.7));
+            transform: scale(1.03);
+        }
+        /* Estilo del botón de requisitos */
+        .btn-requisitos {
+            background: rgba(197, 160, 89, 0.05);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 8px 18px;
+            border-radius: 25px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+        /* Ajuste para que el texto legal sea legible */
+        #listaResumen p {
+            line-height: 1.4;
+            margin-bottom: 5px;
+        }
+        .btn-requisitos:hover {
+            background: var(--primary);
+            color: #000;
+            box-shadow: 0 0 15px rgba(197, 160, 89, 0.3);
+        }        
+        .video-presentacion { background: #0a0c10; padding: 20px 15px; text-align: center; border-bottom: 1px solid var(--border); position: relative; }
+        .video-wrapper { position: relative; width: 100%; max-width: 300px; margin: 0 auto; border-radius: 20px; overflow: hidden; border: 1px solid var(--border); aspect-ratio: 9/16; }
+        .video-wrapper::after {
+            content: "ASI LLEGA SU PRODUCTO 📦✅";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            transform: none;
+            background: rgba(197, 160, 89, 0.98); 
+            color: #000;
+            
+            /* --- AJUSTES DE ESTIRAMIENTO Y CENTRADO --- */
+            padding: 30px 0; /* Aumentamos de 12px a 20px para que se estire hacia abajo */
+            display: flex; /* Usamos flex para asegurar centrado total */
+            align-items: center; 
+            justify-content: center;
+            /* ------------------------------------------ */
+            
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            z-index: 15;
+            border-bottom-left-radius: 0px; 
+            border-bottom-right-radius: 0px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        /* BUSCADOR ACOPLADO AL VIDEO */
+        .contenedor-busqueda { 
+            position: absolute; 
+            top: 130px; /* Ajuste para que quede debajo del título */
+            right: 20px; 
+            z-index: 90;
+        }
+        .input-busqueda { 
+            width: 35px;
+            height: 35px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Transición más suave */
+            padding: 0 10px;
+            border-radius: 20px;
+            border: 1px solid var(--primary); /* Borde dorado */
+            background: rgba(17, 24, 39, 0.9);
+            color: white;
+            font-size: 0.8em;
+            outline: none;
+            text-align: center;
+            box-shadow: 0 0 5px rgba(197, 160, 89, 0.2); /* Brillo sutil */
+        }
+
+         .input-busqueda:focus { 
+            width: 200px; /* Se expande más para que sea cómodo escribir */
+            text-align: left;
+            border: 2px solid var(--primary); /* Resalta el dorado al escribir */
+            box-shadow: 0 0 15px rgba(197, 160, 89, 0.4);
+        }
+
+        .contenedor-filtros { background: #05070a; padding: 10px 20px; }
+        .btn-abrir-filtros { 
+            padding: 10px 20px; 
+            background: transparent; 
+            border: 1px solid var(--primary); /* Marco dorado */
+            color: var(--primary); 
+            font-size: 0.8em; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            display: inline-block; 
+            margin-bottom: 10px;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: 0.3s;
+         }
+/* Efecto cuando pasas el mouse o tocas */
+        .btn-abrir-filtros:active {
+            background: var(--primary);
+            color: #000;
+         }
+        
+        .panel-filtros { display: none; padding: 10px 0; }
+        .panel-filtros.active { display: block; }
+        .chips-container { display: flex; gap: 8px; overflow-x: auto; padding: 5px 0; scrollbar-width: none; }
+        .chip { background: #1f2937; color: #fff; padding: 6px 12px; border-radius: 6px; font-size: 10px; cursor: pointer; border: 1px solid transparent; white-space: nowrap; }
+        .chip.active { background: var(--primary); color: #000; font-weight: bold; }
+
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 12px; }
+        @media (min-width: 768px) { .grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); } }
+
+        .card { background: var(--card-bg); border-radius: 15px; overflow: hidden; cursor: pointer; position: relative; border: 1px solid var(--border); transition: 0.3s; }
+        .card.selected { border-color: var(--primary); box-shadow: 0 0 15px rgba(197, 160, 89, 0.2); }
+
+        .btn-info { position: absolute; top: 10px; left: 10px; width: 35px; height: 35px; background: var(--primary); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 50; font-size: 8px; font-weight: 800; border: 2px solid #000; }
+        .detalles-overlay { position: absolute; bottom: -100%; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(8px); color: white; padding: 20px; box-sizing: border-box; transition: 0.4s; font-size: 11px; display: flex; flex-direction: column; justify-content: center; text-align: center; z-index: 60; }
+        .detalles-overlay.active { bottom: 0; }
+
+        @keyframes selectIndicatorPulse {
+            0% { box-shadow: 0 0 0 rgba(197,160,89,0.0); transform: scale(1); }
+            50% { box-shadow: 0 0 18px rgba(197,160,89,0.55); transform: scale(1.03); }
+            100% { box-shadow: 0 0 0 rgba(197,160,89,0.0); transform: scale(1); }
+        }
+
+        .select-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 54px;
+            height: 54px;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid var(--primary);
+            border-radius: 50%;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            cursor: pointer;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            animation: selectIndicatorPulse 1.8s ease-in-out infinite;
+        }
+
+        /* ✓ arriba */
+        .select-indicator::before {
+            content: "✓";
+            color: rgba(255,255,255,0.98);
+            font-size: 22px;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        /* Texto pequeño */
+        .select-indicator::after {
+            content: "Añadir";
+            color: rgba(255,255,255,0.92);
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: 0.2px;
+            line-height: 1.05;
+        }
+
+        .card.selected .select-indicator {
+            background: #22c55e;
+            border-color: #fff;
+            animation: none;
+            box-shadow: 0 0 18px rgba(34,197,94,0.35);
+        }
+
+        .card.selected .select-indicator::before {
+            color: #05230f;
+            font-size: 24px;
+            text-shadow: 0 0 10px rgba(0,0,0,0.25);
+        }
+
+        .card.selected .select-indicator::after {
+            content: "Listo";
+            color: #05230f;
+        }
+
+        .carrusel { 
+            width: 100%; 
+            height: 220px; /* Un poco más de altura para que luzcan */
+            background: #000; 
+            display: flex; 
+            overflow-x: auto; 
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory; 
+            scrollbar-width: none; 
+            -webkit-overflow-scrolling: touch;
+            align-items: center;
+        }
+        
+        .carrusel img { 
+            flex: 0 0 100%; 
+            min-width: 100%;
+            height: 100%; 
+            object-fit: contain; 
+            scroll-snap-align: center; /* ESTO es lo que mantiene el centrado */
+            display: block;
+            pointer-events: none; /* Esto hace que el clic 'atraviese' la foto para marcar el cuadro */
+        }
+
+        .info { padding: 12px; }
+        .info p { margin: 0; font-size: 0.75em; height: 2.8em; overflow: hidden; color: var(--text-secondary); line-height: 1.4; }
+        .precio-total-card { color: #fff; font-weight: 300; font-size: 0.75em; margin-top: 5px; opacity: 0.6; }
+        .pago-60 { color: var(--primary); font-weight: 700; font-size: 1em; display: block; }
+
+        /* Modal detalle producto */
+        #modalDetalle {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100dvh;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            background: rgba(0,0,0,0.68);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 16px;
+            box-sizing: border-box;
+            overflow: hidden; /* El scroll lo maneja el contenedor interno */
+        }
+
+        .modal-detalle-content {
+            position: relative;
+            width: 95%;
+            max-width: 800px;
+            margin: auto;
+            background: rgba(15, 23, 42, 0.96);
+            border: 1px solid rgba(197,160,89,0.35);
+            border-radius: 18px;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.65);
+            color: #fff;
+            overflow-x: hidden;
+            overflow-y: auto;
+            max-height: 90vh;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .modal-detalle-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 58px;
+            height: 58px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.08);
+            color: #fff;
+            font-size: 34px;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        .modal-detalle-fotos {
+            padding: 105px 14px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 0px;
+        }
+
+        .modal-detalle-foto {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            background: transparent;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.06);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .modal-detalle-info {
+            padding: 6px 14px 16px;
+        }
+
+        .modal-detalle-nombre {
+            margin: 0 0 10px;
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: 0.2px;
+        }
+
+        .modal-detalle-descripcion {
+            margin: 0 0 12px;
+            color: rgba(255,255,255,0.86);
+            line-height: 1.45;
+            font-size: 12px;
+            white-space: pre-wrap;
+        }
+
+        .modal-detalle-precios {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .modal-detalle-line {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 12px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.06);
+            font-size: 13px;
+        }
+
+        .modal-detalle-line span:first-child {
+            color: rgba(255,255,255,0.80);
+        }
+
+        .modal-detalle-actions {
+            padding: 0 14px 16px;
+        }
+
+        .modal-detalle-back-btn {
+            width: 100%;
+            border: none;
+            background: var(--primary);
+            color: #000;
+            border-radius: 14px;
+            padding: 14px 16px;
+            font-weight: 950;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            font-size: 14px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 480px) {
+            .modal-detalle-close { width: 64px; height: 64px; font-size: 38px; }
+        }
+
+        .install-banner {
+            position: fixed;
+            left: 12px;
+            right: 12px;
+            bottom: 90px;
+            z-index: 3000;
+            background: rgba(5, 7, 10, 0.97);
+            border: 1px solid rgba(197,160,89,0.5);
+            border-radius: 14px;
+            padding: 12px 12px 10px;
+            box-shadow: 0 14px 38px rgba(0,0,0,0.45);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+
+        .install-banner-text {
+            color: #fff;
+            font-size: 12px;
+            line-height: 1.35;
+            margin: 0 32px 10px 0;
+        }
+
+        .install-banner-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .install-banner-btn {
+            border: 1px solid var(--primary);
+            background: var(--primary);
+            color: #000;
+            border-radius: 10px;
+            padding: 9px 14px;
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 0.7px;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .install-banner-close {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            border: 1px solid rgba(255,255,255,0.22);
+            background: transparent;
+            color: rgba(255,255,255,0.86);
+            border-radius: 50%;
+            font-size: 14px;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .footer { 
+            position: fixed; 
+            bottom: 0; 
+            width: 100%; 
+            background: rgba(5, 7, 10, 0.98); 
+            backdrop-filter: blur(20px); 
+            padding: 8px 20px; /* Muy fino */
+            border-top: 1px solid var(--primary); 
+            z-index: 100; 
+            box-sizing: border-box; 
+        }
+        .btn-enlistar { background: linear-gradient(135deg, #c5a059, #856404); color: #000; border: none; padding: 14px; border-radius: 10px; font-weight: 700; width: 100%; cursor: pointer; font-size: 13px; text-transform: uppercase; }
+        
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); }
+        .modal-content { background: #111827; margin: 15% auto; padding: 20px; border-radius: 15px; width: 88%; max-width: 380px; color: #fff; border: 1px solid var(--primary); }
+        .instrucciones { background: rgba(197, 160, 89, 0.05); padding: 15px; border-radius: 10px; border-left: 3px solid var(--primary); margin: 15px 0; }
+        .instrucciones p { margin: 8px 0; font-size: 13px; color: #fff; }
+        .instrucciones b { color: var(--primary); }
+
+        /* Animación de latido brillante */
+@keyframes brilloLatido {
+    0% { box-shadow: 0 0 5px rgba(197, 160, 89, 0.2); transform: scale(1); }
+    50% { box-shadow: 0 0 20px rgba(197, 160, 89, 0.6); transform: scale(1.02); }
+    100% { box-shadow: 0 0 5px rgba(197, 160, 89, 0.2); transform: scale(1); }
+}
+
+/* Aplicar la animación al botón de requisitos */
+.btn-requisitos {
+    animation: brilloLatido 3s infinite ease-in-out;
+}    
+    </style>
+</head>
+<body onclick="cerrarFiltrosFuera(event)">
+
+<div class="header">
+    <img src="https://i.postimg.cc/HLt7Kqk1/Untitled-(1).png" alt="BrylexRoda Logo" class="logo-premium">
+</div>
+    <div style="text-align: center;">
+    <button onclick="abrirModalInfo()" class="btn-requisitos">
+        <span>ⓘ</span> PROCESO DE IMPORTACIÓN
+    </button>
+</div>
+<div class="contenedor-busqueda">
+    <input type="text" id="busqueda" class="input-busqueda" placeholder="Buscar..." oninput="aplicarFiltros()">
+</div>
+<div class="video-presentacion">
+    <div class="video-wrapper">
+        <iframe width="100%" height="100%" src="https://www.youtube.com/embed/266kYQHJX9I?autoplay=1&mute=1&loop=1&playlist=266kYQHJX9I&controls=0&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1" frameborder="0" style="pointer-events: none;" allow="autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+    </div>
+</div>
+
+<div class="contenedor-filtros" id="areaFiltros">
+    <button class="btn-abrir-filtros" onclick="toggleFiltros(event)">FILTROS ▼</button>
+    <div class="panel-filtros" id="panelFiltros">
+        
+        <div class="chips-container">
+            <button class="chip chip-genero active" onclick="filtrarGenero('Todos', this)">Todos</button>
+            <button class="chip chip-genero" onclick="filtrarGenero('Hombre', this)">Caballeros</button>
+            <button class="chip chip-genero" onclick="filtrarGenero('Mujer', this)">Damas</button>
+        </div>
+
+        <div class="chips-container">
+    <button class="chip chip-precio active" onclick="filtrarPrecio('todas', this)">Todo Precio</button>
+    <button class="chip chip-precio" onclick="filtrarPrecio('0-60', this)">Bajo $60</button>
+    <button class="chip chip-precio" onclick="filtrarPrecio('60-100', this)">$60 - $100</button>
+    <button class="chip chip-precio" onclick="filtrarPrecio('100-150', this)">$100 - $150</button>
+    <button class="chip chip-precio" onclick="filtrarPrecio('150-up', this)">Premium (+$150)</button>
+</div>
+
+        <div class="chips-container" id="contenedorMarcas">
+            <button class="chip chip-marca active" onclick="filtrarMarca('Todas', this)">Todas las marcas</button>
+        </div>
+    </div>
+</div>
+<div id="contador-resultados" style="color: var(--primary); font-size: 0.9em; text-align: center; margin: 15px 0; letter-spacing: 2px; font-weight: bold; text-transform: uppercase;">
+    Cargando modelos...
+</div>
+    <div id="loading" style="text-align:center; padding:50px; color: var(--text-secondary); font-size: 10px; letter-spacing: 2px;">CONECTANDO CON COLECCIÓN...</div>
+<div class="grid" id="contenedor"></div>
+
+<div class="footer">
+    <div style="display:flex; justify-content:space-between; margin-bottom:8px; align-items: center;">
+        <div><span style="color:var(--text-secondary); font-size:9px; text-transform:uppercase;">Total</span><br><span id="resumenTotalFull" style="color:#fff; font-weight:bold; font-size:1em;">$0.00</span></div>
+        <div style="text-align:right;"><span style="color:var(--primary); font-size:9px; text-transform:uppercase;">Abono Inicial (60%)</span><br><span id="resumenAbono" style="color:var(--primary); font-weight:bold; font-size:1.2em;">$0.00</span></div>
+    </div>
+    <button class="btn-enlistar" onclick="abrirModal()">Confirmar Selección 📋</button>
+</div>
+
+<div id="miModal" class="modal">
+    <div class="modal-content">
+        <h3 style="color:var(--primary); text-align:center; font-size:14px; letter-spacing:1px; margin-top:0;">REQUISITOS DE IMPORTACIÓN</h3>
+        
+        <div class="instrucciones">
+            <p style="font-size: 12px; margin: 8px 0;">• <b>Revision:</b> Se revisara al momento la disposicion en <b>stock</b> del producto de la lista de pedido.</p>            
+            <p style="font-size: 12px; margin: 8px 0;">• <b>Abono inicial:</b> Se requiere el <b>60%</b> del valor total de cada producto para proceder con la compra.</p>
+            <p style="font-size: 12px; margin: 8px 0;">• <b>Tiempo de entrega:</b> Estimado de <b>20 a 30 dias</b> laborales.</p>
+            <p style="font-size: 12px; margin: 8px 0;">• <b>Liquidación:</b> El saldo restante se cancela <b>antes del envio final del producto</b> hacia las puertas de su casa o cooperativa de transporte acordada.</p>
+            
+        </div>
+
+        <p style="font-size: 10px; color: var(--primary); text-transform: uppercase; margin-bottom: 10px; font-weight: bold;">Artículos en tu pedido:</p>
+        
+        <div id="listaResumen" style="max-height:120px; overflow-y:auto; margin-bottom:15px; font-size:13px; border-bottom:1px solid var(--border); padding-bottom: 10px;"></div>
+        
+        <div style="text-align:center; padding:10px 0; background: rgba(255,255,255,0.03); border-radius: 8px;">
+            <span style="color:var(--text-secondary); font-size:10px;">TOTAL DE COMPRA: <span id="modalTotalFull" style="color:#fff;">$0.00</span></span><br>
+            <span style="color:var(--primary); font-size:11px; font-weight: bold;">ABONO 60% REQUERIDO:</span><br>
+            <span id="modalAbonoHoy" style="color:var(--primary); font-size:1.8em; font-weight:bold;">$0.00</span>
+        </div>
+
+        <button id="btnWhatsAppFinal" onclick="enviarWhatsAppFinal()" style="background:#064e3b; color:#ffffff; width:100%; padding:16px; border-radius:12px; font-weight:bold; cursor:pointer; border:none; text-transform:uppercase; font-size:13px; margin-top:15px;">Enviar a WhatsApp 📲</button>
+        <p onclick="cerrarModal()" style="text-align:center; cursor:pointer; color:var(--text-secondary); margin-top:15px; font-size:10px; text-transform:uppercase;">Volver al catálogo</p>
+    </div>
+</div>
+
+<script>
+    const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1ZSSPWWk7VS3L1BHNBFAw8Lo3KFUiOKwFJwKXOoRKvk4/gviz/tq?tqx=out:csv';
+    const miTelefono = "593990267974"; 
+
+    let productos = [];
+    let productosOriginales = [];
+    let productosFiltrados = [];
+    let seleccionados = new Set();
+    let marcaSeleccionada = "Todas";
+    let rangoPrecio = "todas";
+    let cantidadAMostrar = 10;
+    let incremento = 10;
+    let generoSeleccionado = "Todos";
+    let deferredInstallPrompt = null;
+    let installTriggerReached = false;
+    let installBannerVisible = false;
+    let observerProductos = null;
+    const productosVistos = new Set();
+    const installDismissedKey = 'pwaInstallDismissedThisSession';
+    const isIos = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    
+    async function cargar() {
+        window.scrollTo(0, 0); // Esto obliga a la página a subir al cargar
+        try {
+            const res = await fetch(SHEET_URL + '&cache=' + new Date().getTime());
+            const text = await res.text();
+            const filas = text.trim().split(/\r?\n/).slice(1);
+            
+            productos = filas.map((f, i) => {
+                let c = f.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(item => item.replace(/"/g, '').trim());
+                if(c.length < 2) return null;
+                return {
+                    id: i + 2,
+                    nombre: c[0] || 'Reloj Luxury',
+                    marca: (c[0].match(/[A-Z]{2,}(?:\s+[A-Z]{2,})*/) || ["RELOJ"])[0],
+                    genero: c[0].toLowerCase().includes('mujer') ? 'Mujer' : (c[0].toLowerCase().includes('hombre') ? 'Hombre' : 'Unisex'),
+                    precio: parseFloat(c[1]?.replace('$', '').replace(/[^\d.,]/g, '')) || 0,
+                    fotos: (c[2] || '').split('|').map(link => link.trim()),
+                    descripcion: (c[3] || 'Consultar detalles').split('|').join('<br>'), // <-- AQUÍ FALTABA ESTA COMA
+                    stock: (c[5] || '').toLowerCase() // c[5] es la sexta columna (F)                
+                };
+            }).filter(p => p !== null); // <-- Y AQUÍ ASEGÚRATE QUE EL CIERRE ESTÉ ASÍ
+            productosOriginales = [...productos];
+
+            generarMarcas();
+            document.getElementById('loading').style.display = 'none';
+            aplicarFiltros();
+            prepararBannerInstalacion();
+        } catch (e) { console.error(e); }
+    }
+
+    function toggleFiltros(e) { e.stopPropagation(); document.getElementById('panelFiltros').classList.toggle('active'); }
+    function cerrarFiltrosFuera(e) { if (!document.getElementById('areaFiltros').contains(e.target)) document.getElementById('panelFiltros').classList.remove('active'); }
+
+    function generarMarcas() {
+        const cont = document.getElementById('contenedorMarcas');
+        const marcas = [...new Set(productos.map(p => p.marca))];
+        marcas.forEach(m => {
+            const btn = document.createElement('button');
+            btn.className = 'chip chip-marca';
+            btn.innerText = m;
+            btn.onclick = (e) => { e.stopPropagation(); filtrarMarca(m, btn); };
+            cont.appendChild(btn);
+        });
+    }
+
+    function filtrarMarca(m, el) {
+        document.querySelectorAll('.chip-marca').forEach(c => c.classList.remove('active'));
+        el.classList.add('active'); marcaSeleccionada = m; aplicarFiltros();
+    }
+
+    function filtrarPrecio(r, el) {
+        document.querySelectorAll('.chip-precio').forEach(c => c.classList.remove('active'));
+        el.classList.add('active'); rangoPrecio = r; aplicarFiltros();
+    }
+function filtrarGenero(g, el) {
+        document.querySelectorAll('.chip-genero').forEach(c => c.classList.remove('active'));
+        el.classList.add('active');
+        generoSeleccionado = g;
+        aplicarFiltros();
+    }
+    function aplicarFiltros() {
+        cantidadAMostrar = 10; 
+        const query = document.getElementById('busqueda').value.toLowerCase();
+        
+        productosFiltrados = productos.filter(p => {
+            const mMarca = marcaSeleccionada === "Todas" || p.marca === marcaSeleccionada;
+            const mBusqueda = p.nombre.toLowerCase().includes(query);
+            
+            // Lógica para el nuevo filtro de género
+            // El producto se muestra si: es de la categoría elegida O es Unisex
+            const mGenero = generoSeleccionado === "Todos" || 
+                 p.genero === generoSeleccionado || 
+                 p.genero === "Unisex";
+            const mStock = p.stock !== 'no';
+            
+            let mPrecio = true;
+            if(rangoPrecio === '0-60') mPrecio = (p.precio < 60);
+            if(rangoPrecio === '60-100') mPrecio = (p.precio >= 60 && p.precio <= 100);
+            if(rangoPrecio === '100-150') mPrecio = (p.precio > 100 && p.precio <= 150);
+            if(rangoPrecio === '150-up') mPrecio = (p.precio > 150);
+            
+            // Ahora retornamos incluyendo mGenero
+            return mMarca && mBusqueda && mPrecio && mGenero && mStock;
+        });
+        const contador = document.getElementById('contador-resultados');
+        if (contador) {
+            if (productosFiltrados.length === 0) {
+                contador.innerHTML = `
+                    <div style="opacity: 0.6;">NO SE ENCONTRARON MODELOS</div>
+                    <button onclick="reiniciarFiltros()" style="margin-top:10px; background:none; border:1px solid var(--primary); color:var(--primary); padding:5px 15px; cursor:pointer; border-radius:5px; font-size:0.7em; font-weight:bold;">LIMPIAR BÚSQUEDA</button>
+                `;
+            } else {
+                // Aquí es donde mostramos el total de modelos disponibles
+                contador.innerHTML = `
+                    <span style="opacity: 0.5; font-size: 0.8em;">STOCK DISPONIBLE:</span><br>
+                    <span style="font-size: 1.2em;">${productosFiltrados.length} MODELOS EXCLUSIVOS</span>
+                `;
+            }
+        }
+        dibujar();
+        }
+    function reiniciarFiltros() {
+    // 1. Reseteamos las variables a sus valores iniciales
+    marcaSeleccionada = "Todas";
+    generoSeleccionado = "Todos";
+    rangoPrecio = "todas";
+    
+    // 2. Limpiamos el buscador visualmente
+    const buscador = document.getElementById('busqueda');
+    if(buscador) buscador.value = "";
+    
+    // 3. Quitamos el color dorado de todos los botones (chips)
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    
+    // 4. Marcamos los botones de "Todos" como activos para que el usuario vea el cambio
+    // Buscamos los botones que dicen "Todo", "Todas" o "Todos" y les ponemos la clase active
+    document.querySelectorAll('.chip').forEach(c => {
+        if(c.innerText.includes("Todo") || c.innerText.includes("Todas")) {
+            c.classList.add('active');
+        }
+    });
+
+    // 5. Ejecutamos los filtros para que la página se actualice sola
+    aplicarFiltros();
+}
+    function dibujar() {
+        const cont = document.getElementById('contenedor');
+        // Solo tomamos una parte de la lista según 'cantidadAMostrar'
+        const mostrarAhora = productosFiltrados.slice(0, cantidadAMostrar);
+        
+        cont.innerHTML = mostrarAhora.map(p => `
+            <div id="card-${p.id}" class="card ${seleccionados.has(p.id) ? 'selected' : ''}">
+                <div class="btn-info" onclick="toggleDetalles(event, ${p.id})">INFO</div>
+                <div id="detalles-${p.id}" class="detalles-overlay" onclick="toggleDetalles(event, ${p.id})">
+                    <strong>ESPECIFICACIONES</strong><br><br>${p.descripcion}
+                </div>
+                <div class="select-indicator" onclick="event.stopPropagation(); toggleSelect(${p.id})"></div>
+                <div class="carrusel" onclick="abrirModalDetalle(${p.id})">
+                    ${p.fotos.filter(link => link.length > 5).map(img => `<img src="${img}" loading="lazy" style="pointer-events:none;">`).join('')}
+                </div>
+                <div class="info" onclick="abrirModalDetalle(${p.id})">
+                    <p>${p.nombre}</p>
+                    <div class="pago-60">Abono: $${(p.precio * 0.6).toFixed(2)}</div>
+                    <div class="precio-total-card">Total: $${p.precio.toFixed(2)}</div>
+                </div>
+            </div>`).join('');
+
+        actualizarBotonVerMas();
+        actualizarBotonWhatsAppFinal();
+        observarProductosVisibles();
+    }
+    function prepararBannerInstalacion() {
+        setTimeout(() => {
+            installTriggerReached = true;
+            intentarMostrarBannerInstalacion();
+        }, 30000);
+    }
+
+    function observarProductosVisibles() {
+        if (isStandalone) return;
+
+        if (observerProductos) observerProductos.disconnect();
+
+        observerProductos = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting || entry.intersectionRatio < 0.55) return;
+                const id = entry.target.id?.replace('card-', '');
+                if (id) productosVistos.add(id);
+            });
+
+            if (productosVistos.size >= 3) {
+                installTriggerReached = true;
+                intentarMostrarBannerInstalacion();
+            }
+        }, { threshold: [0.55] });
+
+        document.querySelectorAll('.card[id^="card-"]').forEach(card => observerProductos.observe(card));
+    }
+
+    function crearBannerInstalacion() {
+        if (document.getElementById('installBanner')) return;
+
+        const banner = document.createElement('div');
+        banner.id = 'installBanner';
+        banner.className = 'install-banner';
+        banner.innerHTML = `
+            <button type="button" id="btnCerrarInstallBanner" class="install-banner-close" aria-label="Cerrar">✕</button>
+            <p class="install-banner-text">¿Te gustaría tener nuestro catálogo en tu pantalla de inicio?</p>
+            <div class="install-banner-actions">
+                <button type="button" id="btnInstalarCatalogo" class="install-banner-btn">INSTALAR</button>
+            </div>
+        `;
+        document.body.appendChild(banner);
+
+        document.getElementById('btnCerrarInstallBanner').addEventListener('click', () => {
+            sessionStorage.setItem(installDismissedKey, '1');
+            ocultarBannerInstalacion();
+        });
+
+        document.getElementById('btnInstalarCatalogo').addEventListener('click', async () => {
+            if (isIos && !deferredInstallPrompt) {
+                alert("En iPhone/iPad: toca 'Compartir' y luego 'Añadir a pantalla de inicio'.");
+                return;
+            }
+
+            if (!deferredInstallPrompt) return;
+
+            deferredInstallPrompt.prompt();
+            try {
+                await deferredInstallPrompt.userChoice;
+            } catch (_) {}
+            deferredInstallPrompt = null;
+            sessionStorage.setItem(installDismissedKey, '1');
+            ocultarBannerInstalacion();
+        });
+    }
+
+    function ocultarBannerInstalacion() {
+        const banner = document.getElementById('installBanner');
+        if (banner) banner.remove();
+        installBannerVisible = false;
+    }
+
+    function intentarMostrarBannerInstalacion() {
+        const dismissed = sessionStorage.getItem(installDismissedKey) === '1';
+        if (!installTriggerReached || dismissed || isStandalone || installBannerVisible) return;
+        if (!deferredInstallPrompt && !isIos) return;
+
+        crearBannerInstalacion();
+        installBannerVisible = true;
+    }
+
+    window.addEventListener('beforeinstallprompt', (event) => {
+        event.preventDefault();
+        deferredInstallPrompt = event;
+        intentarMostrarBannerInstalacion();
+    });
+
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js').catch(() => {});
+        });
+    }
+    function actualizarBotonVerMas() {
+        // Eliminamos el botón viejo si existe
+        const btnViejo = document.getElementById('btnVerMas');
+        if(btnViejo) btnViejo.remove();
+
+        // Si todavía hay más productos por mostrar, creamos el botón
+        if (cantidadAMostrar < productosFiltrados.length) {
+            const btn = document.createElement('button');
+            btn.id = 'btnVerMas';
+            btn.innerText = "VER MÁS MODELOS ↓";
+            btn.style = "grid-column: 1 / -1; margin: 30px auto; padding: 15px 40px; background: transparent; border: 1px solid var(--primary); color: var(--primary); border-radius: 30px; cursor: pointer; font-weight: bold; font-size: 11px; letter-spacing: 2px; display: block; width: fit-content; text-transform: uppercase;";
+            btn.onclick = () => {
+                cantidadAMostrar += incremento;
+                dibujar();
+            };
+            document.getElementById('contenedor').appendChild(btn);
+        }
+    }
+    function toggleDetalles(e, id) { e.stopPropagation(); document.getElementById(`detalles-${id}`).classList.toggle('active'); }
+
+    function toggleSelect(id) {
+        if (seleccionados.has(id)) seleccionados.delete(id);
+        else seleccionados.add(id);
+        actualizarResumen();
+        dibujar();
+    }
+
+    function actualizarResumen() {
+        let f = 0, a = 0;
+        productos.forEach(p => { if(seleccionados.has(p.id)){ f += p.precio; a += (p.precio * 0.6); }});
+        document.getElementById('resumenTotalFull').innerText = `$${f.toFixed(2)}`;
+        document.getElementById('resumenAbono').innerText = `$${a.toFixed(2)}`;
+    }
+
+    function actualizarBotonWhatsAppFinal() {
+        const btn = document.getElementById('btnWhatsAppFinal');
+        if (!btn) return;
+
+        const habilitado = seleccionados.size !== 0;
+        btn.style.opacity = habilitado ? '1' : '0.5';
+        btn.style.pointerEvents = habilitado ? 'auto' : 'none';
+        btn.textContent = habilitado ? 'Enviar a WhatsApp 📲' : 'Selecciona un reloj para continuar';
+    }
+
+    function abrirModalDetalle(id) {
+        const p = productosOriginales.find(prod => prod.id === id);
+        if (!p) return;
+
+        const fotos = Array.isArray(p.fotos) ? p.fotos.filter(link => link && link.trim().length > 0) : [];
+        const modalFotos = document.getElementById('modalDetalleFotos');
+        if (modalFotos) {
+            modalFotos.innerHTML = fotos.length
+                ? fotos.map(img => `<img class="modal-detalle-foto" src="${img}" alt="${p.nombre}" loading="lazy" decoding="async" onerror="this.src='https://via.placeholder.com/1200x900?text=Sin+Foto'">`).join('')
+                : `<div style="opacity:0.7; padding:10px 0;">Sin fotos disponibles</div>`;
+        }
+
+        document.getElementById('modalDetalleNombre').innerText = p.nombre || '';
+        document.getElementById('modalDetalleDescripcion').innerHTML = p.descripcion || '';
+
+        const precio = Number(p.precio) || 0;
+        document.getElementById('modalDetallePrecioTotal').innerText = `$${precio.toFixed(2)}`;
+        document.getElementById('modalDetalleAbono60').innerText = `$${(precio * 0.6).toFixed(2)}`;
+
+        const modalContent = document.querySelector('#modalDetalle .modal-detalle-content');
+        if (modalContent) modalContent.scrollTop = 0;
+
+        history.pushState({ modalAbierta: true }, '');
+        document.getElementById('modalDetalle').style.display = 'flex';
+    }
+
+    function cerrarDetalle() {
+        const modalContent = document.querySelector('#modalDetalle .modal-detalle-content');
+        if (modalContent) modalContent.scrollTop = 0;
+
+        document.getElementById('modalDetalle').style.display = 'none';
+
+        if (window.history.state?.modalAbierta) history.back();
+    }
+    function abrirModalInfo() {
+    document.getElementById('listaResumen').innerHTML = `
+        <div style="text-align:left; padding: 10px; border: 1px dashed #c5a059; border-radius:10px; font-size:12px; color: #fff;">
+            <p style="text-align:center; color: #c5a059; font-weight:bold; margin-bottom:10px;">📋 TÉRMINOS IMPORTANTES</p>
+            <p>• Los precios incluyen importación y entrega final.</p>
+            <p style="margin:8px 0;">• <b>Política de Abandono:</b> Una vez notificada la llegada de su producto, dispone de <b>30 días calendario</b> para liquidar el saldo. Pasado este tiempo, el producto se liberará para la venta y el abono <b style="color: var(--primary);">NO SERÁ REEMBOLSABLE</b> por gastos logísticos.</p>
+            <p style="text-align:center; opacity:0.6; margin-top:10px;">Consulte antes de elegir sus modelos favoritos.</p>
+        </div>`;
+    
+    document.getElementById('modalTotalFull').innerText = "---";
+    document.getElementById('modalAbonoHoy').innerText = "---";
+    
+    document.getElementById('miModal').style.display = "block";
+    history.pushState({modalAbierto: true}, "");
+}
+    function abrirModal() {
+        if(!seleccionados.size) return alert("Por favor, selecciona al menos un reloj.");
+        let h = "<div style='display:flex; flex-direction:column; gap:8px;'>", a = 0, total = 0;
+        productos.forEach(p => { 
+            if(seleccionados.has(p.id)){ 
+                h += `<div style="display:flex; align-items:center; gap:10px; color:#fff; font-size:13px;">
+                       <span style="color:var(--primary);">⌚</span> 
+                       <span>${p.nombre} <small style="opacity:0.5;">(#${p.id})</small></span>
+                      </div>`; 
+                a += (p.precio * 0.6);
+                total += p.precio;
+            }
+        });
+        document.getElementById('listaResumen').innerHTML = h + "</div>";
+        document.getElementById('modalTotalFull').innerText = `$${total.toFixed(2)}`;
+        document.getElementById('modalAbonoHoy').innerText = `$${a.toFixed(2)}`;
+        document.getElementById('miModal').style.display = "block";
+        
+        // Esto crea el "punto de retorno" para el botón atrás
+        history.pushState({modalAbierto: true}, "");
+    }
+
+    function cerrarModal() { 
+        document.getElementById('miModal').style.display = "none";
+        // Si el usuario cierra con la X, limpiamos el historial
+        if (history.state && history.state.modalAbierto) {
+            history.back();
+        }
+    }
+
+    // Esto detecta cuando el usuario le da "Atrás" en su celular
+    window.onpopstate = function(event) {
+        const modalDetalle = document.getElementById('modalDetalle');
+        if (modalDetalle && modalDetalle.style.display === "flex") {
+            cerrarDetalle();
+            return;
+        }
+
+        const modal = document.getElementById('miModal');
+        if (modal && modal.style.display === "block") {
+            modal.style.display = "none";
+        }
+    };
+
+    
+
+    function enviarWhatsAppFinal() {
+        if(seleccionados.size === 0) {
+            alert('¡Vaya! Aún no has seleccionado ningún modelo para tu pedido');
+            return;
+        }
+
+        let m = "¡Hola Brylexroda! Me interesa importar estos modelos:\n\n", a = 0, total = 0;
+        productos.forEach(p => { 
+            if(seleccionados.has(p.id)) { 
+                // Añadimos el ID como referencia para ubicarlo en el Excel fácilmente
+                m += `⌚ ${p.nombre} (Ref: #${p.id})\n`; 
+                a += (p.precio * 0.6); 
+                total += p.precio;
+            }
+        });
+        
+        m += `\n--------------------------\n`;
+        m += `*TOTAL COMPRA:* $${total.toFixed(2)}\n`;
+        m += `*ABONO 60% (REQUERIDO):* $${a.toFixed(2)}\n`;
+        m += `\n¿Disponibilidad confirmada para proceder?`;
+        
+        window.open(`https://wa.me/${miTelefono}?text=${encodeURIComponent(m)}`);
+    }
+
+    window.onload = () => {
+        window.scrollTo(0, 0);
+        cargar();
+    };
+</script>
+
+<div id="modalDetalle">
+    <div class="modal-detalle-content">
+        <button type="button" class="modal-detalle-close" onclick="cerrarDetalle()" aria-label="Cerrar detalle">✕</button>
+
+        <div class="modal-detalle-fotos" id="modalDetalleFotos"></div>
+
+        <div class="modal-detalle-info">
+            <h2 class="modal-detalle-nombre" id="modalDetalleNombre"></h2>
+            <div class="modal-detalle-descripcion" id="modalDetalleDescripcion"></div>
+
+            <div class="modal-detalle-precios">
+                <div class="modal-detalle-line">
+                    <span>Precio Total:</span>
+                    <span id="modalDetallePrecioTotal"></span>
+                </div>
+                <div class="modal-detalle-line">
+                    <span>Abono del 60%:</span>
+                    <span id="modalDetalleAbono60"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-detalle-actions">
+            <button type="button" class="modal-detalle-back-btn" onclick="cerrarDetalle()">← VOLVER ATRÁS</button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
