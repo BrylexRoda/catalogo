@@ -277,27 +277,21 @@
         /* Modal detalle producto */
         #modalDetalle {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100dvh;
+            inset: 0;
             display: none;
-            align-items: center;
-            justify-content: center;
             z-index: 2000;
             background: rgba(0,0,0,0.68);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             padding: 16px;
-            box-sizing: border-box;
-            overflow: hidden; /* El scroll lo maneja el contenedor interno */
+            overflow: auto;
         }
 
         .modal-detalle-content {
             position: relative;
             width: 95%;
             max-width: 800px;
-            margin: auto;
+            margin: 30px auto 20px;
             background: rgba(15, 23, 42, 0.96);
             border: 1px solid rgba(197,160,89,0.35);
             border-radius: 18px;
@@ -305,8 +299,7 @@
             color: #fff;
             overflow-x: hidden;
             overflow-y: auto;
-            max-height: 90vh;
-            -webkit-overflow-scrolling: touch;
+            max-height: 92vh;
         }
 
         .modal-detalle-close {
@@ -754,16 +747,10 @@ function filtrarGenero(g, el) {
         document.getElementById('modalDetallePrecioTotal').innerText = `$${precio.toFixed(2)}`;
         document.getElementById('modalDetalleAbono60').innerText = `$${(precio * 0.6).toFixed(2)}`;
 
-        const modalContent = document.querySelector('#modalDetalle .modal-detalle-content');
-        if (modalContent) modalContent.scrollTop = 0;
-
-        document.getElementById('modalDetalle').style.display = 'flex';
+        document.getElementById('modalDetalle').style.display = 'block';
     }
 
     function cerrarDetalle() {
-        const modalContent = document.querySelector('#modalDetalle .modal-detalle-content');
-        if (modalContent) modalContent.scrollTop = 0;
-
         document.getElementById('modalDetalle').style.display = 'none';
     }
     function abrirModalInfo() {
